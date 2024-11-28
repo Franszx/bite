@@ -1,0 +1,9 @@
+<form id="block-form-{{ item['item_pk'] }}">
+    <button 
+        class="bg-c-red:-10 text-c-body px-3 py-1 rounded-sm mr-2 h-10 cursor-pointer"
+        id="block-{{ item['item_pk'] }}"
+        mix-put="/items/block/{{ item['item_pk'] }}"
+        mix-data="#block-form-{{ item['item_pk'] }}">
+        Block
+    </button>
+</form>

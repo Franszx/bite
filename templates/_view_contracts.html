@@ -1,0 +1,35 @@
+{% extends "view_admin.html" %}
+
+{% block content %}
+<section class="bg-c-white rounded-4 mb-6 p-6 shadow-md">
+  <h2 class="text-300 mb-4">Contract Management</h2>
+  <table class="w-full text-c-gray">
+    <thead>
+      <tr>
+        <th>Partner</th>
+        <th>Restaurant</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for contract in contracts %}
+      <tr>
+        <td>{{ contract.partner_name }}</td>
+        <td>{{ contract.restaurant_name }}</td>
+        <td>{{ contract.start_date }}</td>
+        <td>{{ contract.end_date }}</td>
+        <td>{{ contract.status }}</td>
+        <td>
+          <a href="#" class="text-c-blue">Edit</a>
+          <a href="#" class="text-c-green">Approve</a>
+          <a href="#" class="text-c-red">Reject</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

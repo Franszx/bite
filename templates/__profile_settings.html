@@ -1,0 +1,178 @@
+
+{% include "_top.html" %}
+
+<main class="w-full h-full d-flex flex-col px-6">
+  <section class="bg-c-light py-10"> 
+  <header class="d-flex j-content-between a-items-center py-3">
+      <h1 class="text-200" md="text-350">
+        {% if role == 'admin' %}
+        Settings
+      {% elif role == 'customer' %}
+        Settings
+      {% elif role == 'partner' %}
+        Settings
+      {% elif role == 'restaurant' %}
+        Settings
+      {% else %}
+        Profile
+      {% endif %} 
+      </h1>
+    </header>
+    <div class="border-1 border-b-c-white:-16">
+        <nav class="tabs d-flex flex-col mb-6 j-content-evenly" md="flex-row gap-6">
+          {% if role == 'admin' %}
+            <a href="{{ url_for('view_admin') }}" class="text-120 text-c-gray">Admin overview</a>
+            <a href="{{ url_for('view_edit_users') }}" class="text-120 text-c-gray">User administration</a>
+            <a href="{{ url_for('view_edit_items') }}" class="text-120  text-c-gray">Item administration</a>
+            <a href="#" class="text-120 text-c-gray">Contracts</a>
+            <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
+            <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+          {% elif role == 'restaurant' %}
+          <a href="#" class="text-120 text-c-gray">Your overview</a>
+          <a href="#" class="text-120 text-c-gray">Menu Management</a>
+          <a href="#" class="text-120 text-c-gray">Order Management</a>
+          <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
+          <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+          {% elif role == 'partner' %}
+          <a href="#" class="text-120 text-c-gray">Order history</a>
+          <a href="#" class="text-120 text-c-gray">Partnership Details</a>
+          <a href="#" class="text-120 text-c-gray">Earnings</a>
+          <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
+          <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+          {% elif role == 'customer' %}
+          <a href="#" class="text-120 text-c-gray">Order history</a>
+          <a href="#" class="text-120 text-c-gray">Earn credits</a>
+          <a href="#" class="text-120 text-c-gray">Redeem code</a>
+          <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold  text-c-gray">Settings</a>
+          <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+          {% endif %}
+        </nav>
+      </div>
+
+  </section>
+
+    <section class="bg-c-white rounded-lg py-8 mb-6">
+        <form id="update_profile_form-{{ user['user_pk'] }}">
+          <div class="d-flex flex-row j-content-between">
+            <label for="user_name" class="a-self-center text-120 text-c-gray:+1" >First Name</label>
+            <input
+              type="text"
+              name="user_name"
+              id="user_name"
+              value="{{ user['user_name'] }}"
+              required
+              class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+              md="text-130"
+            />
+          </div>
+          <div class="d-flex flex-row j-content-between">
+            <label for="user_last_name" class="a-self-center text-120 text-c-gray:+1">Last Name</label>
+            <input
+              type="text"
+              name="user_last_name"
+              id="user_last_name"
+              value="{{ user['user_last_name'] }}"
+              required
+              class="mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+              md="text-130"
+            />
+          </div>
+          <div class="d-flex flex-row j-content-between">
+            <label for="user_email" class="a-self-center text-120 text-c-gray:+1">Email Address</label>
+            <input
+              type="email"
+              name="user_email"
+              id="user_email"
+              value="{{ user['user_email'] }}"
+              required
+              class="mt-1 rounded-md border-s-hidden text-120 text-c-blue:+16 text-a-right w-96 cursor-pointer " focus="bg-c-white:-10 text-c-gray:+10"
+              md="text-130"
+            />
+          </div>
+          <div class="d-flex flex-row j-content-between">
+            <label for="restaurant_name" class="a-self-center text-120 text-c-gray:+1">Restaurant Name</label>
+            <input
+            type="text"
+            name="restaurant_name"
+            id="restaurant_name"
+            value="{{ user['restaurant_name'] }}"
+            required
+            class="mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer"
+            focus="bg-c-white:-16 text-c-gray:+10"
+            md="text-130"
+            />
+          </div>
+          <div class="d-flex j-content-end mt-4">
+            <button
+              class="bg-blue-600 text-white px-4 py-2 text-120 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              id="update-{{ user['user_pk'] }}"
+              mix-put="/users"
+              mix-data="#update_profile_form-{{ user['user_pk'] }}"
+            >
+              Update Profile
+            </button>
+          </div>
+        </form>
+      </section>
+      <!-- Data Protection Section -->
+      <section class=" rounded-sm mb-6">
+        <h2 class="text-200 fw-bold mb-4">Data Protection</h2>
+        <p class="text-100 mb-4">
+          Ads personalisation. We show sponsored content we think you'd be interested in based on your location, interactions, 
+          and purchase history on the platform. You can always disable this feature if you prefer non-personalised ads.
+        </p>
+        <div class="d-flex j-content-between a-items-center">
+          <label for="ads-toggle" class="text-150">Ads personalisation</label>
+          <input type="checkbox" id="ads-toggle" class="toggle-switch w-10" />
+        </div>
+      </section>
+    
+      <!-- Notifications Section -->
+      <section class="rounded-sm gap-4 py-10">
+        <h2 class="text-200 fw-bold mb-4">Push Notifications</h2>
+        <div class="d-flex flex-row j-content-between mb-4">
+          <label for="push-notifications" class="text-150">Notifications</label>
+          <input type="checkbox" id="push-notifications" class="toggle-switch w-10" />
+        </div>
+        <div>
+          <p class="text-100 mt-1">
+            I'd like to receive exclusive special offers and information via push-notifications.
+          </p>
+        </div>
+    
+        <div class="d-flex flex-row j-content-between ">
+          <label for="email-notifications" class="text-150">Email</label>
+          <input type="checkbox" id="email-notifications" class="toggle-switch w-10" />
+        </div>
+        <div class="d-flex flex-row">
+          <p class="text-100 mt-1">
+            I'd like to receive news, offers, and promotions via EMAIL NEWSLETTER.
+          </p>
+        </div>
+      </section>
+      <section class="bg-c-white rounded-lg py-8 mb-6">
+        <h2 class="text-250 mb-4">Delete Profile</h2>
+        <p class="mb-4">Are you sure you want to delete your profile? This action cannot be undone.</p>
+        <form id="delete-profile-form" class="d-flex flex-col gap-3">
+            <input
+                type="text"
+                name="confirm_password"
+                placeholder="Enter your password"
+                class="border p-2 rounded-md w-72"
+                md="w-half"
+                required
+            />
+            <button
+                class="bg-c-red:-10 border-1 border-c-charocoal text-c-white px-3 py-1 rounded-sm h-10 cursor-pointer w-40"
+                mix-post="/users/delete/{{ user['user_pk'] }}"
+                mix-data="#delete-profile-form"
+            >
+                Delete Profile
+            </button>
+        </form>
+    </section>
+
+</main>
+
+  {% include "_bottom.html" %}
+

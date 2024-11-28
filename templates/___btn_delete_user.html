@@ -1,0 +1,12 @@
+
+
+<form id="delete-form-{{ user['user_pk'] }}">
+    <button 
+        class=" border-1 border-c-charocoal text-c-body px-3 py-1 rounded-sm h-10 cursor-pointer"
+        id="delete-{{ user['user_pk'] }}"
+        mix-put="/users/delete/{{ user['user_pk'] }}"
+        mix-data="#delete-form-{{ user['user_pk'] }}">
+        🗑️
+    </button>
+</form>
+

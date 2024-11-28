@@ -1,0 +1,20 @@
+
+    <form class="d-block" md="d-none" id="unblock-form-{{ user['user_pk'] }}">
+        <button 
+            class=" border-1 border-c-charocoal text-c-body px-3 py-1 rounded-sm mr-2 h-10 cursor-pointer"
+            id="unblock-{{ user['user_pk'] }}"
+            mix-put="/users/unblock/{{ user['user_pk'] }}"
+            mix-data="#unblock-form-{{ user['user_pk'] }}">
+            ✅
+        </button>
+    </form>
+
+    <form class="d-none" md="d-block" id="unblock-form-{{ user['user_pk'] }}">
+        <button 
+            class="bg-c-green:-10 border-1 border-c-charocoal text-c-body px-3 py-1 rounded-sm mr-2 h-10 cursor-pointer"
+            id="unblock-{{ user['user_pk'] }}"
+            mix-put="/users/unblock/{{ user['user_pk'] }}"
+            mix-data="#unblock-form-{{ user['user_pk'] }}">
+            Unblock
+        </button>
+    </form>

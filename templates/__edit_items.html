@@ -1,0 +1,40 @@
+
+
+{% include "_top.html" %}
+
+<main class="w-full d-flex flex-col px-6 pb-2">
+  <section class="profile-page bg-c-light py-10">   
+    <header class="d-flex j-content-between a-items-center py-3">
+        <h1 class="text-250" md="text-350">Item administration</h1>
+    </header>
+       <!-- Navigation Tabs -->
+       <div class="border-1 border-b-c-white:-16">
+        <nav class="d-flex flex-col mb-6 j-content-evenly" md="flex-row gap-6">
+          <a href="{{ url_for('view_admin') }}" class="text-120 text-c-gray ">Admin overview</a>
+          <a href="{{ url_for('view_edit_users') }}"  class="text-120  text-c-gray ">User administration</a>
+          <a href="{{ url_for('view_edit_items') }}" class="text-120 text-w-bold text-c-gray">Item administration</a>
+          <a href="#" class="text-120 text-c-gray">Contracts</a>
+          <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray ">Settings</a>
+          <a href="{{ url_for('view_profile') }}" class="text-120 text-c-gray ">Profile</a>
+        </nav>
+        </div>
+  <section class="bg-c-white rounded-4 mt-4">
+  
+    <!-- Responsive Grid -->
+    <div id="items" class="grid gap-6" sm="cols-2" lg="cols-4">
+      {% for item in items %}
+        {% include "__edit_items_item_card.html" %}
+      {% endfor %}
+    </div>
+    <div class="d-flex j-content-center mb-8">
+      {% include "___btn_get_more_items.html" %}
+    </div>
+  
+  </section>
+
+  </section>
+
+
+</main>
+
+{% include "_bottom.html" %}

@@ -1,0 +1,68 @@
+
+{% include "_top.html" %}
+
+<main class="w-full h-fullvh d-flex flex-col p-items-center">
+   <!-- Logo Section -->
+   <div class="text-a-center mb-6 my-1">
+    <img src="{{ url_for('static', filename='uploads/' 'bite_francy.png') }}" alt="bite logo" class="w-40 mx-auto" md="w-40" />
+    <h1 class="text-100 text-w-thin text-c-gray:+16 mt-2" md="text-120">Log In to Your Account</h1>
+</div>
+    
+    <form id="frm_user_login" class="w-50% d-flex flex-col gap-2 mx-auto">
+
+      
+        
+        <div class="text-c-green text-200 text-a-center">
+            {{ message }}
+        </div>
+        
+        <div class="d-flex flex-col">
+            <label for="user_email" class="mb-2 text-130 text-w-thin text-c-gray:+2">
+                <span>Email Address</span>
+            </label>
+            <input 
+                name="user_email" 
+                type="text" 
+                mix-check="{{ x.REGEX_EMAIL }}"
+                class="py-3 px-4 rounded-md border-2 border-c-gray:-4 "
+                focus="border-c-blue:+6 outline-0">
+        </div>
+
+        <div class="d-flex flex-col">
+            <label for="user_password" class="d-flex flex-col mb-2 text-130 text-w-thin text-c-gray:+2">
+                <span>Password</span>
+                <span class="text-12px text-c-gray:+25">{{ x.USER_PASSWORD_MIN }} to {{ x.USER_PASSWORD_MAX }} Characters</span>
+            </label>
+            <input 
+                name="user_password" 
+                type="text" 
+                mix-check="{{ x.REGEX_USER_PASSWORD }}"
+                class="py-3 px-4 rounded-md border-2 border-c-gray:-4 "
+                focus="border-c-blue:+6 outline-0">
+        </div>
+
+        <button 
+            mix-post="/login" 
+            mix-data="#frm_user_login"
+            class="bg-c-blue:+10 text-c-white:-1 a-self-center py-3 px-6 mt-8 rounded-md text-w-thin cursor-pointer w-40" hover="ts-p-all bg-c-blue:+16" 
+            >
+            Login
+        </button>
+            <div class="d-flex flex-col a-self-center gap-2 mt-10">
+                <a href="{{url_for('view_signup')}}" 
+                class="text-c-grayblue:+16 text-a-center text-w-thin " 
+                hover="text-d-underline">
+                Don't have an account? Signup
+            </a>
+            <a href="{{url_for('forgot_password')}}" 
+                class="text-c-grayblue:+16 text-a-center text-w-thin" 
+                hover="text-d-underline ">
+                Forgot password?
+            </a>
+
+            </div>
+    </form>
+
+</main>
+
+{% include "_bottom.html" %}

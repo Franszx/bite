@@ -1,0 +1,46 @@
+{% include "_top.html" %}
+
+<main class="w-full h-100vh d-flex p-items-center">
+  <form id="frm_update_password" method="POST" action="{{ url_for('update_password', reset_key=reset_key) }}" class="w-25% d-flex flex-col gap-4 mx-auto">
+    <h2 class="p-self-center">Create new password</h2>
+
+    <!-- Email Field -->
+    <div class="d-flex flex-col">
+      <label for="user_email" class="d-flex">
+        <span>Email</span>
+      </label>
+      <input name="user_email" type="text" pattern="{{ x.REGEX_EMAIL }}" required />
+    </div>
+
+    <!-- Hidden reset_key Field -->
+    <input type="hidden" name="reset_key" value="{{ reset_key }}" />
+
+    <!-- New Password Field -->
+    <div class="d-flex flex-col">
+      <label for="new_password" class="d-flex">
+        <span>new password</span>
+        <span class="ml-auto text-c-gray:+25">{{ x.USER_PASSWORD_MIN }} to {{ x.USER_PASSWORD_MAX }} chars</span>
+      </label>
+      <input name="new_password" type="password" pattern="{{ x.REGEX_USER_PASSWORD }}" required />
+    </div>
+
+    <!-- Confirm Password Field -->
+    <div class="d-flex flex-col">
+      <label for="confirm_password" class="d-flex">
+        <span>confirm password</span>
+        <span class="ml-auto text-c-gray:+25">{{ x.USER_PASSWORD_MIN }} to {{ x.USER_PASSWORD_MAX }} chars</span>
+      </label>
+      <input name="confirm_password" type="password" pattern="{{ x.REGEX_USER_PASSWORD }}" required />
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit">Update password</button>
+
+    <a href="{{ url_for('view_choose_role') }}" class="d-flex a-items-center j-content-center h-12 w-full mt-4 px-10 rounded-4 border border-1 bg-c-gray text-c-white text-a-center">Back</a>
+
+    <!-- Login Link -->
+    <!-- <a href="{{ url_for('view_login') }}" class="text-a-center">Login</a> -->
+  </form>
+</main>
+
+{% include "_bottom.html" %}

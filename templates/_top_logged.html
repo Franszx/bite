@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='mixhtml.css') }}" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/mojocss"></script>
+    <title>{{ title or "Company" }}</title>
+  </head>
+  <body>
+    <header class="d-flex j-content-between p-items-center py-3 max-w-1500px" md="mx-20" >
+      <div class="logo">
+        <a href="/" class="text-250 text-w-bold text-c-gray:-15"> Bit<span class="text-c-white:-16">e</span> </a>
+      </div>
+      <form method="POST" action="{{url_for('logout')}}" class="d-flex j-content-end pa-3">
+        <button class="">Logout</button>
+      </form>
+    </header>
+  </body>
+</html>

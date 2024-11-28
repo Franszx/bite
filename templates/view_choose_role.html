@@ -1,0 +1,20 @@
+
+{% include "_top.html" %}
+
+<main class=" h-full d-flex flex-col j-content-center a-items-center py-40 px-6">
+  <section class="w-full max-w-lg text-a-center">
+    <h1 class="text-200 text-w-thin">Welcome </h1>
+    <h2 class="text-250 text-w-bold">{{ user['user_name'] }} </h2>
+    <p class="text-100">Select the account you want to access:</p>
+    <div class="d-flex flex-col mt-6">
+      {% for role in user.roles %}
+      <a href="{{ url_for('select_role', role=role) }}" 
+         class="px-4 py-2 bg-c-gray:-4 a-self-center text-c-white text-a-center w-80 rounded-md mt-2">
+        {{ role.capitalize() }} account
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+</main>
+
+{% include "_bottom.html" %}

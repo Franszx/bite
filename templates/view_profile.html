@@ -1,0 +1,205 @@
+{% include "_top.html" %}
+
+<main class="w-full h-full d-flex flex-col px-6">
+
+  <section class="profile-page bg-c-light py-10">   
+    <header class="d-flex j-content-between a-items-center py-3">
+      <h1 class="text-350">
+        {% if role == 'admin' %}
+        Hello {{ user['user_name'] }} 
+      {% elif role == 'customer' %}
+        Hello {{ user['user_name'] }} 
+      {% elif role == 'partner' %}
+        Hello {{ user['user_name'] }} 
+      {% elif role == 'restaurant' %}
+        Hello {{ user.get('restaurant', user['user_name']) }}
+      {% else %}
+        Profile
+      {% endif %} 
+      </h1>
+      
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="border-1 border-b-c-white:-16">
+    <nav class="tabs d-flex flex-col mb-6 j-content-evenly" md="flex-row gap-6">
+      
+      {% if role == 'admin' %}
+        <a href="{{ url_for('view_admin') }}" class="text-120 text-c-gray">Admin overview</a>
+        <a href="{{ url_for('view_edit_users') }}" class="text-120 text-c-gray">User administration</a>
+        <a href="{{ url_for('view_edit_items') }}" class="text-120  text-c-gray">Item administration</a>
+        <a href="#" class="text-120 text-c-gray">Contracts</a>
+        <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+        <a href="{{ url_for('view_profile') }}" class="text-120 text-w-bold text-c-gray">Profile</a>
+      {% elif role == 'restaurant' %}
+      <a href="#" class="text-120 text-c-gray">Menu Management</a>
+      <a href="#" class="text-120 text-c-gray">Order Management</a>
+      <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+      <a href="{{ url_for('view_profile') }}" class="text-120 text-w-bold text-c-gray">Profile</a>
+      {% elif role == 'partner' %}
+      <a href="#" class="text-120 text-c-gray">Order history</a>
+      <a href="#" class="text-120 text-c-gray">Partnership Details</a>
+      <a href="#" class="text-120 text-c-gray">Earnings</a>
+      <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+      <a href="{{ url_for('view_profile') }}" class="text-120 text-w-bold text-c-gray">Profile</a>
+      {% elif role == 'customer' %}
+      <a href="#" class="text-120 text-c-gray">Order history</a>
+      <a href="#" class="text-120 text-c-gray">Earn credits</a>
+      <a href="#" class="text-120 text-c-gray">Redeem code</a>
+      <a href="{{ url_for('view_profile_settings') }}" class="text-120  text-c-gray">Settings</a>
+      <a href="{{ url_for('view_profile') }}" class="text-120 text-w-bold text-c-gray">Profile</a>
+      {% endif %}
+    </nav>
+</div>
+
+ 
+
+    <!-- User Info Section -->
+    <section class="bg-white shadow-md rounded-lg pa-6 mb-6 mt-12">
+      <div class="d-flex flex-col j-content-center  mb-4" md="flex-row j-content-start">
+        <!-- User Avatar -->
+        <div class="d-flex flex-col" md="flex-col a-self-center">
+          <div class="a-self-center">
+            <img id="profile-preview" src="{{ url_for('static', filename='avatars/' + user['user_avatar']) }}" 
+              alt="User Avatar" 
+              class="w-20 h-20 rounded-full a-self-start shadow-md" md=""/>
+          </div>
+          <div class="d-flex flex-col a-self-center">
+            <!-- Form to upload profile picture -->
+            <form class="d-flex flex-col a-items-center a-self-center" action="{{ url_for('change_profile_picture') }}" method="POST" enctype="multipart/form-data">
+              <!-- Change profile picture -->
+              <label for="profile_picture" class="text-c-blue cursor-pointer">Edit Image</label>
+              
+              <!-- Upload button -->
+              <button type="submit" class="mt-2 w-40 bg-c-blue text-c-white py-2 px-4 rounded-md">Upload</button>
+              <input type="file" name="profile_picture" id="profile_picture" class="hidden" accept="image/*" required onchange="previewImage(event)" />
+            </form>
+          </div>
+           
+          </div>
+        <div class="d-flex flex-col a-self-center">
+          <p class="text-c-gray:+16 ma-0">Username</p>
+          <h2 class="text-200">{{ user['user_name'] }} {{ user['user_last_name'] }}</h2>
+          <div class="d-flex flex-col gap-4" md="flex-col gap-1">
+            <div class="d-flex flex-col">
+              <p class="text-c-gray:+16 ma-0">Email:</p>
+              <p class="ma-0">{{ user['user_email'] }}</p>
+            </div>
+            <div class="d-flex flex-col">
+              <p class="text-c-gray:+16 ma-0">Phone number:</p>
+              <p class="ma-0">123456789</p>
+            </div>
+            <div>
+               
+                <!-- Conditionally show Restaurant section -->
+                {% if role == 'restaurant' and restaurant_name %}
+                <div>
+                    <p>Restaurant: {{ restaurant_name }}</p>
+                </div>
+            {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      
+</section>
+
+    {% if role == 'customer' %}
+    <!-- Wolt Tokens and Credits -->
+<section class="grid cols-2 gap-4 mb-6">
+      <div class="bg-white shadow-md rounded-lg pa-4">
+        <h3 class="text-lg mb-2">Bite tokens</h3>
+        <p class="text-sm text-gray-600">Each token gives you a standard delivery with no delivery fee.</p>
+        <span class="block mt-2 text-xl">0 x 🪙</span>
+      </div>
+      <div class="bg-white shadow-md rounded-lg pa-4">
+        <h3 class="text-lg mb-2">Bite credits</h3>
+        <p class="text-sm text-c-gray:+16">You can use credits to pay for your orders.</p>
+        <span class="block mt-2 text-xl">DKK 0.00</span>
+      </div>
+    </section>
+    <!-- Recent Orders -->
+    <section class="bg-white shadow-md rounded-lg pa-4 mb-6">
+      <h3 class="text-lg mb-2">Recent Orders</h3>
+      <ul class="text-sm text-gray-600">
+        <li>Pizza Margherita - <span class="text-c-green fw-bold">DKK 85.00</span></li>
+        <li>Cheeseburger - <span class="text-c-green fw-bold">DKK 95.00</span></li>
+        <li>Sushi Platter - <span class="text-c-green fw-bold">DKK 200.00</span></li>
+      </ul>
+    </section>
+
+    <section class="bg-white shadow-md rounded-lg pa-4 mb-6">
+      <h3 class="text-lg mb-2">Loyalty Rewards</h3>
+      <p class="text-sm text-gray-600">Points Earned: <span class="text-c-blue fw-bold">120</span></p>
+      <p class="text-sm text-gray-600">Next Reward: <span class="text-c-green fw-bold">DKK 50 Off</span></p>
+    </section>
+    {% endif %}
+</section>
+  {% if role == 'partner' %}
+<!-- Partner Insights -->
+<section class="grid cols-2 gap-4 mb-6">
+  <div class="bg-white shadow-md rounded-lg pa-4">
+    <h3 class="text-lg mb-2">Total Earnings</h3>
+    <p class="text-sm text-gray-600">Your total revenue earned from orders.</p>
+    <span class="block mt-2 text-xl">DKK 12,450.00</span>
+  </div>
+  <div class="bg-white shadow-md rounded-lg pa-4">
+    <h3 class="text-lg mb-2">Current Active Partnerships</h3>
+    <p class="text-sm text-c-gray:+16">The number of restaurants currently partnered with you.</p>
+    <span class="block mt-2 text-xl">5</span>
+  </div>
+</section>
+
+<!-- Recent Collaborations -->
+<section class="bg-white shadow-md rounded-lg pa-4 mb-6">
+  <h3 class="text-lg mb-2">Recent Collaborations</h3>
+  <ul class="text-sm text-gray-600">
+    <li>Restaurant A - <span class="text-c-green fw-bold">DKK 12,300</span></li>
+    <li>Restaurant B - <span class="text-c-green fw-bold">DKK 8,700</span></li>
+    <li>Restaurant C - <span class="text-c-green fw-bold">DKK 5,600</span></li>
+  </ul>
+</section>
+
+<!-- Performance Summary -->
+<section class="bg-white shadow-md rounded-lg pa-4 mb-6">
+  <h3 class="text-lg mb-2">Performance Summary</h3>
+  <p class="text-sm text-gray-600">Orders completed this month: <span class="text-c-blue fw-bold">120</span></p>
+  <p class="text-sm text-gray-600">Average delivery time: <span class="text-c-green fw-bold">22 mins</span></p>
+</section>
+{% endif %}
+{% if role == 'restaurant' %}
+<!-- Restaurant Insights -->
+<section class="grid cols-2 gap-4 mb-6">
+  <div class="bg-white shadow-md rounded-lg pa-4">
+    <h3 class="text-lg mb-2">Total Revenue</h3>
+    <p class="text-sm text-gray-600">Your total revenue generated from orders.</p>
+    <span class="block mt-2 text-xl">DKK 35,700.00</span>
+  </div>
+  <div class="bg-white shadow-md rounded-lg pa-4">
+    <h3 class="text-lg mb-2">Active Menu Items</h3>
+    <p class="text-sm text-c-gray:+16">Number of items currently on your menu.</p>
+    <span class="block mt-2 text-xl">12</span>
+  </div>
+</section>
+
+<!-- Order Summary -->
+<section class="bg-white shadow-md rounded-lg pa-4 mb-6">
+  <h3 class="text-lg mb-2">Order Summary</h3>
+  <p class="text-sm text-gray-600">Total Orders This Month: <span class="text-c-blue fw-bold">150</span></p>
+  <p class="text-sm text-gray-600">Average Order Value: <span class="text-c-green fw-bold">DKK 238.00</span></p>
+</section>
+
+<!-- Popular Menu Items -->
+<section class="bg-white shadow-md rounded-lg pa-4 mb-6">
+  <h3 class="text-lg mb-2">Popular Menu Items</h3>
+  <ul class="text-sm text-gray-600">
+    <li>Margherita Pizza - <span class="text-c-green fw-bold">30 orders</span></li>
+    <li>Cheeseburger - <span class="text-c-green fw-bold">25 orders</span></li>
+    <li>Caesar Salad - <span class="text-c-green fw-bold">18 orders</span></li>
+  </ul>
+</section>
+{% endif %}
+</main>
+
+{% include "_bottom.html" %}

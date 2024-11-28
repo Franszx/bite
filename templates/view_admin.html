@@ -1,0 +1,92 @@
+{% include "_top.html" %}
+
+<main class="w-full d-flex flex-col px-6 pb-2">
+  <section class="profile-page bg-c-light py-10">   
+  <header class="d-flex j-content-between a-items-center py-3">
+    <h1 class="text-250" md="text-350">
+      {% if role == 'admin' %}
+        Hello {{ user['user_name'] }}
+          {% elif role == 'customer' %}
+        Hello {{ user['user_name'] }}
+          {% elif role == 'partner' %}
+        Hello {{ user['user_name'] }}
+          {% elif role == 'restaurant' %}
+        Hello {{ user.get('restaurant', user['user_name']) }}
+          {% else %}
+        Profile
+      {% endif %}</h1>    
+  </header>
+   <!-- Navigation Tabs -->
+   <div class="border-1 border-b-c-white:-16">
+    <nav class="tabs d-flex flex-col mb-6 j-content-evenly" md="flex-row gap-6">
+      {% if role == 'admin' %}
+        <a href="{{ url_for('view_admin') }}" class="text-120 text-w-bold text-c-gray">Admin overview</a>
+        <a href="{{ url_for('view_edit_users') }}" class="text-120 text-c-gray">User administration</a>
+        <a href="{{ url_for('view_edit_items') }}" class="text-120  text-c-gray">Item administration</a>
+        <a href="#" class="text-120 text-c-gray">Contracts</a>
+        <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+        <a href="{{ url_for('view_profile') }}" class="text-120 text-c-gray">Profile</a>
+      {% elif role == 'restaurant' %}
+        <a href="#" class="text-120 text-c-gray">Menu Management</a>
+        <a href="#" class="text-120 text-c-gray">Order Management</a>
+        <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+      {% elif role == 'partner' %}
+        <a href="#" class="text-120 text-c-gray">Partnership Details</a>
+        <a href="#" class="text-120 text-c-gray">Earnings</a>
+        <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+      {% elif role == 'customer' %}
+        <a href="#" class="text-120 text-c-gray">Order history</a>
+        <a href="#" class="text-120 text-c-gray">Earn credits</a>
+        <a href="#" class="text-120 text-c-gray">Redeem code</a>
+        <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+      {% endif %}
+    </nav>
+    </div>
+  <section class="rounded-4 my-6">
+    <h2 class=" mb-2" md="text-300">Users</h2>
+    <div class="d-flex flex-row j-content-between">
+      <div>
+        <ul class="d-flex flex-col gap-3">
+          <li class="text-c-gray:-12">Total Users: <strong>{{ total_users }}</strong></li>
+          <li class="text-c-gray:-12">Total Restaurants: <strong>{{ total_restaurants }}</strong></li>
+          <li class="text-c-gray:-12">Total Partners: <strong>{{ total_partners }}</strong></li>
+          <li class="text-c-gray:-12">Total Customers: <strong>{{ total_customers }}</strong></li>
+        </ul>
+      </div>
+      <div>
+        <a href="{{ url_for('view_edit_users') }}" class="bg-c-charocoal:-4 text-c-white px-3 py-2 rounded-sm">Edit Users</a>
+      </div>
+    </div>
+  </section>
+  <section class=" rounded-4 mb-6">
+    <h2 class="mb-2" md="text-300 ">Items</h2>
+    <div class="d-flex flex-row j-content-between">
+      <div>
+        <ul class="d-flex flex-col gap-3">
+          <li class="text-c-gray:-12">Total Items: <strong>{{ total_items }}</strong></li>
+        </ul>
+      </div>
+      <div>
+        <a href="{{ url_for('view_edit_items') }}" class="bg-c-charocoal:-4 text-c-white px-3 py-2 rounded-sm">Edit Items</a>
+      </div>
+      
+    </div>
+  </section>
+
+
+
+  <section class="bg-c-white pa-6 rounded-4 d-flex flex-col gap-5">
+  
+
+
+
+
+    <!-- <div class="d-flex flex-col w-32 gap-2">
+      <a href="{{ url_for('view_edit_users') }}" class="bg-c-charocoal:-4 text-c-white px-3 py-2 rounded-sm">Edit Users</a>
+     
+    </div> -->
+    
+  </section>
+</main>
+
+{% include "_bottom.html" %}

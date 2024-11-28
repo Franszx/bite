@@ -1,0 +1,21 @@
+
+
+<form class="d-block" md="d-none" id="block-form-{{ user['user_pk'] }}">
+    <button 
+        class="border-1 border-c-charocoal text-c-body px-3 py-1 rounded-sm mr-2 h-10 cursor-pointer"
+        id="block-{{ user['user_pk'] }}"
+        mix-put="/users/block/{{ user['user_pk'] }}"
+        mix-data="#block-form-{{ user['user_pk'] }}">
+        ⛔
+    </button>
+</form>
+<form class="d-none" md="d-block" id="block-form-{{ user['user_pk'] }}">
+    <button 
+        class="bg-c-red:+10 border-1 border-c-charocoal text-c-body px-3 py-1 rounded-sm mr-2 h-10 cursor-pointer"
+        id="block-{{ user['user_pk'] }}"
+        mix-put="/users/block/{{ user['user_pk'] }}"
+        mix-data="#block-form-{{ user['user_pk'] }}">
+        Block
+    </button>
+</form>
+

@@ -1,0 +1,24 @@
+{% include "_top.html" %}
+
+<main class="px-6 py-10">
+  <h1>Search Results for "{{ query }}"</h1>
+
+  {% if results %}
+    <ul class="list-unstyled">
+      {% for result in results %}
+        <li class="border-b py-4">
+          <h2>{{ result.item_title }}</h2>
+          <p>Price: {{ result.item_price }}</p>
+          <p>Restaurant: {{ result.restaurant_name }}</p>
+          <p>Address: {{ result.restaurant_address }}</p>
+          <img src="{{ url_for('static', filename='uploads/' ~ result.item_image) }}" alt="{{ result.item_title }}" class="w-32 h-32 rounded">
+          <a href="/restaurant/{{ result.restaurant_pk }}" class="btn">View Restaurant</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No results found for "{{ query }}".</p>
+  {% endif %}
+</main>
+
+{% include "_bottom.html" %}
