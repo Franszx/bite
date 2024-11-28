@@ -201,6 +201,10 @@ def serve_image(filename):
     """Serves individual images."""
     return send_from_directory(UPLOAD_FOLDER, filename)
 
+# @app.get('/images/<path:filename>')
+# def serve_images(filename):
+#     return send_from_directory('images', filename)
+
 ##############################
 @app.get("/test-set-redis")
 def view_test_set_redis():
@@ -222,9 +226,7 @@ def view_test_get_redis():
 
 ##############################
 
-@app.get('/images/<path:filename>')
-def serve_images(filename):
-    return send_from_directory('images', filename)
+
 
 ##############################
 @app.get("/")
@@ -1368,8 +1370,8 @@ def signup():
         reset_key = str(uuid.uuid4())
         token_expiry = datetime.now() + timedelta(hours=2)
 
-        # Step 4: Insert user into the database
         db, cursor = x.db()
+        # Step 4: Insert user into the database
         q = 'INSERT INTO users VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
         cursor.execute(q, (user_pk, user_name, user_last_name, user_email, 
                            hashed_password, user_avatar, user_created_at, user_deleted_at, user_blocked_at, 
@@ -1721,10 +1723,12 @@ def forgot_password():
         db, cursor = x.db()
         
         # Step 2: Check if user exists
-        cursor.execute("SELECT user_pk FROM users WHERE user_email = %s", (user_email,))
+        cursor.execute("SELECT user_pk, user_name FROM users WHERE user_email = %s", (user_email,))
         user = cursor.fetchone()
         if not user:
             return render_template("forgot_password.html", error="Email not found.")
+        
+        user_name = user["user_name"]
 
         # Step 3: Generate reset key and expiry
         reset_key = str(uuid.uuid4())
@@ -1737,11 +1741,18 @@ def forgot_password():
 
         # Step 5: Generate reset link and send email
         reset_link = url_for('show_reset_password', reset_key=reset_key, _external=True)
-        x.send_reset_email(user_email, reset_link)  # Function in `x` to send email with `reset_link`
+        x.send_reset_email(user_email,user_name, reset_link)  # Function in `x` to send email with `reset_link`
 
-        return redirect(url_for("view_login", message="Email sent successfully, please login"))
-    
+        # Redirect to login with a success message
+        toast = render_template(
+            "___toast_success.html", message="Reset link sent! Please check your email."
+        )
+        return f"""
+        <template mix-redirect="/login" mix-target="#toast" mix-bottom>{toast}</template>
+        """, 200
+
     except Exception as ex:
+        ic(f"Error in forgot_password: {ex}") 
         if "db" in locals():
             db.rollback()
         return "<h1>System under maintenance</h1>", 500
@@ -1830,9 +1841,6 @@ def user_self_delete(user_pk):
         if logged_in_user_pk != user_pk:
             return "Unauthorized action", 403
 
-        # Log the user_pk for debugging
-        ic(f"User attempting to delete profile: {logged_in_user_pk}, Target user_pk: {user_pk}")
-
         confirm_password = request.form.get("confirm_password")
         if not confirm_password:
             return "Password is required to delete your profile.", 400
@@ -1841,9 +1849,6 @@ def user_self_delete(user_pk):
         db, cursor = x.db()
         cursor.execute("SELECT user_password, user_deleted_at FROM users WHERE user_pk = %s", (user_pk,))
         user = cursor.fetchone()
-
-        # Debug: Check if the user is found
-        ic(f"Fetched user from DB: {user}")
 
         if not user:
             return "Account not found or already deleted.", 404
@@ -1871,8 +1876,7 @@ def user_self_delete(user_pk):
         # Send confirmation email if necessary
         x.send_deletion_confirmation_email(logged_in_user['user_email'], logged_in_user['user_name'])
 
-        # Return the confirmation page after profile deletion
-        return  redirect(url_for("view_profile_deleted", message="Profile is successfully deleted"))
+        return """<template mix-redirect="/profile-deleted"></template>"""
 
     except Exception as ex:
         if "db" in locals():

@@ -177,7 +177,7 @@ def send_verify_email(to_email, user_verification_key):
         
         # Create the email message
         message = MIMEMultipart()
-        message["From"] = "My company name"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Please verify your account"
 
@@ -202,7 +202,7 @@ def send_verify_email(to_email, user_verification_key):
 ##############################
 
 
-def send_reset_email(user_email, reset_link):
+def send_reset_email(user_email, user_name, reset_link):
     try:
         sender_email = "anderslindberg999@gmail.com"
         password = "sxkqvqqwwztienky"
@@ -210,14 +210,18 @@ def send_reset_email(user_email, reset_link):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "My company name"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Password reset request"
 
         
 
         body = f"""
-        Hello, 
+        Hello {user_name},
+        
+        <div class="">
+        
+        </div>
 
         We received a request to reset your password. Click the link to reset it:
         <a href="{reset_link}">click here</a>
@@ -235,7 +239,7 @@ def send_reset_email(user_email, reset_link):
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, message.as_string())
 
-        ic("Email sent successfully!")
+        # ic("Email sent successfully!")
 
         return "email sent"
 
@@ -255,7 +259,7 @@ def send_user_info_email(user_email, user_info_link):
         receiver_email = user_email
 
         message = MIMEMultipart()
-        message["From"] = "My Company Name"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Your Account Information"
         
@@ -284,7 +288,7 @@ def send_password_update_confirmation(user_email, user_name):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "My company name"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Your Password Has Been Updated"
 
@@ -319,7 +323,7 @@ def send_block_notification(user_email):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "My Company Name"
+        message["From"] = "bite support"
         message["To"] = receiver_email
         message["Subject"] = "Your Account Has Been Blocked"
 
@@ -357,7 +361,7 @@ def send_unblock_notification(user_email):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "My Company Name"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Your Account Has Been Unblocked"
 
@@ -395,7 +399,7 @@ def send_item_block_notification(partner_email, item_title):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "My Company Name"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Item Blocked Notification"
 
@@ -434,7 +438,7 @@ def send_item_unblock_notification(partner_email, item_title):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "Bite Support"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Item Unblocked Notification"
 
@@ -479,7 +483,7 @@ def send_deleted_email_notification(to_email, user_name):
         receiver_email = to_email
 
         message = MIMEMultipart()
-        message["From"] = "Bite Support"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Profile deleted Notification"
 
@@ -513,7 +517,7 @@ def send_undeleted_email_notification(to_email, user_name):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "Bite Support"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Profile available notification"
 
@@ -547,7 +551,7 @@ def send_deletion_confirmation_email(to_email, user_name):
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "Bite Support"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Item Unblocked Notification"
 
@@ -581,7 +585,7 @@ def send_item_purchase_confirmation_email(user_email, user_name, item_title, ite
         receiver_email = "anderslindberg999@gmail.com"
 
         message = MIMEMultipart()
-        message["From"] = "Bite Support"
+        message["From"] = "bite food inc."
         message["To"] = receiver_email
         message["Subject"] = "Order Confirmation - Bite"
 

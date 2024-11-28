@@ -83,15 +83,19 @@
 
     <!-- Items Section -->
     {% if items %}
-<h3>Items</h3>
-<div id="item-list" class="flex flex-col gap-4"> <!-- Use flex for a vertical list -->
+    <h3 class="text-200" md="text-350" >Items</h3>
+    <div id="item-list" class="grid gap-4 p-items-center " md="cols-2"> <!-- Use flex for a vertical list -->
   {% for item in items %}
-  <div class="card w-full rounded-4 border-2 shadow-md d-flex pa-2 j-content-between items-center justify-between gap-4"> <!-- Flex container for card -->
-    <div class="flex flex-col"> <!-- Text info on the left -->
-      <h4 class="text-lg font-bold">{{ item.item_title }}</h4>
-      <p class="text-sm text-gray-600">Price: {{ item.item_price }}</p>
-      <p class="text-sm text-gray-600">Category: {{ item.item_food_category }}</p>
-      <p class="text-sm text-gray-600">Sold by: {{ item.restaurant_name }}</p>
+  <div class="card w-full rounded-4 border-2 shadow-md d-flex pa-2 j-content-between gap-4" > <!-- Flex container for card -->
+    <div class="flex flex-col"> 
+      <!-- Text info on the left -->
+      <h4 class="text-lg text-w-bold">{{ item.item_title }}</h4>
+      <div>
+        <p class="text-sm text-gray-600">Price: {{ item.item_price }}</p>
+        <p class="text-sm text-gray-600">Category: {{ item.item_food_category }}</p>
+        <p class="text-sm text-gray-600">Restaurant: {{ item.restaurant_name }}</p>
+      </div>
+
 
 
       <form id="buy-form-{{ item['item_pk'] }}">
