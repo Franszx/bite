@@ -1,0 +1,45 @@
+<form action="/restaurants/add" method="post" class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+    <h2 class="text-xl font-bold mb-4 text-gray-800">Create a Restaurant</h2>
+  
+    <!-- Restaurant Name -->
+    <div class="mb-4">
+      <label for="restaurant_name" class="block text-gray-700 text-sm font-bold mb-2">Restaurant Name</label>
+      <input type="text" name="restaurant_name" id="restaurant_name" required
+             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+  
+    <!-- Street Name -->
+    <div class="mb-4">
+      <label for="street_name" class="block text-gray-700 text-sm font-bold mb-2">Street Name</label>
+      <input type="text" name="street_name" id="street_name" required
+             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+  
+    <!-- Street Number -->
+    <div class="mb-4">
+      <label for="street_number" class="block text-gray-700 text-sm font-bold mb-2">Street Number</label>
+      <input type="text" name="street_number" id="street_number" required
+             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+  
+    <!-- City -->
+    <div class="mb-4">
+      <label for="city" class="block text-gray-700 text-sm font-bold mb-2">City</label>
+      <input type="text" name="city" id="city" required
+             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+  
+    <!-- Postnummer -->
+    <div class="mb-4">
+      <label for="postnummer" class="block text-gray-700 text-sm font-bold mb-2">Postnummer</label>
+      <input type="text" name="postnummer" id="postnummer" required
+             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    </div>
+  
+    <!-- Submit Button -->
+    <div class="flex items-center justify-between">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        Create Restaurant
+      </button>
+    </div>
+  </form>

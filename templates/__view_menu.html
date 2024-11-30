@@ -1,0 +1,26 @@
+{% include "_top.html" %}
+<main class="w-full px-4" md="px-16">
+  <header class="d-flex j-content-between a-items-center py-4">
+    <h1 class="text-250" md="text-350">{{ restaurant.name }}</h1>
+    <p class="text-sm text-c-gray">Location: {{ restaurant.location }}</p>
+  </header>
+
+  <section class="bg-c-white rounded-4 pa-4">
+    <h2 class="text-lg text-w-bold mb-4">Menu</h2>
+    {% if menu_items %}
+      <div class="grid gap-6" sm="cols-2" lg="cols-3">
+        {% for item in menu_items %}
+          <div class="card w-full rounded-4 border-2 shadow-sm pa-4">
+            <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" alt="{{ item.item_title }}" class="w-full h-32 rounded-4 obj-f-cover mb-4">
+            <h3 class="text-md text-w-bold">{{ item.item_title }}</h3>
+            <p class="text-sm text-c-gray:-6">Price: {{ item.item_price }}</p>
+            <p class="text-sm text-c-gray:-6">{{ item.item_description }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-c-gray:-6">No menu items available for this restaurant.</p>
+    {% endif %}
+  </section>
+</main>
+{% include "_bottom.html" %}

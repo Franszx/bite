@@ -5,16 +5,19 @@
   <header class="d-flex j-content-between a-items-center py-3">
     <h1 class="text-250" md="text-350">
       {% if role == 'admin' %}
-        Hello {{ user['user_name'] }}
-          {% elif role == 'customer' %}
-        Hello {{ user['user_name'] }}
-          {% elif role == 'partner' %}
-        Hello {{ user['user_name'] }}
-          {% elif role == 'restaurant' %}
-        Hello {{ user.get('restaurant', user['user_name']) }}
-          {% else %}
-        Profile
-      {% endif %}</h1>    
+      Hello {{ user.get('user_name', 'Admin') }}
+    {% elif role == 'customer' %}
+      Hello {{ user.get('user_name', 'Customer') }}
+    {% elif role == 'partner' %}
+      Hello {{ user.get('user_name', 'Partner') }}
+    {% elif role == 'restaurant' %}
+      Hello {{ user.get('restaurant', 'Your Restaurant') or user.get('user_name', 'Restaurant User') }}
+    {% elif role %}
+      Hello Guest (Unexpected Role: {{ role }})
+    {% else %}
+      Hello Guest
+    {% endif %}
+    </h1>    
   </header>
    <!-- Navigation Tabs -->
    <div class="border-1 border-b-c-white:-16">
@@ -42,51 +45,38 @@
       {% endif %}
     </nav>
     </div>
-  <section class="rounded-4 my-6">
-    <h2 class=" mb-2" md="text-300">Users</h2>
-    <div class="d-flex flex-row j-content-between">
-      <div>
-        <ul class="d-flex flex-col gap-3">
-          <li class="text-c-gray:-12">Total Users: <strong>{{ total_users }}</strong></li>
-          <li class="text-c-gray:-12">Total Restaurants: <strong>{{ total_restaurants }}</strong></li>
-          <li class="text-c-gray:-12">Total Partners: <strong>{{ total_partners }}</strong></li>
-          <li class="text-c-gray:-12">Total Customers: <strong>{{ total_customers }}</strong></li>
-        </ul>
-      </div>
-      <div>
-        <a href="{{ url_for('view_edit_users') }}" class="bg-c-charocoal:-4 text-c-white px-3 py-2 rounded-sm">Edit Users</a>
-      </div>
+  </section>
+<!-- Admin Overview Section -->
+<section class="admin-overview bg-c-white rounded-4 p-4">
+  <h2 class="text-200 text-c-gray mb-4">Admin Overview</h2>
+  <div class="grid gap-6" sm="cols-2" lg="cols-4">
+    <!-- Total Users -->
+    <div class="stat-card bg-c-light p-4 rounded-4">
+      <h3 class="text-150 text-c-charocoal">Total Users</h3>
+      <p class="text-200">{{ total_users }}</p>
     </div>
-  </section>
-  <section class=" rounded-4 mb-6">
-    <h2 class="mb-2" md="text-300 ">Items</h2>
-    <div class="d-flex flex-row j-content-between">
-      <div>
-        <ul class="d-flex flex-col gap-3">
-          <li class="text-c-gray:-12">Total Items: <strong>{{ total_items }}</strong></li>
-        </ul>
-      </div>
-      <div>
-        <a href="{{ url_for('view_edit_items') }}" class="bg-c-charocoal:-4 text-c-white px-3 py-2 rounded-sm">Edit Items</a>
-      </div>
-      
+    <!-- Total Restaurants -->
+    <div class="stat-card bg-c-light p-4 rounded-4">
+      <h3 class="text-150 text-c-charocoal">Total Restaurants</h3>
+      <p class="text-200">{{ total_restaurants }}</p>
     </div>
-  </section>
-
-
-
-  <section class="bg-c-white pa-6 rounded-4 d-flex flex-col gap-5">
-  
-
-
-
-
-    <!-- <div class="d-flex flex-col w-32 gap-2">
-      <a href="{{ url_for('view_edit_users') }}" class="bg-c-charocoal:-4 text-c-white px-3 py-2 rounded-sm">Edit Users</a>
-     
-    </div> -->
-    
-  </section>
+    <!-- Total Partners -->
+    <div class="stat-card bg-c-light p-4 rounded-4">
+      <h3 class="text-150 text-c-charocoal">Total Partners</h3>
+      <p class="text-200">{{ total_partners }}</p>
+    </div>
+    <!-- Total Customers -->
+    <div class="stat-card bg-c-light p-4 rounded-4">
+      <h3 class="text-150 text-c-charocoal">Total Customers</h3>
+      <p class="text-200">{{ total_customers }}</p>
+    </div>
+    <!-- Total Items -->
+    <div class="stat-card bg-c-light p-4 rounded-4">
+      <h3 class="text-150 text-c-charocoal">Total Items</h3>
+      <p class="text-200">{{ total_items }}</p>
+    </div>
+  </div>
+</section>
 </main>
 
 {% include "_bottom.html" %}

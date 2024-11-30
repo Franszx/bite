@@ -1,12 +1,12 @@
-<div class="bg-c-white:-16 rounded-10 shadow-md w-60 j-self-center mb-8" md="w-full">
-    <!-- Image -->
+<div class="bg-c-white:-16 rounded-10 shadow-md w-60 j-self-center mb-8 pa-2" md="w-full">
+
     <img 
       src="{{ url_for('static', filename='uploads/' 'bite_francy.png') }}" 
       alt="Restaurant Image" 
-      class="w-full h-30 rounded-t-10 obj-f-cover" 
+      class="w-full h-30 rounded-t-10 obj-f-contain" 
       md="h-40">
     
-    <!-- Content -->
+
     <div class="pa-2" md="pa-4">
       <h3 class="text-lg text-c-black:+16 mb-1">{{ restaurant["restaurant_name"] }}</h3>
       <p class="text-12px text-c-black:+16 ma-0 pb-1" md="text-sm">
@@ -22,7 +22,7 @@
         {% endif %}
       </div>
 
-      <!-- Actions -->
+
       <div class="d-flex j-content-between ml-2" md="ml-0">
         <a href="/restaurant/{{ restaurant['restaurant_pk'] }}" class="btn">
           View Menu

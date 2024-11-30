@@ -13,8 +13,7 @@
         Hello {{ user['user_name'] }} 
       {% elif role == 'restaurant' %}
         Hello {{ user.get('restaurant', user['user_name']) }}
-      {% else %}
-        Profile
+        
       {% endif %} 
       </h1>
       
@@ -104,6 +103,7 @@
     
       
 </section>
+
 
     {% if role == 'customer' %}
     <!-- Wolt Tokens and Credits -->

@@ -157,14 +157,14 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
  
-    // Initialize the map
-    var map = L.map('map').setView([55.6761, 12.5683], 13);
+    // // Initialize the map
+    // var map = L.map('map').setView([55.6761, 12.5683], 13);
 
-    // Add OpenStreetMap tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 20,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    // // Add OpenStreetMap tile layer
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //     maxZoom: 20,
+    //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // }).addTo(map);
 
     // function test(){
     //     var markerLocations = [
@@ -182,112 +182,41 @@
     // }
 
     // setTimeout(test, 3000)
-   // Function to add markers
-// Function to parse restaurant data
-// Clear existing markers
 
-// Clear existing markers
+// Initialize the map
+var map = L.map('map').setView([55.6761, 12.5683], 13);
 
-// Clear existing markers from the map
-function clearMarkers() {
-    map.eachLayer(layer => {
-        if (layer instanceof L.Marker) {
-            map.removeLayer(layer);
-        }
-    });
+
+
+// Add OpenStreetMap tile layer
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+try {
+    // Parse restaurants data passed from Flask
+    const restaurants = JSON.parse('{{ restaurants | tojson | safe }}');
+    console.log("Restaurants data:", restaurants);
+
+    // Function to add markers to the map
+    function addMarkers() {
+        restaurants.forEach(function (restaurant) {
+            if (restaurant.restaurant_latitude && restaurant.restaurant_longitude) {
+                // Add marker at the restaurant's latitude and longitude
+                var marker = L.marker([parseFloat(restaurant.restaurant_latitude), parseFloat(restaurant.restaurant_longitude)]).addTo(map);
+                // Add a popup with the restaurant name
+                marker.bindPopup(`<b>${restaurant.restaurant_name}</b>`);
+            }
+        });
+    }
+
+    // Add markers on page load
+    document.addEventListener("DOMContentLoaded", addMarkers);
+} catch (error) {
+    console.error("Error parsing restaurants data:", error);
 }
 
-// Fetch and display restaurants
-function fetchRestaurants(query) {
-    fetch(`/restaurants?query=${encodeURIComponent(query)}`, {
-        headers: { 'Accept': 'application/json' }
-    })
-        .then(response => response.json())
-        .then(data => {
-            // Clear existing markers and restaurant list
-            clearMarkers();
-            const listContainer = document.querySelector('#restaurant-list');
-            listContainer.innerHTML = '';
-
-            // Iterate over fetched restaurant data
-            data.forEach(restaurant => {
-                // Add marker to the map
-                const marker = L.marker([restaurant.restaurant_latitude, restaurant.restaurant_longitude]).addTo(map);
-                marker.bindPopup(`
-                    <strong>${restaurant.restaurant_name}</strong><br>
-                    ${restaurant.restaurant_address}
-                `);
-
-                // Add restaurant card to the list view
-                const listItem = document.createElement('div');
-                listItem.className = 'card';
-                listItem.innerHTML = `
-                    <h3>${restaurant.restaurant_name}</h3>
-                    <p>${restaurant.restaurant_address}</p>
-                    <a href="/restaurants/${restaurant.restaurant_pk}/items" class="btn">View Menu</a>
-                `;
-                listContainer.appendChild(listItem);
-            });
-        })
-        .catch(err => console.error("Error fetching restaurants:", err));
-}
-
-// Fetch and display items
-function fetchItems(query) {
-    fetch(`/items?query=${encodeURIComponent(query)}`, {
-        headers: { 'Accept': 'application/json' }
-    })
-        .then(response => response.json())
-        .then(data => {
-            // Clear and update the item list
-            const listContainer = document.querySelector('#item-list');
-            listContainer.innerHTML = '';
-
-            // Iterate over fetched item data
-            data.forEach(item => {
-                const listItem = document.createElement('div');
-                listItem.className = 'card';
-                listItem.innerHTML = `
-                    <img src="/static/uploads/${item.item_image}" alt="${item.item_title}" class="w-full h-40">
-                    <div>
-                        <h3>${item.item_title}</h3>
-                        <p>Price: ${item.item_price}</p>
-                        <p>Category: ${item.item_food_category}</p>
-                        <p>Sold by: ${item.restaurant_name}</p>
-                        <a href="#" class="btn">Order Now</a>
-                    </div>
-                `;
-                listContainer.appendChild(listItem);
-            });
-        })
-        .catch(err => console.error("Error fetching items:", err));
-}
-
-// Search form submission handler
-document.querySelector('#search-form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent page reload
-
-    const query = document.querySelector('#search-input').value.trim();
-    if (!query) return;
-
-    // Fetch both restaurants and items based on the query
-    fetchRestaurants(query);
-    fetchItems(query);
-
-    // Show list view and hide map view
-    document.querySelector('#list-view').classList.remove('hidden');
-    document.querySelector('#map-view').classList.add('hidden');
-});
-
-// Toggle between map and list views
-document.querySelector('#toggle-map').addEventListener('click', () => {
-    document.querySelector('#map-view').classList.remove('hidden');
-    document.querySelector('#list-view').classList.add('hidden');
-});
-document.querySelector('#toggle-list').addEventListener('click', () => {
-    document.querySelector('#map-view').classList.add('hidden');
-    document.querySelector('#list-view').classList.remove('hidden');
-});
 </script>
 
 </body>

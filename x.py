@@ -12,11 +12,13 @@ from email.mime.text import MIMEText
 from icecream import ic
 ic.configureOutput(prefix=f'***** | ', includeContext=True)
 
+
 UNSPLASH_ACCESS_KEY = '30f5d8eb-41ad-4dc1-8e95-36ab5e5e1009'
 ADMIN_ROLE_PK = "16fd2706-8baf-433b-82eb-8c7fada847da"
 CUSTOMER_ROLE_PK = "c56a4180-65aa-42ec-a945-5fd21dec0538"
 PARTNER_ROLE_PK = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 RESTAURANT_ROLE_PK = "9f8c8d22-5a67-4b6c-89d7-58f8b8cb4e15"
+SECRET_KEY = os.getenv('SECRET_KEY', '61dacde0-e6c2-4e31-b436-6f3e2ca4829109384') # This approach allows you to use a secure key in production while keeping a fallback for local development.
 
 
 # form to get data from input fields
@@ -593,7 +595,7 @@ def send_item_purchase_confirmation_email(user_email, user_name, item_title, ite
         body = f"""
         Hi {user_name},
 
-        Thank you for your purchase! Below are the details of your order:<br><br>
+        Thank you for your order! Below are the details of your order:<br><br>
         <strong>Item:</strong> {item_title}<br>
         <strong>Price:</strong> DKK {item_price}<br>
         <strong>Restaurant:</strong> {restaurant_name}<br><br>
@@ -601,7 +603,7 @@ def send_item_purchase_confirmation_email(user_email, user_name, item_title, ite
         If you have any questions or issues, feel free to contact our support team.<br><br>
 
         Best regards,<br>
-        Bite Team
+        bite Team
         """
         message.attach(MIMEText(body, "html"))
 

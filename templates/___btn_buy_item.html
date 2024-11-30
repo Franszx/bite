@@ -1,9 +1,14 @@
-<form id="buy-form-{{ item['item_pk'] }}">
+<!-- <form id="buy-form-{{ item['item_pk'] }}">
     <button 
-        class="bg-c-green:-10 text-c-body px-3 py-1 rounded-sm mr-2 h-10 cursor-pointer"
         id="buy-{{ item['item_pk'] }}"
         mix-post="/items/{{ item['item_pk'] }}/buy"
         mix-data="#buy-form-{{ item['item_pk'] }}">
+        Buy Now
+    </button>
+</form> -->
+
+<form method="POST" action="/items/{{ item['item_pk'] }}/buy">
+    <button type="submit" class="bg-c-green:-10 text-c-body px-3 py-1 rounded-sm h-10 cursor-pointer">
         Buy Now
     </button>
 </form>

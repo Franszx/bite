@@ -1,121 +1,123 @@
 {% include "_top.html" %}
 
-<main class="w-full h-full d-flex gap-10 flex-col" md="">
-
+<main class="w-full h-full d-flex gap-10 flex-col">
+  <!-- Hero Section -->
   <section class="d-flex flex-col md:flex-row">
     {% if is_logged_in %}
-    <!-- Dynamic Content for Logged-in Users -->
-    <section class="px-6">
-      <h1>Welcome back, {{ user.user_name }}!</h1>
-      <p>Your current role: {{ user.current_role }}</p>
-      
-  
-      {% if role == 'customer' %}
-      <div>
-        
-      </div>
-      {% elif role == 'restaurant' %}
-      <div>
-        <a href="#" class="btn">Manage Menu</a>
-        <a href="#" class="btn">View Orders</a>
-      </div>
-      {% elif role == 'partner' %}
-      <div>
-        <a href="#" class="btn">Partner Dashboard</a>
-        <a href="#" class="btn">View Collaborations</a>
-      </div>
-      {% elif role == 'admin' %}
-      <div>
-        <a href="{{ url_for('view_admin_users') }}" class="btn">Manage Users</a>
-        <a href="{{ url_for('view_admin_items') }}" class="btn">Manage Items</a>
-      </div>
-     
-      {% endif %}
-    </section>
-  {% else %}
-  </section>
-  <!-- Hero Section -->
-  <section class="px-6">
-    <h1>Welcome to Bite</h1>
-    <p>Your favorite app for delicious food delivery.</p>
-    <a href="{{ url_for('view_login') }}" class="btn">Login</a>
-    <p>or</p>
-    <a href="{{ url_for('view_signup') }}" class="btn">Sign Up</a>
-  </section>
-  
-  {% endif %}
+      <section class="px-6">
+        <h1>Welcome back, {{ user.user_name }}!</h1>
+        <p>Your current role: {{ role }}</p>
 
+        {% if role == 'customer' %}
+          <div></div>
+        {% elif role == 'restaurant' %}
+          <div>
+            <a href="#" class="btn">Manage Menu</a>
+            <a href="#" class="btn">View Orders</a>
+          </div>
+        {% elif role == 'partner' %}
+          <div>
+            <a href="#" class="btn">Partner Dashboard</a>
+            <a href="#" class="btn">View Collaborations</a>
+          </div>
+        {% elif role == 'admin' %}
+          <div>
+            <a href="{{ url_for('view_edit_users') }}" class="btn">Manage Users</a>
+            <a href="{{ url_for('view_edit_items') }}" class="btn">Manage Items</a>
+          </div>
+        {% endif %}
+      </section>
+    {% else %}
+    
+      <section class="py-6 d-flex a-self-center gap-4">
+        <div class="d-flex flex-col a-items-center">
+          <h1>Welcome to Bite</h1>
+              <p>Your favorite app for delicious food delivery.</p>
+              <div class="d-flex flex-row a-items-center gap-4">
+                <a href="{{ url_for('view_login') }}" class="btn">Login</a>
+                <p>or</p>
+                <a href="{{ url_for('view_signup') }}" class="btn">Sign Up</a>
+              </div>
+        </div>
+        
+      </section>
+  
+    {% endif %}
+  </section>
   <!-- Search Section -->
-  <section class="py-6">
-    <form 
-      id="search-form" 
-      class="px-6" 
-      method="get" 
-      action="{{ url_for('view_search') }}">
-      <input 
-        type="text" 
-        name="query" 
-        id="search-input" 
-        placeholder="Search for cuisine, type, or category" 
-        class="w-half"
-        value="{{ query|default('') }}">
+  <section class="py-6 d-flex a-self-center gap-4 ">
+    <h2 class="a-self-center text-200">Search your cravings!</h2>
+    <form id="search-form" class="px-6 d-flex gap-2" method="get" action="{{ url_for('view_search') }}">
+      <input type="text" name="query" id="search-input" placeholder="Search for cuisine, type, or category" class="w-full" value="{{ query|default('') }}" />
       <button type="submit" class="btn">Search</button>
     </form>
   </section>
 
+      <section class="d-flex  pt-20">
+        <div class=" w-50vw d-flex flex-col p-items-center gap-4 a-self-center ">
 
+  
+              <!-- Restaurants Section -->
+    {% if restaurants %}
+    
+    <div id="restaurant-list-container" class="w-full h-100vh overflow-y-auto px-4">
+    <div id="restaurants" class="grid gap-6" sm="cols-2">
+      {% for restaurant in restaurants %}
+        {% include "__card_restaurant.html" %}
+      {% endfor %}
+    </div>
+    </div>
+  {% endif %}
+        </div>
+        <div id="map" class="w-50vw h-100vh p-sticky"></div>
+      </section>
 
-
-  <!-- List View -->
+  <!-- Results Section -->
   <section id="list-view" class="px-6 py-10">
     {% if query %}
-    <h2>Search Results for "{{ query }}"</h2>
+      <h2>Search Results for "{{ query }}"</h2>
     {% endif %}
 
     <!-- Restaurants Section -->
-    <div id="items" class="grid gap-6" sm="cols-2" lg="cols-3">
-    {% if restaurants %}
-      {% for restaurant in restaurants %}
-        {% include "__card_restaurant.html" %}
-      {% endfor %}    
-    {% endif %}
-    </div>
+    <!-- {% if restaurants %}
+      <div id="restaurant-list-container" class="w-full h-60vh overflow-y-auto rounded-4 border-2 shadow-md pa-4">
+        <div id="restaurants" class="d-flex flex-wrap gap-4" sm="cols-2">
+          {% for restaurant in restaurants %}
+            {% include "__card_restaurant.html" %}
+          {% endfor %}
+        </div>
+      </div>
+{% endif %} -->
 
     <!-- Items Section -->
     {% if items %}
-    <h3 class="text-200" md="text-350" >Items</h3>
-    <div id="item-list" class="grid gap-4 p-items-center " md="cols-2"> <!-- Use flex for a vertical list -->
-  {% for item in items %}
-  <div class="card w-full rounded-4 border-2 shadow-md d-flex pa-2 j-content-between gap-4" > <!-- Flex container for card -->
-    <div class="flex flex-col"> 
-      <!-- Text info on the left -->
-      <h4 class="text-lg text-w-bold">{{ item.item_title }}</h4>
-      <div>
-        <p class="text-sm text-gray-600">Price: {{ item.item_price }}</p>
-        <p class="text-sm text-gray-600">Category: {{ item.item_food_category }}</p>
-        <p class="text-sm text-gray-600">Restaurant: {{ item.restaurant_name }}</p>
+      <h3 class="text-200" md="text-350">Items</h3>
+      <div id="item-list" class="grid gap-4" md="cols-2">
+        {% for item in items %}
+          <div class="card w-full rounded-4 border-2 shadow-md d-flex pa-2 j-content-between gap-4">
+            <div class="flex flex-col">
+              <h4 class="text-lg text-w-bold">{{ item.item_title }}</h4>
+              <p class="text-sm text-gray-600">Price: {{ item.item_price }}</p>
+              <p class="text-sm text-gray-600">Category: {{ item.item_food_category }}</p>
+              <p class="text-sm text-gray-600">Restaurant: {{ item.restaurant_name }}</p>
+              {% if is_logged_in %}
+                <form id="buy-form-{{ item['item_pk'] }}">
+                  <button class="bg-c-green:-10 text-c-body px-3 py-1 rounded-sm h-10 cursor-pointer" mix-post="/items/{{ item['item_pk'] }}/buy">
+                    Buy Now
+                  </button>
+                </form>
+              {% else %}
+                <p class="text-sm text-c-gray:-10 mt-2">Log in to purchase this item.</p>
+              {% endif %}
+            </div>
+            <div class="w-32 h-40">
+              <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" alt="{{ item['item_title'] }}" class="w-full h-full rounded-4 obj-f-cover" />
+            </div>
+          </div>
+        {% endfor %}
       </div>
-
-
-
-      <form id="buy-form-{{ item['item_pk'] }}">
-       <button 
-           class="bg-c-green:-10 text-c-body px-3 py-1 rounded-sm h-10 cursor-pointer"
-           mix-post="/items/{{ item['item_pk'] }}/buy">
-           Buy Now
-       </button>
-       </form>
-    </div>
-   <!-- Buy Now Button -->
-    <div class="w-32 h-40 ">
-      <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" 
-           alt="{{ item['item_title'] }}" 
-           class="w-full h-full rounded-4 obj-f-cover"> <!-- Fixed size image on the right -->
-    </div>
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
+    
+    {% endif %}
   </section>
 </main>
 

@@ -35,7 +35,7 @@
 
         <div class="d-flex flex-row j-content-evenly j-content-stretch">
         <div class="mt-2">
-          <img src="{{ url_for('static', filename='avatars/' + user['user_avatar']) }}"
+          <img src="{{ url_for('static', filename='avatars/' ~ user.user_avatar | default('default.jpg')) }}" alt="Avatar"
           alt="User Avatar" 
           class="h-8 w-8 rounded-full j-items-start" 
           md=" h-12 w-12 a-self-center" />
@@ -66,14 +66,25 @@
         
         <div class="py-2 d-flex a-items-center" 
         md="py-4">
-    
-          {% if not user["user_blocked_at"] or user["user_blocked_at"] == "0" %}
-            {% include "___btn_block_user.html" %}
-            {% include "___btn_delete_user.html" %}
-          {% else %}
-            {% include "___btn_unblock_user.html" %}
+        {% if not user["user_deleted_at"] or user["user_deleted_at"] == "0" %}
+            {# User is NOT deleted #}
+            {% if not user["user_blocked_at"] or user["user_blocked_at"] == "0" %}
+                {# User is NOT blocked #}
+                {% include "___btn_block_user.html" %}
+                {% include "___btn_delete_user.html" %}
+            {% else %}
+                {# User IS blocked #}
+                {% include "___btn_unblock_user.html" %}
+                {% include "___btn_delete_user.html" %}
+            {% endif %}
+        {% else %}
+            {# User IS deleted #}
             {% include "___btn_undelete_user.html" %}
-          {% endif %}
+            {% if user["user_blocked_at"] and user["user_blocked_at"] != "0" %}
+                {# If deleted AND blocked #}
+                {% include "___btn_unblock_user.html" %}
+            {% endif %}
+        {% endif %}
         </div>
       </div>
 

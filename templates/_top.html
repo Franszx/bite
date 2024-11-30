@@ -30,23 +30,37 @@
             <!-- Default Down Arrow -->
           </button>
 
-          <!-- Dropdown Content -->
           <div id="dropdown-menu" class="dropdown-content pa-4 w-52 d-none bg-c-white shadow-md rounded-sm">
-            <a href="{{ url_for('view_profile') }}" class="d-flex a-items-center text-c-gray:-15">
-              <span>Profile</span>
+            <!-- Profile Link with Role -->
+            <a href="{{ url_for('view_profile', role=session.get('user').get('current_role', 'default')) }}" 
+               class="d-flex a-items-center text-c-gray:-15">
+                <span>Profile</span>
             </a>
-            {% set roles = session.get("user").get("roles", []) %} {% if "admin" in roles %}
-            <a href="{{ url_for('view_admin') }}" class="d-flex a-items-center text-c-gray:-15">
-              <span>Admin account</span>
-            </a>
-            {% endif %} {% if roles|length > 1 %}
-            <a href="{{ url_for('view_choose_role') }}" class="d-flex a-items-center text-c-gray:-15">
-              <span>Bite+</span>
+        
+            {% set roles = session.get("user").get("roles", []) %}
+        
+            <!-- Admin Link -->
+            {% if "admin" in roles %}
+            <a href="{{ url_for('view_admin', role='admin') }}" 
+               class="d-flex a-items-center text-c-gray:-15">
+                <span>Admin account</span>
             </a>
             {% endif %}
-            <a href="#" class="d-flex a-items-center text-c-gray:-15">
-              <span>Get help</span>
+        
+            <!-- Role Selection (if multiple roles) -->
+            {% if roles|length > 1 %}
+            <a href="{{ url_for('view_choose_role') }}" 
+               class="d-flex a-items-center text-c-gray:-15">
+                <span>Bite+</span>
             </a>
+            {% endif %}
+        
+            <!-- Help Link -->
+            <a href="#" 
+               class="d-flex a-items-center text-c-gray:-15">
+                <span>Get help</span>
+            </a>
+        
             <form method="POST" action="{{ url_for('logout') }}">
               <button class="w-full text-a-left px-4 py-2 mt-2 text-c-red:-10 rounded-sm" hover="bg-c-gray:-4">Log out</button>
             </form>

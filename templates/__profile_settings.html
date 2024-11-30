@@ -28,7 +28,6 @@
             <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
             <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
           {% elif role == 'restaurant' %}
-          <a href="#" class="text-120 text-c-gray">Your overview</a>
           <a href="#" class="text-120 text-c-gray">Menu Management</a>
           <a href="#" class="text-120 text-c-gray">Order Management</a>
           <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
@@ -52,6 +51,7 @@
   </section>
 
     <section class="bg-c-white rounded-lg py-8 mb-6">
+      <h3 class="text-150">Personal Info</h3>
         <form id="update_profile_form-{{ user['user_pk'] }}">
           <div class="d-flex flex-row j-content-between">
             <label for="user_name" class="a-self-center text-120 text-c-gray:+1" >First Name</label>
@@ -87,21 +87,83 @@
               required
               class="mt-1 rounded-md border-s-hidden text-120 text-c-blue:+16 text-a-right w-96 cursor-pointer " focus="bg-c-white:-10 text-c-gray:+10"
               md="text-130"
-            />
+              />
+            </div>
+            {% if role == 'restaurant' %}
+            {% if user.get('restaurant_name') %}
+            <div class="mt-10">
+            <h3 class="text-150 mb-4">Restaurant Info</h3>
+                <div class="mb-4 d-flex flex-row j-content-between">
+                    <label for="restaurant_name" class="a-self-center text-120 text-c-gray:+1">Restaurant Name</label>
+                    <input
+                        type="text"
+                        name="restaurant_name"
+                        id="restaurant_name"
+                        value="{{ user.get('restaurant_name', '') }}"
+                        required
+                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        md="text-130"
+                    />
+                </div>
+                <div class="mb-4 d-flex flex-row j-content-between">
+                    <label for="street_name" class="a-self-center text-120 text-c-gray:+1">Street Name</label>
+                    <input
+                        type="text"
+                        name="street_name"
+                        id="street_name"
+                        value="{{ user.get('street_name', '') }}"
+                        required
+                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        md="text-130"
+                    />
+                </div>
+                <div class="mb-4 d-flex flex-row j-content-between">
+                    <label for="street_number" class="a-self-center text-120 text-c-gray:+1">Street Number</label>
+                    <input
+                        type="text"
+                        name="street_number"
+                        id="street_number"
+                        value="{{ user.get('street_number', '') }}"
+                        required
+                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        md="text-130"
+                    />
+                </div>
+                <div class="mb-4 d-flex flex-row j-content-between">
+                    <label for="city" class="a-self-center text-120 text-c-gray:+1">City</label>
+                    <input
+                        type="text"
+                        name="city"
+                        id="city"
+                        value="{{ user.get('city', '') }}"
+                        required
+                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        md="text-130"
+                    />
+                </div>
+                <div class="mb-4 d-flex flex-row j-content-between">
+                    <label for="postnummer" class="a-self-center text-120 text-c-gray:+1">Postalcode</label>
+                    <input
+                        type="text"
+                        name="postnummer"
+                        id="postnummer"
+                        value="{{ user.get('postnummer', '') }}"
+                        required
+                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        md="text-130"
+                    />
+                </div>
+            {% else %}
+                <div class="mb-4">
+                    <a href="{{ url_for('add_restaurant') }}" class="bg-blue-600 text-white px-4 py-2 text-sm rounded-md shadow hover:bg-blue-700">
+                        Create Restaurant
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+
           </div>
-          <div class="d-flex flex-row j-content-between">
-            <label for="restaurant_name" class="a-self-center text-120 text-c-gray:+1">Restaurant Name</label>
-            <input
-            type="text"
-            name="restaurant_name"
-            id="restaurant_name"
-            value="{{ user['restaurant_name'] }}"
-            required
-            class="mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer"
-            focus="bg-c-white:-16 text-c-gray:+10"
-            md="text-130"
-            />
-          </div>
+         
           <div class="d-flex j-content-end mt-4">
             <button
               class="bg-blue-600 text-white px-4 py-2 text-120 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -117,7 +179,7 @@
       <!-- Data Protection Section -->
       <section class=" rounded-sm mb-6">
         <h2 class="text-200 fw-bold mb-4">Data Protection</h2>
-        <p class="text-100 mb-4">
+        <p class="text-100 mb-4 w-75vw">
           Ads personalisation. We show sponsored content we think you'd be interested in based on your location, interactions, 
           and purchase history on the platform. You can always disable this feature if you prefer non-personalised ads.
         </p>
