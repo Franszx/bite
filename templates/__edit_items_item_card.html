@@ -1,23 +1,24 @@
-<div class="bg-c-white:-16 rounded-10 shadow-md w-60 j-self-center mb-8" md="w-full">
-    <!-- Image -->
-    <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" 
-         alt="Item Image" class="w-full h-30 rounded-t-10 obj-f-cover" md="h-40">
-    <!-- Content -->
-    <div class="pa-2" md="pa-4">
+<div class="d-flex flex-col j-content-between :-16 rounded-10 shadow-md w-60 j-self-center mb-8" md="w-full">
+    <div class="card-image w-full h-40 obj-f-cover">
+      <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" 
+      alt="Item Image" class="w-full h-30 rounded-t-10 " md="h-40">
+    </div>
+    
+
+    <div class="card-content pa-4 flex-1 d-flex flex-col j-content-between" md="pa-4">
       <h3 class="text-lg text-c-black:+16 mb-1">{{ item["item_title"] }}</h3>
       <p class="text-12px text-c-black:+16 ma-0 pb-1" md="text-sm">Price: {{ item["item_price"] }} Dkk.</p>
       <div class="mb-2">
         {% if item["restaurant_name"] %}
-        <p class="text-12px text-c-black:+16 ma-0" md="text-sm">Restaurant:</p>
-        <p class="text-w-bold text-12px ma-0">{{ item["restaurant_name"] }}</p>
-   
-       
-      {% endif %}
-
+          <div class="restaurant-info mb-4">
+            <p class="text-12px text-c-black:+16 ma-0" md="text-sm">Restaurant:</p>
+            <p class="text-w-bold text-12px ma-0">{{ item["restaurant_name"] }}</p>
+          </div>
+        {% endif %}
       </div>
     
       <!-- Actions -->
-      <div class="d-flex j-content-between ml-2" md="ml-0">
+      <div class="card-actions d-flex j-content-between pa-2 mt-auto" md="ml-0">
         {% if not item["item_blocked_at"] or item["item_blocked_at"] == "0" %}
           {% include "___btn_block_item.html" %}
         {% else %}

@@ -1451,9 +1451,6 @@ def view_search():
             for item in item_results
         ]
 
-        # Debugging output
-        ic(f"Found {len(restaurants)} restaurants and {len(items)} items.")
-
         # Check if the request is an XMLHttpRequest (AJAX)
         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return jsonify({"restaurants": restaurants, "items": items})
@@ -2052,16 +2049,21 @@ def buy_item(item_pk):
         """
 
     except Exception as ex:
-        import traceback
-        traceback.print_exc()
-        # Log and handle the exception
         ic("Error in buy_item:", ex)
         if "db" in locals():
             db.rollback()
 
-        # Return error response
+        # Handle specific exceptions
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        elif isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+
+        # Generic error response
         return f"""
-            <template mix-target="#toast" mix-bottom>An error occurred: {str(ex)}</template>
+            <template mix-target="#toast" mix-bottom>An error occurred while processing your request.</template>
         """, 500
 
     finally:
@@ -2360,8 +2362,6 @@ def update_password(reset_key):
             db.close()
 
 
-
-
 ##############################
 @app.post("/forgot-password")
 def forgot_password():
@@ -2503,33 +2503,31 @@ def user_self_delete(user_pk):
     try:
         # Ensure the user is logged in
         if not session.get("user"):
-            return redirect(url_for("view_login"))
+            raise x.CustomException("You must be logged in to delete your account.", 401)
 
         logged_in_user = session["user"]
         logged_in_user_pk = logged_in_user["user_pk"]
 
         # Check if the logged-in user is trying to delete their own profile
         if logged_in_user_pk != user_pk:
-            return "Unauthorized action", 403
+            raise x.CustomException("Unauthorized action. You can only delete your own account.", 403)
 
-        confirm_password = request.form.get("confirm_password")
+        confirm_password = request.form.get("confirm_password", "").strip()
         if not confirm_password:
-            return "Password is required to delete your profile.", 400
+            raise x.CustomException("Password is required to delete your profile.", 400)
 
         # Validate the password
         db, cursor = x.db()
         cursor.execute("SELECT user_password, user_deleted_at FROM users WHERE user_pk = %s", (user_pk,))
         user = cursor.fetchone()
 
-        if not user:
-            return "Account not found or already deleted.", 404
+        if not user or user["user_deleted_at"]:
+            raise x.CustomException("Account not found or already deleted.", 404)
 
         stored_password_hash = user["user_password"]
-        ic(f"Stored password hash: {stored_password_hash}")
-        ic(f"Entered password: {confirm_password}")
 
         if not check_password_hash(stored_password_hash, confirm_password):
-            return "Incorrect password. Please try again.", 401 
+            raise x.CustomException("Incorrect password. Please try again.", 401)
 
         # Perform the soft delete (update `user_deleted_at`)
         user_deleted_at = int(time.time())
@@ -2550,9 +2548,25 @@ def user_self_delete(user_pk):
         return """<template mix-redirect="/profile-deleted"></template>"""
 
     except Exception as ex:
+        ic("Error in user_self_delete:", ex)
         if "db" in locals():
             db.rollback()
-        return "An error occurred while deleting your profile.", 500
+
+        # Handle specific exceptions
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        elif isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+
+        # Generic error response
+        return """
+            <template mix-target="#toast" mix-bottom>
+                <div class="text-c-red:-9">An error occurred while deleting your profile.</div>
+            </template>
+        """, 500
+
     finally:
         if "cursor" in locals():
             cursor.close()

@@ -16,10 +16,10 @@
               <summary class="text-100 text-w-bold mb-2 cursor-pointer ">Partner with Bite</summary>
               <ul class="list-unstyled pl-4">
                 <li>
-                    <a href="{{url_for('view_partner')}}" class="text-a-center text-c-white:-14">For Partners</a>
+                    <a href="{{ url_for('view_signup') }}" class="text-a-center text-c-white:-14">For Partners</a>
                 </li>
                 <li>
-                    <a href="{{url_for('view_restaurant')}}" class="text-a-center text-c-white:-14">For Restaurants</a>
+                    <a href="{{ url_for('view_signup') }}" class="text-a-center text-c-white:-14">For Restaurants</a>
                 </li>
               </ul>
             </details>
@@ -27,10 +27,10 @@
                 <h3 class="text-100 text-w-bold mb-2">Partner with Bite</h3>
                 <ul class="list-unstyled">
                     <li>
-                        <a href="{{url_for('view_partner')}}" class="text-a-center text-c-white:-14">For Partners</a>
+                        <a href="{{ url_for('view_signup') }}" class="text-a-center text-c-white:-14">For Partners</a>
                     </li>
                     <li>
-                        <a href="{{url_for('view_restaurant')}}" class="text-a-center text-c-white:-14">For Restaurants</a>
+                        <a href="{{ url_for('view_signup') }}" class="text-a-center text-c-white:-14">For Restaurants</a>
                     </li>
                 </ul>
               </div>
@@ -179,7 +179,13 @@
                               parseFloat(restaurant.restaurant_latitude),
                               parseFloat(restaurant.restaurant_longitude),
                           ]).addTo(map);
-                          marker.bindPopup(`<b>${restaurant.restaurant_name}</b>`);
+                          marker.bindPopup(`<div>
+                    <b>${restaurant.restaurant_name}</b>
+                    <br>
+                    <a href="/restaurant/${restaurant.restaurant_pk}" class="btn text-c-green" style="text-decoration: none;" hover="text-c-green:-16">
+                        View Restaurant
+                    </a>
+                </div>`);
                       }
                   });
               } else {

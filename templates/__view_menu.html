@@ -1,29 +1,30 @@
 {% include "_top.html" %}
 
 <main class="w-full h-full d-flex gap-10 flex-col py-3 px-6" md="px-72">
+   <!-- Hero Section -->
+   <section class="w-full">
+    <div class="w-full h-full flex flex-col justify-center">
+      <h1 class="text-1rem text-c-gray:+16 mb-2" md="text-2rem">{{ restaurant["restaurant_name"] }}</h1>
+      <p class="text-c-gray:-16 text-lg">{{ restaurant["restaurant_address"] }}</p>
+      <div class="flex flex-row gap-2 mt-4">
+        <span class="bg-c-white:-3 text-c-gray:+16 px-4 py-1 rounded-4 ">Delivery: 69.00 DKK</span>
+        <span class="bg-c-white:-3 text-c-gray:+16 px-4 py-1 rounded-4 ">Min. Order: 75.00 DKK</span>
+        <span class="bg-c-white:-3 text-c-gray:+16 px-4 py-1 rounded-4 ">W+: Free Delivery</span>
+      </div>
+    </div>
+  </section>
   <div class="d-flex j-content-start">
     <a href="/search?query={{ request.args.get('query', '') }}" class="btn text-c-charocoal:-10 py-2 text-75 rounded-sm" hover="text-c-green:-16">
       ← Go Back to Search
     </a>
   </div>
-  <header class="d-flex flex-row my-6" md="my-16">
-    <div class="d-flex flex-col a-content-center">
-      <div class="w-60">
-        <h1 class="text-3rem text-lh-tight text-w-hair" md="text-7rem">{{ restaurant["restaurant_name"] }}</h1>
-      </div>
-      <div class="">
-        <p class="text-w-bold">{{ restaurant["restaurant_address"] }}</p>
-      </div>
-
-      </div>
-  </header>
   <div class="grid cols-4 gap-1" md="d-flex flex-row">
     {% for cuisine in cuisine_types %}
       <form method="get" action="{{ url_for('view_menu', restaurant_pk=restaurant['restaurant_pk']) }}">
         <input type="hidden" name="cuisine" value="{{ cuisine }}">
         <button 
           type="submit" 
-          class="btn bg-c-gray:+16:+16 pa-2 text-c-white" md="cursor-pointer">{{ cuisine }}</button>
+          class="btn bg-c-white:-3 text-c-gray:+16 pa-2 " md="cursor-pointer">{{ cuisine }}</button>
       </form>
     {% endfor %}
   </div>
@@ -32,9 +33,9 @@
     {% set grouped_items = menu_items|groupby('item_cuisine_type') %}
     {% for cuisine, items in grouped_items %}
       <section class="cuisine-section">
-        <div class="d-flex j-content-center">
+        <div class="d-flex">
           <!-- Display Cuisine Type -->
-        <h3 class=" j-self-end pa-2 rounded-4 text-2rem text-w-bold text-c-body:-16 my-2" md="text-3rem my-6">- {{ cuisine or "Unknown Cuisine" }} -</h3>
+        <h3 class="j-self-end pa-2 rounded-4 text-2rem text-w-bold text-c-body:-16 my-2" md="text-3rem my-6">{{ cuisine or "Unknown Cuisine" }}</h3>
         </div>
    
         
@@ -42,7 +43,7 @@
 
   <div class="grid gap-2 cols-2" sm="cols-4 gap-4">
     {% for item in items %}
-    <div class="d-flex flex-col j-content-between h-100% bg-c-black:+16 cursor-pointer rounded-10 shadow-md w-50 j-self-center mb-8 " md="w-full">
+    <div class="d-flex flex-col j-content-between h-100% bg-c-white:-10 cursor-pointer rounded-10 shadow-md w-50 j-self-center mb-8 " md="w-full">
       <div>
         <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}"  
         alt="{{ item['item_title'] }}" 
@@ -59,7 +60,7 @@
                     class="d-flex flex-col j-self-stretch mt-auto"
                     >
                     <div class="d-flex flex-row j-content-between a-items-center px-1 py-2">
-                      <label for="quantity-{{ item['item_pk'] }}" class="pa-1 text-1rem text-c-white">Pcs:</label>
+                      <label for="quantity-{{ item['item_pk'] }}" class="pa-1 text-1rem text-c-white">Pcs:</label>4
                     <input
                         type="number"
                         id="quantity-{{ item['item_pk'] }}"

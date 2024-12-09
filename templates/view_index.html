@@ -1,81 +1,106 @@
 {% include "_top.html" %}
 
-<main class="w-full h-full d-flex gap-10 flex-col mt-20" md="mt-32">
+<main class="w-full h-full d-flex flex-col mb-20" md="mb-20">
   <!-- Hero Section -->
-  <section class="d-flex flex-col px-72">
-    {% if is_logged_in %}
-      <section class="d-flex flex-col">
-        <div class="d-flex flex-col mb-10 " md="mb-20">
-          <h1 class="text-3rem text-lh-tight " md="text-7rem text-lh-tight text-w-hair ">Welcome back</h1>
-          <h2 class="text-3rem text-ls-tight " md="text-7rem text-lh-tight text-w-hair ">{{ user.user_name }}!</h2>
-        </div>
-        {% if role == 'customer' %}
-          <div class="d-flex flex-col">
-            <button class="bg-c-green:-16 px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white" href="{{ url_for('view_profile_settings') }}">Settings</a></button>
-            <button class="bg-c-green:-16 px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white " href="#">Restaurants</a></button>
-          </div>
-        {% elif role == 'restaurant' %}
-          <div class="d-flex flex-col a-items-center gap-6 ">
-           
-              <a class="text-c-gray:-16" href="{{ url_for('view_manage_items') }}"  class="">Manage Menu</a>
-            
-              <a class="text-c-gray:-16 " href="#" class="btn">View Orders</a>
-      
-          </div>
-        {% elif role == 'partner' %}
-          <div class="d-flex flex-col a-items-center p-items-start gap-4">
-            <a class="text-c-gray:-16" href="#" class="btn" hover="text-d-underline">Partner Dashboard</a>
-            <a class="text-c-gray:-16" href="#" class="btn" hover="text-d-underline">View Collaborations</a>           
-          </div>
-        {% elif role == 'admin' %}
-          <div class="d-flex flex-col a-content-center">
-            <button class="bg-c-green:-16 text-c-white px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white " href="{{ url_for('view_edit_users') }}" class="btn">Manage Users</a></button>
-            <button class="bg-c-green:-16 text-c-white px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white " href="{{ url_for('view_edit_items') }}" class="btn">Manage Items</a></button>
-          </div>
-        {% endif %}
-      </section>
-    {% else %}
-    
-      <section class="py-6 d-flex gap-4 px-6" md="px-72">
-        <div class="d-flex flex-col">
-          <h1 class="text-7rem text-lh-tight text-w-hair">Welcome to Bite</h1>
-              <p>Your favorite app for delicious food delivery.</p>
-              <div class="d-flex flex-row a-items-center gap-4">
-                <a href="{{ url_for('view_login') }}" class="btn text-c-green" hover="text-c-green:-16" >Login</a>
-                <p>or</p>
-                <a href="{{ url_for('view_signup') }}" class="btn text-c-green" hover="text-c-green:-16">Sign Up</a>
-              </div>
-        </div>
-      </section>
-  
-    {% endif %}
-  </section>
-  <!-- Search Section -->
-  <section class="py-6 d-flex flex-col a-self-center gap-4 px-6 " md="mt-20 px-72">
-    <h2 class="a-self-center text-1.5rem">Search your cravings!</h2>
-    <form id="search-form" class="px-6 d-flex flex-col gap-2" method="get" action="{{ url_for('view_search') }}">
-      <input type="text" name="query" id="search-input" placeholder="Search for cuisine, type, or category" class="w-full" value="{{ query|default('') }}" />
-      <button type="submit" class="btn pa-2 bg-c-green:+11 text-c-white cursor-pointer" hover="bg-c-green:+16">Search</button>
+   <!-- Hero Section -->
+      <!-- Search Section -->
+  <section id="search-section" class="bg-img-static/uploads/burger.png bg-s-cover bg-p-center d-flex flex-col a-items-center py-60 w-fullvw h-fullvh px-6" md="">
+    <div class="d-flex flex-col gap-4 a-items-center ">
+      <div>
+        <h2 class="a-self-center text-w-light text-c-white text-5rem">Craving? We’ve Got You Covered!</h2>
+      </div>
+     <div>
+      <form 
+      id="search-form" 
+      class="px-6 d-flex flex-col gap-2" 
+      method="get" 
+      action="{{ url_for('view_search') }}#restaurant-section">
+      <input type="text" 
+        name="query" 
+        id="search-input" 
+        placeholder="Search delicous food" 
+        class="w-full bg-none"
+        focus="bg-c-white:-4" 
+        value="{{ query|default('') }}" />
+      <button 
+        type="submit" 
+        class="btn pa-2 bg-c-white:-6 text-c-gray:+16 cursor-pointer" 
+        hover="bg-c-green:+16 ts-300 text-c-white ts-f-ease-in">
+        Search
+      </button>
     </form>
+     </div>
+     
+    </div>
+    </section>
+  <!-- <section class="hero-section bg-c-white:-6 w-full h-60vh d-flex j-content-center a-items-center text-a-center p-relative overflow-hid px-6" md="px-0 h-80vh">
+    <img
+      src="{{ url_for('static', filename='uploads/images/' 'bite_world.webp') }}" 
+      alt="Delicious Food Spread"
+      class="d-none w-full h-full obj-f-cover z-0"
+      md="d-block"
+    />
+    <div class="hero-text text-c-gray:-16 d-flex flex-col a-items-center text-lh-tight gap-4">
+      <h1 class="text-5rem text-w-bold" md="text-7rem">Craving Something Delicious?</h1>
+      <p class="text-1.5rem" md="text-2rem">Order your favorite meals, snacks, and drinks now!</p>
+      <a href="#search-section" class="btn bg-c-green:+11 text-c-white px-6 py-3 rounded-lg ts-300 ts-f-ease-in" hover="bg-c-green:+16">
+        Explore Restaurants
+      </a>
+    </div>
+  </section> -->
+
+  
+
+  <section class="how-it-works py-10 px-6" md="py-52 px-72">
+    <h2 class="text-2rem text-w-bold text-center mb-6">How It Works</h2>
+    <div class="grid gap-4" md="cols-3">
+      <div class="step-card text-center">
+        <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="Search" class="mb-4 w-16 h-16 obj-f-contain" />
+        <h4 class="text-lg text-w-bold">1. Search</h4>
+        <p class="text-sm text-c-gray">Find your favorite meals and restaurants in just a few clicks.</p>
+      </div>
+      <div class="step-card text-center">
+        <img src="{{ url_for('static', filename='icons/order.svg') }}" alt="Order" class="mb-4 w-16 h-16 obj-f-contain" />
+        <h4 class="text-lg text-w-bold">2. Order</h4>
+        <p class="text-sm text-c-gray">Place your order and pay securely through our app.</p>
+      </div>
+      <div class="step-card text-center">
+        <img src="{{ url_for('static', filename='icons/delivery.svg') }}" alt="Delivery" class="mb-4 w-16 h-16 obj-f-contain" />
+        <h4 class="text-lg text-w-bold">3. Enjoy</h4>
+        <p class="text-sm text-c-gray">Sit back and relax while we deliver delicious food to your door.</p>
+      </div>
+    </div>
   </section>
 
-  <section class="bg-c-white:-16">
-    <div class="d-flex flex-col gap-4 px-6" md="flex-row gap-0 py-20 px-72">
-      <div class=" d-flex flex-col p-items-center gap-4 a-self-center "
-      md="w-50vw">
+
+
+  {% if restaurants %}
+  <section id="restaurant-section" class="mt-32">
+    <div class="d-flex flex-col" md="px-72">
+      {% if query %}
+      <h2 class="text-2rem">Restaurant results for <span class="text-w-bold text-t-capitalize">{{ query }}</span></h2>
+    {% endif %}
+    </div>
+    
+    <div class="d-flex flex-col gap-4 px-6" md="flex-row gap-0 mb-20 px-72">
+      
+      <div 
+        class=" d-flex flex-col gap-2"
+        md="w-50vw">
       <!-- Restaurants Section -->
-      {% if restaurants %}
+      <div>
+
+      </div>
       
       <div id="restaurant-list-container" class="w-full h-75vh overflow-y-auto">
-      <div id="restaurants" class="grid cols-2 pa-2 gap-6 " md="">
+      <div id="restaurants" class="grid gap-4" md="cols-1" lg="cols-2">
         {% for restaurant in restaurants|sort(attribute='restaurant_name') %}
           {% include "__card_restaurant.html" %}
         {% endfor %}
       </div>
       </div>
   </div>
-  <div id="map" class=" h-75vh p-sticky"
-md="w-50vw"></div>
+  <div id="map" class=" h-75vh p-sticky" md="w-50vw"></div>
 
     </div>
    
@@ -83,7 +108,7 @@ md="w-50vw"></div>
   {% endif %}
 
   <!-- Results Section -->
-  <section id="list-view" class="px-6 py-10">
+  <section id="list-view" class="px-6 py-10" md="px-72">
     {% if query %}
       <h2>Results for <span class="text-w-bold text-t-capitalize">{{ query }}</span></h2>
     {% endif %}
@@ -91,67 +116,120 @@ md="w-50vw"></div>
 
     <!-- Items Section -->
     {% if items %}
-  <div id="restaurant-items-container">
-    {% set grouped_items = items|groupby('restaurant_name') %}
-    {% for restaurant, restaurant_items in grouped_items %}
-      <div class="restaurant-section">
-        <!-- Restaurant Name -->
-        <h4 class="text-300 text-c-gray:-8">{{ restaurant }}</h4>
-
-        <!-- Items for this Restaurant -->
-        <div class="grid gap-4 mb-12" md="cols-3">
-          {% for item in restaurant_items %}
-            <div class="d-flex flex-col card cursor-pointer w-full rounded-4 border-2 shadow-md d-flex pa-2 j-content-between gap-4">
-              <div class="flex flex-col">
-                <div class="w-32 h-40">
-                  <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" alt="{{ item['item_title'] }}" class="w-full h-full rounded-4 obj-f-cover" />
-                </div>
-                <h4 class="text-lg text-w-bold">{{ item.item_title }}</h4>
-                <p class="text-sm text-gray-600">Price: {{ item.item_price }}</p>
-                <p class="text-sm text-gray-600">Category: {{ item.item_food_category }}</p>
-                <p class="text-sm text-gray-600">Restaurant: {{ item.restaurant_name }}</p>
-                {% if is_logged_in %}
-                <form 
-                id="buy-form-{{ item['item_pk'] }}" 
-                class="d-flex flex-col j-self-stretch mt-auto"
-                >
-                <div class="d-flex flex-row j-content-between a-items-center px-1 py-2">
-                  <label for="quantity-{{ item['item_pk'] }}" class="pa-1 text-1rem text-c-white">Pcs:</label>
-                <input
-                    type="number"
-                    id="quantity-{{ item['item_pk'] }}"
-                    name="quantity"
-                    min="1"
-                    value="1"
-                    class="border-s-hidden px-2 py-1 rounded-md w-20"
-                    required
-                />
-
-                </div>
-                
-                <button 
-                    class="bg-c-green:-10 text-c-body rounded-sm px-1 py-0 h-10 cursor-pointer"
-                    md="px-3 py-1 "
-                    mix-post="/items/{{ item['item_pk'] }}/buy"
-                    mix-data="#buy-form-{{ item['item_pk'] }}"
-                    >
-                    Buy Now
-                </button>
-            </form>
-                {% else %}
-                  <p class="text-sm text-c-gray:-10 mt-2">Log in to purchase this item.</p>
-                {% endif %}
-              </div>
-             
+    <div id="restaurant-items-container">
+      <!-- Items Section -->
+      <div class="grid gap-4 mb-12" md="cols-3">
+        {% for item in items %}
+          <div class="card bg-c-white rounded-10 shadow-md d-flex flex-col h-full j-content-between overflow-hidden border-c-gray:-10" hover="scale-101 ts-300">
+            <!-- Image Section -->
+            <div class="card-image-container w-full h-40 obj-f-cover">
+              <img
+                src="{{ url_for('static', filename='dishes/' + item['item_image']) }}"
+                alt="{{ item['item_title'] }}"
+                class="w-full h-full obj-f-cover"
+                hover=""
+              />
             </div>
-          {% endfor %}
-        </div>
+    
+            <!-- Content Section -->
+            <div class="card-content px-4 py-2">
+              <h4 class="text-lg text-w-bold text-c-black">{{ item.item_title }}</h4>
+              <p class="text-sm text-c-gray">Price: <span class="text-c-black">{{ item.item_price }} DKK</span></p>
+              <p class="text-sm text-c-gray">Category: {{ item.item_food_category }}</p>
+              <p class="text-sm text-c-gray">Restaurant: <span class="text-c-black">{{ item.restaurant_name }}</span></p>
+            </div>
+    
+            <!-- Actions Section -->
+            <div class="card-actions d-flex j-content-between px-4 py-2 border-t-4 border-s-dotted border-c-white:-16">
+              {% if is_logged_in %}
+              <form id="buy-form-{{ item['item_pk'] }}" class="d-flex flex-row j-content-between a-items-center">
+                <label for="quantity-{{ item['item_pk'] }}" class="text-sm text-c-gray mr-2">Pcs:</label>
+                <input
+                  type="number"
+                  id="quantity-{{ item['item_pk'] }}"
+                  name="quantity"
+                  min="1"
+                  value="1"
+                  class="border-0 rounded-md px-2 py-1 w-20"
+                  required
+                />
+                <button
+                  class="ml-4 bg-none border-1 border-c-green:-10 text-c-green:-10 px-4 py-2 rounded-md cursor-pointer"
+                  hover="bg-c-green:-10 text-c-white ts-350"
+                  mix-post="/items/{{ item['item_pk'] }}/buy"
+                  mix-data="#buy-form-{{ item['item_pk'] }}"
+                >
+                  Buy Now
+                </button>
+              </form>
+              {% else %}
+              <p class="text-sm text-c-gray:-10">Log in to purchase this item.</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
       </div>
-    {% endfor %}
+    </div>
+    
+      
   </div>
 
 {% endif %}
   </section>
+  
+ 
+  
+  <section class="cta-banner bg-c-white:-16 py-80 text-center text-c-white px-6" md="px-72">
+    <h2 class="text-2rem text-w-bold">Ready to Satisfy Your Hunger?</h2>
+    <p class="text-lg mb-6">Explore our wide range of restaurants and dishes!</p>
+    <a href="#search-section" class="btn bg-none text-c-white px-6 py-3 rounded-lg mt-4 ts-300" hover="bg-c-green:+16 text-c-white ts-300 ts-f-ease-in">
+      Order Now
+    </a>
+  </section>
+  <section class="py-12 px-6" md="px-72">
+    <h2 class="text-2rem text-w-bold text-center mb-8">Hungry for more than food?</h2>
+    <div class="grid gap-6" md="cols-3">
+      <!-- Card 1 -->
+      <div class="card bg-c-white rounded-10 shadow-md overflow-hidden d-flex flex-col a-items-center text-center">
+        <img
+          src="{{ url_for('static', filename='images/delivery_partner.jpg') }}"
+          alt="Courier Partner"
+          class="w-full h-40 obj-f-cover"
+        />
+        <div class="d-flex flex-col gap-2 px-6 py-4">
+          <h3 class="text-lg text-w-bold">Earn Money as a Courier Partner</h3>
+          <a href="{{ url_for('view_signup') }}" class="btn bg-none text-c-gray:-16 px-6 text-a-center py-2 rounded-lg mt-4 ts-300" hover="bg-c-green:+16 text-c-white ts-300 ts-f-ease-in">Apply Now</a>
+        </div>
+      </div>
+  
+      <!-- Card 2 -->
+      <div class="card bg-c-white rounded-10 shadow-md overflow-hidden d-flex flex-col a-items-center  text-center">
+        <img
+          src="{{ url_for('static', filename='images/restaurant_partner.jpg') }}"
+          alt="Restaurant Partner"
+          class="w-full h-40 obj-f-cover"
+        />
+        <div class="d-flex flex-col gap-2 px-6 py-4">
+          <h3 class="text-lg text-w-bold">Become a Restaurant Partner and Serve More</h3>
+          <a href="{{ url_for('view_signup') }}" class="btn bg-none text-c-gray:-16 px-6 text-a-center py-2 rounded-lg mt-4 ts-300" hover="bg-c-green:+16 text-c-white ts-300 ts-f-ease-in">Apply Now</a>
+        </div>
+      </div>
+  
+      <!-- Card 3 -->
+      <div class="card bg-c-white rounded-10 shadow-md overflow-hidden d-flex flex-col a-items-center text-center">
+        <img
+          src="{{ url_for('static', filename='images/career_opportunity.jpg') }}"
+          alt="Career Opportunity"
+          class="w-full h-40 obj-f-cover"
+        />
+        <div class="d-flex flex-col gap-2 px-6 py-4">
+          <h3 class="text-lg text-w-bold">Try Something New – Start a Job at Bite</h3>
+          <a href="{{ url_for('view_signup') }}" class="btn bg-none text-c-gray:-16 px-6 text-a-center py-2 rounded-lg mt-4 ts-300" hover="bg-c-green:+16 text-c-white ts-300 ts-f-ease-in">Apply Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 {% include "_bottom.html" %}

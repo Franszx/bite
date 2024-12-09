@@ -1,18 +1,45 @@
 
 {% include "_top.html" %}
 
-<main class=" h-full d-flex flex-col j-content-center a-items-center py-40 px-6">
-  <section class="w-full max-w-lg text-a-center">
-    <h1 class="text-200 text-w-thin">Welcome </h1>
-    <h2 class="text-250 text-w-bold">{{ user['user_name'] }} </h2>
-    <p class="text-100">Select the account you want to access:</p>
-    <div class="d-flex flex-col mt-6">
-      {% for role in user.roles %}
-      <a href="{{ url_for('select_role', role=role) }}" 
-         class="px-4 py-2 bg-c-gray:-4 a-self-center text-c-white text-a-center w-80 rounded-md mt-2">
-        {{ role.capitalize() }} account
-      </a>
-      {% endfor %}
+<main class="px-6 d-flex flex-col gap-10" md="pb-40 px-72">
+  <section class="d-flex flex-col j-content-center a-items-center gap-10 mb-20">
+    <section class="hero d-flex flex-col j-content-center a-items-center text-c-black:+16 text-a-center px-6">
+      <h1 class="text-400 text-w-bold">Welcome to Bite, {{ user['user_name'] }}</h1>
+      <p class="text-200 text-w-thin mt-2">Choose your account to get started</p>
+      </section>
+      <section class="w-full max-w-lg text-a-center" sm="px-6">
+        
+        <div class="d-flex flex-col mt-6">
+          {% for role in user.roles %}
+          <a href="{{ url_for('select_role', role=role) }}" 
+             class="px-4 py-2 bg-c-gray:-4 a-self-center text-c-white text-a-center w-80 rounded-md mt-2 cursor-pointer"
+             hover="bg-c-gray:-10">
+            {{ role.capitalize() }} account
+          </a>
+          {% endfor %}
+        </div>
+      </section>
+
+  </section>
+ 
+
+  <section class="info-section py-10 px-32 bg-c-white:-5">
+    <div class="grid gap-4 cols-2">
+      <div class="info-card text-c-black:+16 text-a-center">
+        <img src="{{ url_for('static', filename='icons/help.svg') }}" alt="Help" class="w-12 h-12 mb-4" />
+        <h4 class="text-200 text-w-bold">Need Help?</h4>
+        <p class="text-100">Visit our support page for assistance.</p>
+      </div>
+      <div class="info-card text-c-black:+16 text-a-center">
+        <img src="{{ url_for('static', filename='icons/features.svg') }}" alt="Features" class="w-12 h-12 mb-4" />
+        <h4 class="text-200 text-w-bold">Explore Features</h4>
+        <p class="text-100">Learn more about what Bite offers.</p>
+      </div>
+      <div class="info-card text-c-black:+16 text-a-center">
+        <img src="{{ url_for('static', filename='icons/contact.svg') }}" alt="Contact" class="w-12 h-12 mb-4" />
+        <h4 class="text-200 text-w-bold">Contact Us</h4>
+        <p class="text-100">Have questions? Reach out to us anytime.</p>
+      </div>
     </div>
   </section>
 </main>

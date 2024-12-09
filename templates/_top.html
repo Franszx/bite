@@ -10,8 +10,9 @@
     <title>{{ title or "bite" }}</title>
   </head>
   <body class="w-full h-full text-c-gray:-16">
-    <header class="d-flex j-content-between a-items-center py-3 px-6" md="px-72">
-      <!-- Logo -->
+    <header class="py-3 p-sticky px-6 top-0 w-full bg-c-body z-10" md="px-72">
+      <div class="d-flex j-content-between a-items-center ">
+         <!-- Logo -->
       <div class="logo">
         <a href="/">
           <img src="{{ url_for('static', filename='uploads/' 'bite_francy.png') }}" alt="bite logo" class="w-20" />
@@ -24,7 +25,7 @@
         <!-- Dropdown Menu -->
         <div class="dropdown">
           <!-- Profile Button -->
-          <button id="profile-btn" class="d-flex a-items-center pa-0 border-0 rounded-full cursor-pointer" onclick="toggleDropdown()">
+          <button id="profile-btn" class="d-flex a-items-center pa-0 border-0 rounded-full cursor-pointer" onclick="toggleDropdown()" >
             <img src="{{ url_for('static', filename='avatars/' + session.get('user', {}).get('user_avatar', 'default_avatar.jpg')) }}" alt="User Avatar" class="w-12 h-12 pa-1 rounded-full" />
             <span id="dropdown-arrow" class="text-c-gray:-15 mr-4"> &#x2193; </span>
             <!-- Default Down Arrow -->
@@ -38,7 +39,8 @@
             </a> -->
             <!-- Profile Link with Role -->
             <a href="{{ url_for('view_profile') }}" 
-            class="d-flex a-items-center text-c-gray:-15">
+            class="d-flex a-items-center text-c-gray:-15"
+            >
             <span>Profile</span>
             </a>
         
@@ -87,6 +89,9 @@
 
         {% endif %}
       </div>
+
+      </div>
+     
     </header>
 
     <div id="toast" class="d-flex flex-col j-content-center p-fixed w-full top-4 z-10"></div>
