@@ -1,5 +1,5 @@
-<footer class="bg-c-gray:-30 text-c-white:-1 px-6 pb-4">
-    <section class="pt-10 max-w-1500px" xxl="mx-40">
+<footer class="bg-c-gray:-30 text-c-white:-1 px-6 pb-4" md="px-0">
+    <section class="pt-10 max-w-1500px" md="mx-72">
     <section class="mb-5" md="gap-4">
         <div class="d-flex flex-col flex-wrap j-content-between a-items-start gap-2" md="d-flex flex-row gap-5">
             <div>
@@ -146,76 +146,92 @@
                idle : "border border-1 border-c-gray:+25 px-2 rounded-4 h-12 outline-none"
            },
            "button": {
-                idle : "border-c-black px-4 rounded-sm h-12 outline-none"
+                idle : "border-c-black px-4 rounded-sm outline-none"
             }           
          },
          
        })
 </script>
-
-
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <script>
- 
-    // // Initialize the map
-    // var map = L.map('map').setView([55.6761, 12.5683], 13);
+  document.addEventListener("DOMContentLoaded", function () {
+      // Initialize the map only if the container is present
+      const mapContainer = document.getElementById("map");
+      if (mapContainer) {
+          const map = L.map(mapContainer).setView([55.6761, 12.5683], 13);
 
-    // // Add OpenStreetMap tile layer
-    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //     maxZoom: 20,
-    //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    // }).addTo(map);
+          // Add the OpenStreetMap tile layer
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+              maxZoom: 15,
+              attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+          }).addTo(map);
 
-    // function test(){
-    //     var markerLocations = [
-    //     { coords: [51.5, -0.09], popup: "Marker 1: London" },
-    //     { coords: [48.8566, 2.3522], popup: "Marker 2: Paris" },
-    //     { coords: [40.7128, -74.0060], popup: "Marker 3: New York" },
-    //     { coords: [55.6845, 12.564148], popup: "Marker 4: Tokyo" }
-    //     ];
+          try {
+              // Parse the restaurants data passed from Flask
+              const restaurants = JSON.parse('{{ restaurants | tojson | default([]) | safe }}');
+              console.log("Restaurants data:", restaurants);
 
-    //     // Loop through the markerLocations array and add markers to the map
-    //     markerLocations.forEach(function(location) {
-    //         var marker = L.marker(location.coords).addTo(map);
-    //         marker.bindPopup(location.popup);
-    //     });
-    // }
+              if (Array.isArray(restaurants) && restaurants.length > 0) {
+                  restaurants.forEach(function (restaurant) {
+                      if (restaurant.restaurant_latitude && restaurant.restaurant_longitude) {
+                          const marker = L.marker([
+                              parseFloat(restaurant.restaurant_latitude),
+                              parseFloat(restaurant.restaurant_longitude),
+                          ]).addTo(map);
+                          marker.bindPopup(`<b>${restaurant.restaurant_name}</b>`);
+                      }
+                  });
+              } else {
+                  console.warn("No restaurants to display on the map.");
+              }
+          } catch (error) {
+              console.error("Error parsing restaurants data:", error);
+          }
+      }
+  });
+</script>
 
-    // setTimeout(test, 3000)
-
-// Initialize the map
-var map = L.map('map').setView([55.6761, 12.5683], 13);
 
 
+<!-- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const mapContainer = document.getElementById("map");
+        if (mapContainer) {
+            var map = L.map(mapContainer).setView([55.6761, 12.5683], 13);
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 20,
+                attribution: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",
+            }).addTo(map);
 
-// Add OpenStreetMap tile layer
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 20,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+            try {
+                // Parse restaurants data passed from Flask
+                const restaurants = JSON.parse('{{ restaurants | tojson | safe }}');
+                console.log("Restaurants data:", restaurants);
 
-try {
-    // Parse restaurants data passed from Flask
-    const restaurants = JSON.parse('{{ restaurants | tojson | safe }}');
-    console.log("Restaurants data:", restaurants);
-
-    // Function to add markers to the map
-    function addMarkers() {
-        restaurants.forEach(function (restaurant) {
-            if (restaurant.restaurant_latitude && restaurant.restaurant_longitude) {
-                // Add marker at the restaurant's latitude and longitude
-                var marker = L.marker([parseFloat(restaurant.restaurant_latitude), parseFloat(restaurant.restaurant_longitude)]).addTo(map);
-                // Add a popup with the restaurant name
-                marker.bindPopup(`<b>${restaurant.restaurant_name}</b>`);
+                // Add markers
+                if (Array.isArray(restaurants) && restaurants.length > 0) {
+                    restaurants.forEach(function (restaurant) {
+                        if (restaurant.restaurant_latitude && restaurant.restaurant_longitude) {
+                            var marker = L.marker([
+                                parseFloat(restaurant.restaurant_latitude),
+                                parseFloat(restaurant.restaurant_longitude),
+                            ]).addTo(map);
+                            marker.bindPopup(`<b>${restaurant.restaurant_name}</b>`);
+                        }
+                    });
+                } else {
+                    console.warn("No restaurants to display on the map.");
+                }
+            } catch (error) {
+                console.error("Error parsing restaurants data:", error);
             }
-        });
-    }
+        } else {
+            console.warn("Map container not found.");
+        }
+    }); -->
 
-    // Add markers on page load
-    document.addEventListener("DOMContentLoaded", addMarkers);
-} catch (error) {
-    console.error("Error parsing restaurants data:", error);
-}
 
 </script>
 

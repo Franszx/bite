@@ -1,0 +1,118 @@
+{% include "_top.html" %}
+<main class="w-full h-full d-flex flex-col px-6">
+    <header class="d-flex j-content-between a-items-center py-3">
+        <h1 class="text-200" md="text-350">
+        {% if role == 'restaurant' %}
+          Menu Management
+        {% endif %} 
+        </h1>
+      </header>
+      <div class="border-1 border-b-c-white:-16">
+          <nav class="tabs d-flex flex-col mb-6 j-content-evenly" md="flex-row gap-6">
+            {% if role == 'admin' %}
+              <a href="{{ url_for('view_admin') }}" class="text-120 text-c-gray">Admin overview</a>
+              <a href="{{ url_for('view_edit_users') }}" class="text-120 text-c-gray">User administration</a>
+              <a href="{{ url_for('view_edit_items') }}" class="text-120  text-c-gray">Item administration</a>
+              <a href="#" class="text-120 text-c-gray">Contracts</a>
+              <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
+              <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+            {% elif role == 'restaurant' %}
+                <a href="{{ url_for('view_manage_items') }}" 
+                  class="text-120 text-c-gray text-w-bold ">
+                    Menu Management
+                </a>  
+            <a href="#" class="text-120 text-c-gray">Order Management</a>
+            <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+            <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+            {% elif role == 'partner' %}
+            <a href="#" class="text-120 text-c-gray">Order history</a>
+            <a href="#" class="text-120 text-c-gray">Partnership Details</a>
+            <a href="#" class="text-120 text-c-gray">Earnings</a>
+            <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
+            <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+            {% elif role == 'customer' %}
+            <a href="#" class="text-120 text-c-gray">Order history</a>
+            <a href="#" class="text-120 text-c-gray">Earn credits</a>
+            <a href="#" class="text-120 text-c-gray">Redeem code</a>
+            <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold  text-c-gray">Settings</a>
+            <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+            {% endif %}
+          </nav>
+        </div>
+    <h2 class="text-200 text-c-gray:+2 mb-6">Edit Item</h2>
+    <form 
+    id="edit_item_form"
+    class="d-flex flex-col gap-6 w-half mb-10"
+    >
+    <label for="item_image">Main Item Image:</label>
+    <input 
+        type="file" 
+        id="item_image" 
+        name="item_image" 
+        accept="image/*" />
+    
+    <label for="item_title">Title:</label>
+    <input 
+        type="text" 
+        id="item_title" 
+        name="item_title" 
+        value="{{ item.item_title }}" 
+        required>
+
+    <label for="item_price">Price:</label>
+    <input 
+        type="number" 
+        id="item_price" 
+        name="item_price" 
+        value="{{ item.item_price }}" 
+        step="0.01" 
+        required>
+
+    <label for="item_cuisine_type">Cuisine Type:</label>
+    <input 
+        type="text" 
+        id="item_cuisine_type" 
+        name="item_cuisine_type" 
+        value="{{ item.item_cuisine_type }}" 
+        required>
+
+    <label for="item_food_category">Food Category:</label>
+    <input 
+        type="text" 
+        id="item_food_category" 
+        name="item_food_category" 
+        value="{{ item.item_food_category }}" 
+        required>
+
+        <label for="item_image_1">Upload Image 1:</label>
+        <input 
+            type="file" 
+            id="item_image_1" 
+            name="item_image_1" 
+            accept="image/*" />
+    
+        <label for="item_image_2">Upload Image 2:</label>
+        <input 
+            type="file" 
+            id="item_image_2" 
+            name="item_image_2" 
+            accept="image/*" />
+    
+        <label for="item_image_3">Upload Image 3:</label>
+        <input 
+            type="file" 
+            id="item_image_3" 
+            name="item_image_3" 
+            accept="image/*" />
+    
+
+    <button 
+        type="submit" 
+        class="bg-c-green text-c-white px-6 py-2 rounded-md shadow hover:bg-c-green:-8"
+        mix-post="{{ url_for('update_item_details', item_pk=item.item_pk) }}"
+        mix-data="#edit_item_form">
+        Save Changes
+    </button>
+</form>
+</main>
+{% include "_bottom.html" %}

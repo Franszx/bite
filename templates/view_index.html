@@ -1,123 +1,156 @@
 {% include "_top.html" %}
 
-<main class="w-full h-full d-flex gap-10 flex-col">
+<main class="w-full h-full d-flex gap-10 flex-col mt-20" md="mt-32">
   <!-- Hero Section -->
-  <section class="d-flex flex-col md:flex-row">
+  <section class="d-flex flex-col px-72">
     {% if is_logged_in %}
-      <section class="px-6">
-        <h1>Welcome back, {{ user.user_name }}!</h1>
-        <p>Your current role: {{ role }}</p>
-
+      <section class="d-flex flex-col">
+        <div class="d-flex flex-col mb-10 " md="mb-20">
+          <h1 class="text-3rem text-lh-tight " md="text-7rem text-lh-tight text-w-hair ">Welcome back</h1>
+          <h2 class="text-3rem text-ls-tight " md="text-7rem text-lh-tight text-w-hair ">{{ user.user_name }}!</h2>
+        </div>
         {% if role == 'customer' %}
-          <div></div>
+          <div class="d-flex flex-col">
+            <button class="bg-c-green:-16 px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white" href="{{ url_for('view_profile_settings') }}">Settings</a></button>
+            <button class="bg-c-green:-16 px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white " href="#">Restaurants</a></button>
+          </div>
         {% elif role == 'restaurant' %}
-          <div>
-            <a href="#" class="btn">Manage Menu</a>
-            <a href="#" class="btn">View Orders</a>
+          <div class="d-flex flex-col a-items-center gap-6 ">
+           
+              <a class="text-c-gray:-16" href="{{ url_for('view_manage_items') }}"  class="">Manage Menu</a>
+            
+              <a class="text-c-gray:-16 " href="#" class="btn">View Orders</a>
+      
           </div>
         {% elif role == 'partner' %}
-          <div>
-            <a href="#" class="btn">Partner Dashboard</a>
-            <a href="#" class="btn">View Collaborations</a>
+          <div class="d-flex flex-col a-items-center p-items-start gap-4">
+            <a class="text-c-gray:-16" href="#" class="btn" hover="text-d-underline">Partner Dashboard</a>
+            <a class="text-c-gray:-16" href="#" class="btn" hover="text-d-underline">View Collaborations</a>           
           </div>
         {% elif role == 'admin' %}
-          <div>
-            <a href="{{ url_for('view_edit_users') }}" class="btn">Manage Users</a>
-            <a href="{{ url_for('view_edit_items') }}" class="btn">Manage Items</a>
+          <div class="d-flex flex-col a-content-center">
+            <button class="bg-c-green:-16 text-c-white px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white " href="{{ url_for('view_edit_users') }}" class="btn">Manage Users</a></button>
+            <button class="bg-c-green:-16 text-c-white px-3 py-1 w-full h-10 cursor-pointer"><a class="text-c-white " href="{{ url_for('view_edit_items') }}" class="btn">Manage Items</a></button>
           </div>
         {% endif %}
       </section>
     {% else %}
     
-      <section class="py-6 d-flex a-self-center gap-4">
-        <div class="d-flex flex-col a-items-center">
-          <h1>Welcome to Bite</h1>
+      <section class="py-6 d-flex gap-4 px-6" md="px-72">
+        <div class="d-flex flex-col">
+          <h1 class="text-7rem text-lh-tight text-w-hair">Welcome to Bite</h1>
               <p>Your favorite app for delicious food delivery.</p>
               <div class="d-flex flex-row a-items-center gap-4">
-                <a href="{{ url_for('view_login') }}" class="btn">Login</a>
+                <a href="{{ url_for('view_login') }}" class="btn text-c-green" hover="text-c-green:-16" >Login</a>
                 <p>or</p>
-                <a href="{{ url_for('view_signup') }}" class="btn">Sign Up</a>
+                <a href="{{ url_for('view_signup') }}" class="btn text-c-green" hover="text-c-green:-16">Sign Up</a>
               </div>
         </div>
-        
       </section>
   
     {% endif %}
   </section>
   <!-- Search Section -->
-  <section class="py-6 d-flex a-self-center gap-4 ">
-    <h2 class="a-self-center text-200">Search your cravings!</h2>
-    <form id="search-form" class="px-6 d-flex gap-2" method="get" action="{{ url_for('view_search') }}">
+  <section class="py-6 d-flex flex-col a-self-center gap-4 px-6 " md="mt-20 px-72">
+    <h2 class="a-self-center text-1.5rem">Search your cravings!</h2>
+    <form id="search-form" class="px-6 d-flex flex-col gap-2" method="get" action="{{ url_for('view_search') }}">
       <input type="text" name="query" id="search-input" placeholder="Search for cuisine, type, or category" class="w-full" value="{{ query|default('') }}" />
-      <button type="submit" class="btn">Search</button>
+      <button type="submit" class="btn pa-2 bg-c-green:+11 text-c-white cursor-pointer" hover="bg-c-green:+16">Search</button>
     </form>
   </section>
 
-      <section class="d-flex  pt-20">
-        <div class=" w-50vw d-flex flex-col p-items-center gap-4 a-self-center ">
+  <section class="bg-c-white:-16">
+    <div class="d-flex flex-col gap-4 px-6" md="flex-row gap-0 py-20 px-72">
+      <div class=" d-flex flex-col p-items-center gap-4 a-self-center "
+      md="w-50vw">
+      <!-- Restaurants Section -->
+      {% if restaurants %}
+      
+      <div id="restaurant-list-container" class="w-full h-75vh overflow-y-auto">
+      <div id="restaurants" class="grid cols-2 pa-2 gap-6 " md="">
+        {% for restaurant in restaurants|sort(attribute='restaurant_name') %}
+          {% include "__card_restaurant.html" %}
+        {% endfor %}
+      </div>
+      </div>
+  </div>
+  <div id="map" class=" h-75vh p-sticky"
+md="w-50vw"></div>
 
-  
-              <!-- Restaurants Section -->
-    {% if restaurants %}
-    
-    <div id="restaurant-list-container" class="w-full h-100vh overflow-y-auto px-4">
-    <div id="restaurants" class="grid gap-6" sm="cols-2">
-      {% for restaurant in restaurants %}
-        {% include "__card_restaurant.html" %}
-      {% endfor %}
     </div>
-    </div>
+   
+</section>
   {% endif %}
-        </div>
-        <div id="map" class="w-50vw h-100vh p-sticky"></div>
-      </section>
 
   <!-- Results Section -->
   <section id="list-view" class="px-6 py-10">
     {% if query %}
-      <h2>Search Results for "{{ query }}"</h2>
+      <h2>Results for <span class="text-w-bold text-t-capitalize">{{ query }}</span></h2>
     {% endif %}
 
-    <!-- Restaurants Section -->
-    <!-- {% if restaurants %}
-      <div id="restaurant-list-container" class="w-full h-60vh overflow-y-auto rounded-4 border-2 shadow-md pa-4">
-        <div id="restaurants" class="d-flex flex-wrap gap-4" sm="cols-2">
-          {% for restaurant in restaurants %}
-            {% include "__card_restaurant.html" %}
-          {% endfor %}
-        </div>
-      </div>
-{% endif %} -->
 
     <!-- Items Section -->
     {% if items %}
-      <h3 class="text-200" md="text-350">Items</h3>
-      <div id="item-list" class="grid gap-4" md="cols-2">
-        {% for item in items %}
-          <div class="card w-full rounded-4 border-2 shadow-md d-flex pa-2 j-content-between gap-4">
-            <div class="flex flex-col">
-              <h4 class="text-lg text-w-bold">{{ item.item_title }}</h4>
-              <p class="text-sm text-gray-600">Price: {{ item.item_price }}</p>
-              <p class="text-sm text-gray-600">Category: {{ item.item_food_category }}</p>
-              <p class="text-sm text-gray-600">Restaurant: {{ item.restaurant_name }}</p>
-              {% if is_logged_in %}
-                <form id="buy-form-{{ item['item_pk'] }}">
-                  <button class="bg-c-green:-10 text-c-body px-3 py-1 rounded-sm h-10 cursor-pointer" mix-post="/items/{{ item['item_pk'] }}/buy">
+  <div id="restaurant-items-container">
+    {% set grouped_items = items|groupby('restaurant_name') %}
+    {% for restaurant, restaurant_items in grouped_items %}
+      <div class="restaurant-section">
+        <!-- Restaurant Name -->
+        <h4 class="text-300 text-c-gray:-8">{{ restaurant }}</h4>
+
+        <!-- Items for this Restaurant -->
+        <div class="grid gap-4 mb-12" md="cols-3">
+          {% for item in restaurant_items %}
+            <div class="d-flex flex-col card cursor-pointer w-full rounded-4 border-2 shadow-md d-flex pa-2 j-content-between gap-4">
+              <div class="flex flex-col">
+                <div class="w-32 h-40">
+                  <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" alt="{{ item['item_title'] }}" class="w-full h-full rounded-4 obj-f-cover" />
+                </div>
+                <h4 class="text-lg text-w-bold">{{ item.item_title }}</h4>
+                <p class="text-sm text-gray-600">Price: {{ item.item_price }}</p>
+                <p class="text-sm text-gray-600">Category: {{ item.item_food_category }}</p>
+                <p class="text-sm text-gray-600">Restaurant: {{ item.restaurant_name }}</p>
+                {% if is_logged_in %}
+                <form 
+                id="buy-form-{{ item['item_pk'] }}" 
+                class="d-flex flex-col j-self-stretch mt-auto"
+                >
+                <div class="d-flex flex-row j-content-between a-items-center px-1 py-2">
+                  <label for="quantity-{{ item['item_pk'] }}" class="pa-1 text-1rem text-c-white">Pcs:</label>
+                <input
+                    type="number"
+                    id="quantity-{{ item['item_pk'] }}"
+                    name="quantity"
+                    min="1"
+                    value="1"
+                    class="border-s-hidden px-2 py-1 rounded-md w-20"
+                    required
+                />
+
+                </div>
+                
+                <button 
+                    class="bg-c-green:-10 text-c-body rounded-sm px-1 py-0 h-10 cursor-pointer"
+                    md="px-3 py-1 "
+                    mix-post="/items/{{ item['item_pk'] }}/buy"
+                    mix-data="#buy-form-{{ item['item_pk'] }}"
+                    >
                     Buy Now
-                  </button>
-                </form>
-              {% else %}
-                <p class="text-sm text-c-gray:-10 mt-2">Log in to purchase this item.</p>
-              {% endif %}
+                </button>
+            </form>
+                {% else %}
+                  <p class="text-sm text-c-gray:-10 mt-2">Log in to purchase this item.</p>
+                {% endif %}
+              </div>
+             
             </div>
-            <div class="w-32 h-40">
-              <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" alt="{{ item['item_title'] }}" class="w-full h-full rounded-4 obj-f-cover" />
-            </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
       </div>
-    
-    {% endif %}
+    {% endfor %}
+  </div>
+
+{% endif %}
   </section>
 </main>
 

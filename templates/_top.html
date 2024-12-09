@@ -10,7 +10,7 @@
     <title>{{ title or "bite" }}</title>
   </head>
   <body class="w-full h-full text-c-gray:-16">
-    <header class="d-flex j-content-between a-items-center py-3 px-6">
+    <header class="d-flex j-content-between a-items-center py-3 px-6" md="px-72">
       <!-- Logo -->
       <div class="logo">
         <a href="/">
@@ -32,9 +32,14 @@
 
           <div id="dropdown-menu" class="dropdown-content pa-4 w-52 d-none bg-c-white shadow-md rounded-sm">
             <!-- Profile Link with Role -->
-            <a href="{{ url_for('view_profile', role=session.get('user').get('current_role', 'default')) }}" 
+            <!-- <a href="{{ url_for('view_profile', role=session.get('user').get('role', 'default')) }}" 
                class="d-flex a-items-center text-c-gray:-15">
                 <span>Profile</span>
+            </a> -->
+            <!-- Profile Link with Role -->
+            <a href="{{ url_for('view_profile') }}" 
+            class="d-flex a-items-center text-c-gray:-15">
+            <span>Profile</span>
             </a>
         
             {% set roles = session.get("user").get("roles", []) %}
@@ -62,7 +67,7 @@
             </a>
         
             <form method="POST" action="{{ url_for('logout') }}">
-              <button class="w-full text-a-left px-4 py-2 mt-2 text-c-red:-10 rounded-sm" hover="bg-c-gray:-4">Log out</button>
+              <button class="w-full text-a-left px-4 py-2 mt-2 rounded-sm" hover="">Log out</button>
             </form>
           </div>
         </div>
@@ -70,12 +75,13 @@
         <!-- Login and Signup Links -->
         <div class="d-flex flex-row a-items-center">
           <a href="{{ url_for('view_login') }}" 
-            class="rounded-4 text-c-gray:-15"> 
+            class="rounded-4 text-14px text-c-gray:-15"> 
             Login 
           </a>
           <a href="{{ url_for('view_signup') }}" 
-            class="a-items-center ml-2 pa-3 rounded-4 rounded-4 border border-1 text-c-gray:-15 search-button">
-            <button>Sign Up</button>
+            class="a-items-center ml-2 rounded-4 text-14px border-1 text-c-gray:-15 search-button">
+            <button class="pa-2 bg-c-green:+16 text-c-white cursor-pointer"
+            hover=" bg-c-green">Sign Up</button>
           </a>
         </div>
 
@@ -84,5 +90,4 @@
     </header>
 
     <div id="toast" class="d-flex flex-col j-content-center p-fixed w-full top-4 z-10"></div>
-  </body>
-</html>
+

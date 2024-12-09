@@ -163,6 +163,12 @@ def validate_item_image():
 
 
 ##############################
+
+
+
+
+
+##############################
 def send_verify_email(to_email, user_verification_key):
     try:
         # Create a gmail fullflaskdemomail
@@ -580,7 +586,7 @@ def send_deletion_confirmation_email(to_email, user_name):
 
 ##############################
 
-def send_item_purchase_confirmation_email(user_email, user_name, item_title, item_price, restaurant_name):
+def send_item_purchase_confirmation_email(user_email, user_name, item_title, item_price, restaurant_name, quantity):
     try:
         sender_email = "anderslindberg999@gmail.com"
         password = "sxkqvqqwwztienky"
@@ -591,14 +597,21 @@ def send_item_purchase_confirmation_email(user_email, user_name, item_title, ite
         message["To"] = receiver_email
         message["Subject"] = "Order Confirmation - Bite"
 
+
+        # Calculate the total price
+        total_price = item_price * quantity
+
         # Email body with purchase details
         body = f"""
-        Hi {user_name},
+        Hi <h2 class="text-20px w-20">{user_name}</h2><br>
+        
 
-        Thank you for your order! Below are the details of your order:<br><br>
-        <strong>Item:</strong> {item_title}<br>
-        <strong>Price:</strong> DKK {item_price}<br>
-        <strong>Restaurant:</strong> {restaurant_name}<br><br>
+        Thank you for your order! Below are the details of your order:<br><br><br><br>
+        - Item: {item_title}<br>
+        - Pieces: {quantity} <br>
+        - Price per dish: DKK {item_price:.2f}<br>
+        - Total Price: DKK {total_price:.2f}<br>
+        - Restaurant: {restaurant_name}<br><br>
 
         If you have any questions or issues, feel free to contact our support team.<br><br>
 
@@ -619,3 +632,56 @@ def send_item_purchase_confirmation_email(user_email, user_name, item_title, ite
     except Exception as ex:
         print("Failed to send purchase confirmation email:", ex)
         raise_custom_exception("cannot send email", 500)
+
+
+##############################
+# Constants for Create Restaurant Form
+RESTAURANT_NAME_MIN = 2
+RESTAURANT_NAME_MAX = 50
+RESTAURANT_NAME_REGEX = f"^.{{{RESTAURANT_NAME_MIN},{RESTAURANT_NAME_MAX}}}$"
+def validate_restaurant_name():
+    error = f"Restaurant name must be between {RESTAURANT_NAME_MIN} and {RESTAURANT_NAME_MAX} characters."
+    restaurant_name = request.form.get("restaurant_name", "").strip()
+    if not re.match(RESTAURANT_NAME_REGEX, restaurant_name): 
+        raise_custom_exception(error, 400)
+    return restaurant_name
+
+##############################
+STREET_NAME_MIN = 2
+STREET_NAME_MAX = 50
+STREET_NAME_REGEX = f"^.{{{STREET_NAME_MIN},{STREET_NAME_MAX}}}$"
+def validate_street_name():
+    error = f"Street name must be between {STREET_NAME_MIN} and {STREET_NAME_MAX} characters."
+    street_name = request.form.get("street_name", "").strip()
+    if not re.match(STREET_NAME_REGEX, street_name): 
+        raise_custom_exception(error, 400)
+    return street_name
+
+##############################
+STREET_NUMBER_REGEX = r"^\d{1,5}$"  # Allows numbers up to 5 digits
+def validate_street_number():
+    error = "Street number must be a number between 1 and 99999."
+    street_number = request.form.get("street_number", "").strip()
+    if not re.match(STREET_NUMBER_REGEX, street_number): 
+        raise_custom_exception(error, 400)
+    return street_number
+
+##############################
+CITY_NAME_MIN = 2
+CITY_NAME_MAX = 50
+CITY_NAME_REGEX = f"^.{{{CITY_NAME_MIN},{CITY_NAME_MAX}}}$"
+def validate_city_name():
+    error = f"City name must be between {CITY_NAME_MIN} and {CITY_NAME_MAX} characters."
+    city_name = request.form.get("city", "").strip()
+    if not re.match(CITY_NAME_REGEX, city_name): 
+        raise_custom_exception(error, 400)
+    return city_name
+
+##############################
+POSTAL_CODE_REGEX = r"^\d{4,6}$"  # Allows postal codes between 4 and 6 digits
+def validate_postal_code():
+    error = "Postal code must be a number between 4 and 6 digits."
+    postal_code = request.form.get("postnummer", "").strip()
+    if not re.match(POSTAL_CODE_REGEX, postal_code): 
+        raise_custom_exception(error, 400)
+    return postal_code

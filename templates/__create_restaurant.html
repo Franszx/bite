@@ -1,45 +1,110 @@
-<form action="/restaurants/add" method="post" class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
-    <h2 class="text-xl font-bold mb-4 text-gray-800">Create a Restaurant</h2>
-  
+{% include "_top.html" %}
+
+<main class="w-full d-flex flex-col" md="px-72">
+  <!-- Logo Section -->
+  <div class="text-a-center mb-6 my-10">
+    <img src="{{ url_for('static', filename='uploads/' 'bite_francy.png') }}" alt="bite logo" class="w-40" md="w-40" />
+    <h1 class="text-100 text-w-thin text-c-gray:+16 mt-2" md="text-120">Create a Restaurant</h1>
+  </div>
+
+  <form id="frm_create_restaurant" class="d-flex flex-col gap-4 w-50% mx-auto mb-20">
     <!-- Restaurant Name -->
-    <div class="mb-4">
-      <label for="restaurant_name" class="block text-gray-700 text-sm font-bold mb-2">Restaurant Name</label>
-      <input type="text" name="restaurant_name" id="restaurant_name" required
-             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div class="d-flex flex-col">
+      <label 
+        for="restaurant_name" 
+        class="mb-2 text-100 text-w-thin text-c-gray:+2" 
+        md="text-130">
+        <span>Restaurant Name</span>
+      </label>
+      <input 
+        id="restaurant_name" 
+        name="restaurant_name"
+        type="text" 
+        mix-check="{{ x.RESTAURANT_NAME_REGEX }}" 
+        class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
+        focus="border-c-blue:+6 outline-0"
+        />
     </div>
-  
+
     <!-- Street Name -->
-    <div class="mb-4">
-      <label for="street_name" class="block text-gray-700 text-sm font-bold mb-2">Street Name</label>
-      <input type="text" name="street_name" id="street_name" required
-             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div class="d-flex flex-col">
+      <label 
+        for="street_name" 
+        class="mb-2 text-100 text-w-thin text-c-gray:+2" 
+        md="text-130">
+        <span>Street Name</span>
+      </label>
+      <input 
+        id="street_name" 
+        name="street_name"
+        type="text" 
+        mix-check="{{ x.STREET_NAME_REGEX }}" 
+        class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
+        focus="border-c-blue:+6 outline-0"
+        />
     </div>
-  
+
     <!-- Street Number -->
-    <div class="mb-4">
-      <label for="street_number" class="block text-gray-700 text-sm font-bold mb-2">Street Number</label>
-      <input type="text" name="street_number" id="street_number" required
-             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div class="d-flex flex-col">
+      <label 
+        for="street_number" 
+        class="mb-2 text-100 text-w-thin text-c-gray:+2" 
+        md="text-130">
+        <span>Street Number</span>
+      </label>
+      <input 
+        id="street_number" 
+        name="street_number"
+        type="text" 
+        mix-check="{{ x.STREET_NUMBER_REGEX }}" 
+        class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
+        focus="border-c-blue:+6 outline-0"
+        />
     </div>
-  
+
     <!-- City -->
-    <div class="mb-4">
-      <label for="city" class="block text-gray-700 text-sm font-bold mb-2">City</label>
-      <input type="text" name="city" id="city" required
-             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div class="d-flex flex-col">
+      <label 
+        for="city" 
+        class="mb-2 text-100 text-w-thin text-c-gray:+2" 
+        md="text-130">
+        <span>City</span>
+      </label>
+      <input 
+        id="city" 
+        name="city"
+        type="text" 
+        mix-check="{{ x.CITY_NAME_REGEX }}" 
+        class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
+        focus="border-c-blue:+6 outline-0"
+        />
     </div>
-  
+
     <!-- Postnummer -->
-    <div class="mb-4">
-      <label for="postnummer" class="block text-gray-700 text-sm font-bold mb-2">Postnummer</label>
-      <input type="text" name="postnummer" id="postnummer" required
-             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+    <div class="d-flex flex-col">
+      <label 
+        for="postnummer" 
+        class="mb-2 text-100 text-w-thin text-c-gray:+2" 
+        md="text-130">
+        <span>Postal code</span>
+      </label>
+      <input 
+        id="postnummer" 
+        name="postnummer"
+        type="text" 
+        mix-check="{{ x.POSTAL_CODE_REGEX }}" 
+        class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
+        focus="border-c-blue:+6 outline-0"
+        />
     </div>
-  
-    <!-- Submit Button -->
-    <div class="flex items-center justify-between">
-      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Create Restaurant
-      </button>
-    </div>
+
+    <button 
+      mix-post="/restaurants/add" 
+      mix-data="#frm_create_restaurant"
+      class="py-3 px-6 cursor-pointer text-w-thin bg-c-blue:-9 text-c-white rounded-md shadow-md hover:bg-c-blue:-6">
+      Create Restaurant
+    </button>
   </form>
+</main>
+
+{% include "_bottom.html" %}

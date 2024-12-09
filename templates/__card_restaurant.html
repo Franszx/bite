@@ -1,30 +1,16 @@
-<div class="bg-c-white:-16 rounded-10 shadow-md w-60 j-self-center mb-8 pa-2" md="w-full">
-
+<div class="d-flex flex-col j-content-between h-100%  bg-c-black:+16 cursor-pointer rounded-10 shadow-md w-40 j-self-center mb-8 " md="w-full" hover="scale-102">
     <img 
-      src="{{ url_for('static', filename='uploads/' 'bite_francy.png') }}" 
+      src="{{ url_for('static', filename='uploads/images/' 'bite_world.webp') }}" 
       alt="Restaurant Image" 
-      class="w-full h-30 rounded-t-10 obj-f-contain" 
+      class="w-full h-30 rounded-t-10 obj-f-cover" 
       md="h-40">
-    
-
-    <div class="pa-2" md="pa-4">
-      <h3 class="text-lg text-c-black:+16 mb-1">{{ restaurant["restaurant_name"] }}</h3>
-      <p class="text-12px text-c-black:+16 ma-0 pb-1" md="text-sm">
+    <div class="px-2" md="">
+      <h3 class="text-14px text-c-white:-16 mb-1" md="text-lg">{{ restaurant["restaurant_name"] }}</h3>
+      <p class="text-8px text-c-white:-16 ma-0 pb-1" md="text-sm">
         Address: {{ restaurant["restaurant_address"] }}
       </p>
-      
-      <div class="mb-2">
-        {% if restaurant["restaurant_item_cuisine_type"] %}
-        <p class="text-12px text-c-black:+16 ma-0" md="text-sm">Cuisine:</p>
-        <p class="text-w-bold text-12px ma-0">
-          {{ restaurant["restaurant_item_cuisine_type"] }}
-        </p>
-        {% endif %}
-      </div>
-
-
       <div class="d-flex j-content-between ml-2" md="ml-0">
-        <a href="/restaurant/{{ restaurant['restaurant_pk'] }}" class="btn">
+        <a href="/restaurant/{{ restaurant['restaurant_pk'] }}?query={{ query }}" class="btn pa-2 text-c-white:-16" md="text-1rem" hover="text-c-green:+16 text-d-underline">
           View Menu
         </a>
       </div>

@@ -9,7 +9,10 @@
       <label for="user_email" class="d-flex">
         <span>Email</span>
       </label>
-      <input name="user_email" type="text" pattern="{{ x.REGEX_EMAIL }}" required />
+      <input name="user_email" 
+        type="text" 
+        mix-check="{{ x.REGEX_EMAIL }}" 
+        required />
     </div>
 
     <!-- Hidden reset_key Field -->
@@ -18,23 +21,33 @@
     <!-- New Password Field -->
     <div class="d-flex flex-col">
       <label for="new_password" class="d-flex">
-        <span>new password</span>
+        <span>New password</span>
         <span class="ml-auto text-c-gray:+25">{{ x.USER_PASSWORD_MIN }} to {{ x.USER_PASSWORD_MAX }} chars</span>
       </label>
-      <input name="new_password" type="password" pattern="{{ x.REGEX_USER_PASSWORD }}" required />
+      <input 
+      id="new_password" 
+      name="new_password" 
+      type="text" 
+      mix-check="{{ x.REGEX_USER_PASSWORD }}" 
+      required />
     </div>
 
     <!-- Confirm Password Field -->
     <div class="d-flex flex-col">
       <label for="confirm_password" class="d-flex">
-        <span>confirm password</span>
+        <span>Confirm password</span>
         <span class="ml-auto text-c-gray:+25">{{ x.USER_PASSWORD_MIN }} to {{ x.USER_PASSWORD_MAX }} chars</span>
       </label>
-      <input name="confirm_password" type="password" pattern="{{ x.REGEX_USER_PASSWORD }}" required />
+      <input 
+        id="confirm_password"
+        name="confirm_password" 
+        type="text" 
+        mix-check="{{ x.REGEX_USER_PASSWORD }}" 
+        required />
     </div>
 
     <!-- Submit Button -->
-    <button type="submit">Update password</button>
+    <button class="py-3 px-10 w-full bg-c-green:+11 text-c-white rounded-md cursor-pointer" hover="bg-c-green:+16" type="submit">Update password</button>
 
 
   </form>

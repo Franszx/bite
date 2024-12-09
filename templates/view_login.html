@@ -1,22 +1,26 @@
 
 {% include "_top.html" %}
 
-<main class="w-full h-fullvh d-flex flex-col p-items-center">
+<main class="w-full d-flex flex-col p-items-center" md="px-72">
    <!-- Logo Section -->
-   <div class="text-a-center mb-6 my-1">
-    <img src="{{ url_for('static', filename='uploads/' 'bite_francy.png') }}" alt="bite logo" class="w-40 mx-auto" md="w-40" />
+<div class="text-a-center my-10">
+    <img 
+        src="{{ url_for('static', filename='uploads/' 'bite_francy.png') }}" 
+        alt="bite logo" 
+        class="w-40 mx-auto"
+        md="w-40" />
     <h1 class="text-100 text-w-thin text-c-gray:+16 mt-2" md="text-120">Log In to Your Account</h1>
 </div>
     
-    <form id="frm_user_login" class="w-50% d-flex flex-col gap-2 mx-auto">
+    <form id="frm_user_login" class="w-50% d-flex flex-col gap-2 mx-auto mb-20">
 
       
         
-        <div class="text-c-green text-200 text-a-center">
+        <div class="text-c-green text-100 text-w-thin text-a-center">
             {{ message }}
         </div>
         
-        <div class="d-flex flex-col">
+        <div class="d-flex flex-col mt-10">
             <label for="user_email" class="mb-2 text-130 text-w-thin text-c-gray:+2">
                 <span>Email Address</span>
             </label>
@@ -25,7 +29,7 @@
                 type="text" 
                 mix-check="{{ x.REGEX_EMAIL }}"
                 class="py-3 px-4 rounded-md border-2 border-c-gray:-4 "
-                focus="border-c-blue:+6 outline-0">
+                focus="border-c-green:+16 outline-0">
         </div>
 
         <div class="d-flex flex-col">
@@ -38,13 +42,13 @@
                 type="text" 
                 mix-check="{{ x.REGEX_USER_PASSWORD }}"
                 class="py-3 px-4 rounded-md border-2 border-c-gray:-4 "
-                focus="border-c-blue:+6 outline-0">
+                focus="border-c-green:+16 outline-0">
         </div>
 
         <button 
             mix-post="/login" 
             mix-data="#frm_user_login"
-            class="bg-c-blue:+10 text-c-white:-1 a-self-center py-3 px-6 mt-8 rounded-md text-w-thin cursor-pointer w-40" hover="ts-p-all bg-c-blue:+16" 
+            class="bg-c-green:+11 text-c-white:-1 a-self-center py-3 px-6 mt-8 rounded-md text-w-thin cursor-pointer w-40" hover="ts-p-all bg-c-green:+16+16" 
             >
             Login
         </button>

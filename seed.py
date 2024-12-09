@@ -4,34 +4,49 @@ import time
 import random
 from werkzeug.security import generate_password_hash
 from faker import Faker
+from shapely.geometry import Point, Polygon
 
 fake = Faker()
 
 from icecream import ic
 ic.configureOutput(prefix=f'***** | ', includeContext=True)
 
-
 db, cursor = x.db()
-
 
 def insert_user(user):       
     q = f"""
-        INSERT INTO users 
-        VALUES (%s, %s,%s ,%s ,%s ,%s ,%s ,%s ,%s ,%s ,%s ,%s, %s, %s)        
-        """
+    INSERT INTO users 
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)        
+    """
     values = tuple(user.values())
     cursor.execute(q, values)
 
+# Define Copenhagen's approximate boundary using latitude and longitude
+copenhagen_boundary = Polygon([
+    (12.45, 55.6), (12.65, 55.6), (12.65, 55.8), (12.45, 55.8), (12.45, 55.6)
+])
 
+def is_within_copenhagen(latitude, longitude):
+    """Check if a given latitude and longitude point is within the boundary."""
+    point = Point(longitude, latitude)  # Note: Longitude comes first in Point
+    return copenhagen_boundary.contains(point)
 
+def generate_coordinates_within_boundary():
+    """Generate a random point within Copenhagen's boundary."""
+    while True:
+        latitude = round(random.uniform(55.6, 55.8), 8)
+        longitude = round(random.uniform(12.45, 12.65), 8)
+        if is_within_copenhagen(latitude, longitude):
+            return latitude, longitude
 
 try:
 
 
     
     ##############################
-    cursor.execute("DROP TABLE IF EXISTS items") # dependent table
-    cursor.execute("DROP TABLE IF EXISTS users_roles") # dependent table
+    cursor.execute("DROP TABLE IF EXISTS item_images")  # Drop `item_images` table first
+    cursor.execute("DROP TABLE IF EXISTS items") 
+    cursor.execute("DROP TABLE IF EXISTS users_roles") #  junction table
     cursor.execute("DROP TABLE IF EXISTS restaurants")
     cursor.execute("DROP TABLE IF EXISTS users")
     
@@ -57,9 +72,12 @@ try:
         """        
     cursor.execute(q)
 
+
     ##############################
-    # Create restaurants table
-    q = """
+
+
+    # Create `restaurants` table
+    cursor.execute("""
         CREATE TABLE restaurants (
             restaurant_pk CHAR(36),
             restaurant_user_fk CHAR(36),
@@ -71,34 +89,54 @@ try:
             restaurant_item_cuisine_type TEXT,
             restaurant_item_food_category TEXT,
             PRIMARY KEY(restaurant_pk),
-            FOREIGN KEY(restaurant_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE,
-            FULLTEXT(restaurant_name, restaurant_address, restaurant_item_title, restaurant_item_cuisine_type, restaurant_item_food_category)
+            FOREIGN KEY(restaurant_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE
         )
-    """
-    cursor.execute(q)
+    """)
+    # Add FULLTEXT index for `restaurants`
+    cursor.execute("""
+        ALTER TABLE restaurants
+        ADD FULLTEXT (restaurant_name, restaurant_item_title, restaurant_item_cuisine_type, restaurant_item_food_category)
+    """)
 
     ##############################
-    # Create items table
+    
+
+    # Create `items` table
+    cursor.execute("""
+            CREATE TABLE items (
+                item_pk CHAR(36),
+                item_user_fk CHAR(36),
+                item_title VARCHAR(50) NOT NULL,
+                item_price DECIMAL(5,2) NOT NULL,
+                item_image VARCHAR(255),
+                item_cuisine_type VARCHAR(50),
+                item_food_category VARCHAR(50),
+                item_created_at INTEGER UNSIGNED,
+                item_updated_at INTEGER UNSIGNED,
+                item_blocked_at INTEGER UNSIGNED,
+                PRIMARY KEY(item_pk)
+                -- Note: item_restaurant_fk and its FOREIGN KEY line removed
+            )
+        """)
+
+    cursor.execute("""
+            ALTER TABLE items
+            ADD FULLTEXT (item_title, item_cuisine_type, item_food_category)
+        """)
+
+    ##############################
     q = """
-    CREATE TABLE items (
-        item_pk CHAR(36),
-        item_user_fk CHAR(36),
-        item_title VARCHAR(50) NOT NULL,
-        item_price DECIMAL(5,2) NOT NULL,
-        item_image VARCHAR(50),
-        item_cuisine_type VARCHAR(50),
-        item_food_category VARCHAR(50),
-        item_blocked_at INTEGER UNSIGNED,
-        PRIMARY KEY(item_pk),
-        FULLTEXT(item_title, item_cuisine_type, item_food_category) -- Add FULLTEXT index here
-        );
+    CREATE TABLE item_images (
+        image_pk CHAR(36) PRIMARY KEY,  
+        item_fk CHAR(36),
+        image_path VARCHAR(255) NOT NULL,
+        restaurant_fk CHAR(36),
+        created_at INTEGER UNSIGNED,
+        FOREIGN KEY (item_fk) REFERENCES items(item_pk) ON DELETE CASCADE,
+        FOREIGN KEY (restaurant_fk) REFERENCES restaurants(restaurant_pk) ON DELETE CASCADE
+    )
     """
     cursor.execute(q)
-
-    # Add foreign key constraint
-    cursor.execute("""
-        ALTER TABLE items ADD FOREIGN KEY (item_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE ON UPDATE RESTRICT
-    """)
 
 
     ##############################
@@ -114,20 +152,34 @@ try:
 
 
     ##############################  Users_roles Junction Table
-    q = """
+    # q = """
+    #     CREATE TABLE users_roles (
+    #         user_role_user_fk CHAR(36),
+    #         user_role_role_fk CHAR(36),
+    #         PRIMARY KEY(user_role_user_fk, user_role_role_fk)
+    #     );
+    #     """        
+    # cursor.execute(q)
+
+    # Create `users_roles` table
+    cursor.execute("""
         CREATE TABLE users_roles (
             user_role_user_fk CHAR(36),
             user_role_role_fk CHAR(36),
-            PRIMARY KEY(user_role_user_fk, user_role_role_fk)
-        );
-        """        
-    cursor.execute(q)
+            PRIMARY KEY(user_role_user_fk, user_role_role_fk),
+            FOREIGN KEY(user_role_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE,
+            FOREIGN KEY(user_role_role_fk) REFERENCES roles(role_pk) ON DELETE CASCADE
+        )
+    """)
 
-    cursor.execute("ALTER TABLE users_roles ADD FOREIGN KEY (user_role_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE ON UPDATE RESTRICT") 
-    cursor.execute("ALTER TABLE users_roles ADD FOREIGN KEY (user_role_role_fk) REFERENCES roles(role_pk) ON DELETE CASCADE ON UPDATE RESTRICT") 
-
-
-
+    
+    # Add foreign key constraints to `users_roles`
+    cursor.execute("""
+        ALTER TABLE users_roles ADD FOREIGN KEY (user_role_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE ON UPDATE RESTRICT
+    """)
+    cursor.execute("""
+        ALTER TABLE users_roles ADD FOREIGN KEY (user_role_role_fk) REFERENCES roles(role_pk) ON DELETE CASCADE ON UPDATE RESTRICT
+    """)
 
 
     ############################## 
@@ -140,6 +192,7 @@ try:
                 ("{x.RESTAURANT_ROLE_PK}", "restaurant")
         """
     cursor.execute(q)
+
 
     ############################## 
     # Create admin user
@@ -158,7 +211,7 @@ try:
         "user_verified_at" : int(time.time()),
         "user_verification_key" : str(uuid.uuid4()),
         "reset_key" : str(uuid.uuid4()),
-        "token_expriry" : None
+        "token_expiry" : None
     }            
 
 
@@ -189,7 +242,7 @@ try:
         "user_verified_at" : int(time.time()),
         "user_verification_key" : str(uuid.uuid4()),
         "reset_key" : str(uuid.uuid4()),
-        "token_expriry" : None
+        "token_expiry" : None
     }
     insert_user(user)
    
@@ -218,7 +271,7 @@ try:
         "user_verified_at" : int(time.time()),
         "user_verification_key" : str(uuid.uuid4()),
         "reset_key" : str(uuid.uuid4()),
-        "token_expriry" : None
+        "token_expiry" : None
     }
     insert_user(user)
     # Assign role to partner user
@@ -260,12 +313,73 @@ try:
     # Insert into the `restaurants` table
     cursor.execute("""
         INSERT INTO restaurants (restaurant_pk, restaurant_user_fk, restaurant_name,
-                                restaurant_address, restaurant_latitude, restaurant_longitude)
-        VALUES (%s, %s, %s, %s, %s, %s)
+                                restaurant_address, restaurant_latitude, restaurant_longitude, restaurant_item_title, restaurant_item_cuisine_type, restaurant_item_food_category)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
     """, (restaurant_pk, user_pk, "John's Fine Dining", "123 Gourmet Street, Food City",
-        round(random.uniform(55.5, 55.8), 8),  # Latitude around Copenhagen
-        round(random.uniform(12.4, 12.7), 8)   # Longitude around Copenhagen
+        round(random.uniform(55.5, 55.8), 8),
+        round(random.uniform(12.4, 12.7), 8),
+        None,
+        None,
+        None   
     ))
+
+    dishes = [
+        # American
+        ("Buffalo Wings", "American", "American"),
+        ("Mac and Cheese", "American", "American"),
+        ("Cornbread", "American", "American"),
+
+        # Burger
+        ("Classic Cheeseburger", "American", "Burger"),
+        ("Vegan Black Bean Burger", "American", "Burger"),
+        ("Chicken Burger", "American", "Burger"),
+
+        ("Turkey Club Sandwich", "American", "Sandwich"),
+        ("Pulled Pork Sandwich", "American", "Sandwich"),
+
+        ]
+
+
+    # Add random items to the restaurant
+    item_titles = []
+    item_cuisines = []
+    item_categories = []
+
+    for _ in range(random.randint(1, 2)):  # Random number of items
+        dish = random.choice(dishes)
+        item_pk = str(uuid.uuid4())
+        item_title, item_cuisine_type, item_food_category = dish
+        item_price = round(random.uniform(50, 150), 2)
+        item_image = f"dish_{random.randint(1, 100)}.jpg"
+
+        # Insert item into the items table
+        cursor.execute("""
+            INSERT INTO items (
+                item_pk, item_user_fk, item_title, item_price, item_image, item_cuisine_type, item_food_category, item_created_at, item_updated_at, item_blocked_at
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (item_pk, user_pk, item_title, item_price, item_image, item_cuisine_type, item_food_category, int(time.time()), 0, 0))
+
+        # Collect data for updating the restaurant
+        item_titles.append(item_title)
+        item_cuisines.append(item_cuisine_type)
+        item_categories.append(item_food_category)
+
+    # Update the restaurant with item details
+    cursor.execute("""
+        UPDATE restaurants
+        SET 
+            restaurant_item_title = %s,
+            restaurant_item_cuisine_type = %s,
+            restaurant_item_food_category = %s
+        WHERE restaurant_pk = %s
+    """, (
+        ", ".join(item_titles),          # Concatenate all item titles
+        ", ".join(set(item_cuisines)),   # Concatenate unique cuisine types
+        ", ".join(set(item_categories)), # Concatenate unique food categories
+        restaurant_pk                    # Restaurant primary key
+    ))
+
 
 
     ############################## 
@@ -291,7 +405,7 @@ try:
             "user_verified_at" : user_verified_at,
             "user_verification_key" : str(uuid.uuid4()),
             "reset_key" : str(uuid.uuid4()),
-            "token_expriry" : None
+            "token_expiry" : None
         }
 
         insert_user(user)
@@ -322,7 +436,7 @@ try:
             "user_verified_at" : user_verified_at,
             "user_verification_key" : str(uuid.uuid4()),
             "reset_key" : str(uuid.uuid4()),
-            "token_expriry" : None
+            "token_expiry" : None
         }
 
         insert_user(user)
@@ -457,10 +571,13 @@ try:
 
 
     user_password = hashed_password = generate_password_hash("password")
+
     for _ in range(50):
         user_pk = str(uuid.uuid4())
         restaurant_pk = str(uuid.uuid4())
         user_verified_at = random.choice([0,int(time.time())])
+
+
         user = {
             "user_pk" : user_pk,
             "user_name" : fake.first_name(),
@@ -475,7 +592,7 @@ try:
             "user_verified_at" : user_verified_at,
             "user_verification_key" : str(uuid.uuid4()),
             "reset_key" : str(uuid.uuid4()),
-            "token_expriry" : None
+            "token_expiry" : None
         }
         insert_user(user)
 
@@ -500,28 +617,31 @@ try:
             neighborhood = random.choice(neighborhoods)
             street_number = random.randint(1, 200)  # Random house number
             return f"{street} {street_number}, {neighborhood}, Copenhagen"
+        
+           # Generate valid latitude and longitude within Copenhagen boundary
+        latitude, longitude = generate_coordinates_within_boundary()
 
         cursor.execute("""
             INSERT INTO restaurants (restaurant_pk, restaurant_user_fk, restaurant_name, restaurant_address, restaurant_latitude, restaurant_longitude, restaurant_item_title, restaurant_item_cuisine_type, restaurant_item_food_category)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (
-            restaurant_pk,
-            user_pk,
-            fake.company(),
-            random_copenhagen_address(),
-            round(random.uniform(55.5, 55.8), 8),  # Latitude
-            round(random.uniform(12.4, 12.7), 8),  # Longitude
-            None,  # Placeholder for restaurant_item_title
-            None,  # Placeholder for restaurant_item_cuisine_type
-            None   # Placeholder for restaurant_item_food_category
-        ))
+                restaurant_pk,
+                user_pk,
+                fake.company(),
+                random_copenhagen_address(),
+                latitude,  # Use the generated latitude
+                longitude, # Use the generated longitude
+                None,  # Placeholder for restaurant_item_title
+                None,  # Placeholder for restaurant_item_cuisine_type
+                None   # Placeholder for restaurant_item_food_category
+    ))
 
         
         item_titles = []
         item_cuisines = []
         item_categories = []
 
-        for _ in range(random.randint(5, 10)):  # Random number of items
+        for _ in range(random.randint(1, 2)):  # Random number of items
             dish = random.choice(dishes)
             item_pk = str(uuid.uuid4())
             item_title, item_cuisine_type, item_food_category = dish
@@ -530,11 +650,11 @@ try:
 
             # Insert item into the items table
             cursor.execute("""
-                INSERT INTO items (
-                    item_pk, item_user_fk, item_title, item_price, item_image, item_cuisine_type, item_food_category
-                )
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (item_pk, user_pk, item_title, item_price, item_image, item_cuisine_type, item_food_category))
+                            INSERT INTO items (
+                            item_pk, item_user_fk, item_title, item_price, item_image, item_cuisine_type, item_food_category, item_created_at, item_updated_at, item_blocked_at
+                            )
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        """, (item_pk, user_pk, item_title, item_price, item_image, item_cuisine_type, item_food_category, int(time.time()), 0, 0))
 
             # Collect data for updating the restaurant
             item_titles.append(item_title)
@@ -555,6 +675,37 @@ try:
                 restaurant_pk                    # Restaurant primary key
             ))
 
+        
+            # Fetch a list of existing user_pks from the users table
+            cursor.execute("SELECT user_pk FROM users")
+            existing_users = [row["user_pk"] for row in cursor.fetchall()]
+
+            # Ensure there are users available before proceeding
+            if not existing_users:
+                raise Exception("No users available in the database to assign as foreign keys to items.")
+
+            for dish in dishes:
+                item_pk = str(uuid.uuid4())
+                item_title, item_cuisine_type, item_food_category = dish
+                item_price = round(random.uniform(50, 150), 2)
+                item_image = f"dish_{random.randint(1, 100)}.jpg"
+
+                # Randomly assign an existing user as the foreign key
+                item_user_fk = random.choice(existing_users)
+
+                cursor.execute("""
+                    INSERT INTO items (item_pk, item_user_fk, item_title, item_price, item_image, item_cuisine_type, item_food_category)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """, (item_pk, item_user_fk, item_title, item_price, item_image, item_cuisine_type, item_food_category))
+
+                # Insert additional images into `item_images`
+                for _ in range(2):  # Adding two additional images per item
+                    image_pk = str(uuid.uuid4())
+                    image_path = f"alt_{random.randint(1, 100)}_{item_image}"
+                    cursor.execute("""
+                                        INSERT INTO item_images (image_pk, item_fk, image_path, restaurant_fk, created_at)
+                                        VALUES (%s, %s, %s, %s, %s)
+                    """, (image_pk, item_pk, image_path, restaurant_pk, int(time.time())))
 
 
     db.commit()

@@ -1,0 +1,171 @@
+
+{% include "_top.html" %}
+
+    <main class="w-full h-full d-flex flex-col px-6">
+      <section class="bg-c-light py-10"> 
+      <header class="d-flex j-content-between a-items-center py-3">
+          <h1 class="text-200" md="text-350">
+          {% if role == 'restaurant' %}
+            Menu Management
+          {% endif %} 
+          </h1>
+        </header>
+        <div class="border-1 border-b-c-white:-16">
+            <nav class="tabs d-flex flex-col mb-6 j-content-evenly" md="flex-row gap-6">
+              {% if role == 'admin' %}
+                <a href="{{ url_for('view_admin') }}" class="text-120 text-c-gray">Admin overview</a>
+                <a href="{{ url_for('view_edit_users') }}" class="text-120 text-c-gray">User administration</a>
+                <a href="{{ url_for('view_edit_items') }}" class="text-120  text-c-gray">Item administration</a>
+                <a href="#" class="text-120 text-c-gray">Contracts</a>
+                <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
+                <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+              {% elif role == 'restaurant' %}
+                  <a href="{{ url_for('view_manage_items') }}" 
+                    class="text-120 text-c-gray text-w-bold ">
+                      Menu Management
+                  </a>  
+              <a href="#" class="text-120 text-c-gray">Order Management</a>
+              <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-c-gray">Settings</a>
+              <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+              {% elif role == 'partner' %}
+              <a href="#" class="text-120 text-c-gray">Order history</a>
+              <a href="#" class="text-120 text-c-gray">Partnership Details</a>
+              <a href="#" class="text-120 text-c-gray">Earnings</a>
+              <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold text-c-gray">Settings</a>
+              <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+              {% elif role == 'customer' %}
+              <a href="#" class="text-120 text-c-gray">Order history</a>
+              <a href="#" class="text-120 text-c-gray">Earn credits</a>
+              <a href="#" class="text-120 text-c-gray">Redeem code</a>
+              <a href="{{ url_for('view_profile_settings') }}" class="text-120 text-w-bold  text-c-gray">Settings</a>
+              <a href="{{ url_for('view_profile') }}" class="text-120  text-c-gray">Profile</a>
+              {% endif %}
+            </nav>
+          </div>
+          <section class="d-flex flex-col gap-4 my-8">
+            <div class="d-flex flex-col col-4 w-half">
+                <h2 class="text-200 text-c-gray:+2 mb-4">Add a New Menu Item</h2>
+                <form 
+                  id="add_menu_item_form"  
+                  class="d-flex flex-col  gap-4"
+                  action="{{ url_for('add_item')}}"
+                  enctype="multipart/form-data">
+
+                  <input type="hidden" name="item_user_fk" value="{{ session['user']['user_pk'] }}">
+                    <label for="item_title">Title:</label>
+                    <input 
+                      type="text" 
+                      id="item_title" 
+                      name="item_title" 
+                      required>
+          
+                    <label for="item_price">Price:</label>
+                    <input 
+                      type="number" 
+                      id="item_price" 
+                      name="item_price" 
+                      step="0.01" 
+                      required>
+
+                    <label for="item_cuisine_type">Cuisine Type:</label>
+                    <input 
+                      type="text" 
+                      id="item_cuisine_type"
+                      name="item_cuisine_type" 
+                      required />
+
+                    <label for="item_food_category">Food Category:</label>
+                    <input 
+                      type="text" 
+                      id="item_food_category" 
+                      name="item_food_category" 
+                      required />
+
+                      <label 
+                      for="item_image">
+                      Upload Image:
+                    </label>
+                    <input 
+                      type="file" 
+                      name="item_image" 
+                      id="item_image" 
+                      accept="image/*" 
+                      required>
+                    
+                  </div>
+                </form>
+                <div>
+                  <button
+                      type="button"
+                      class="d-flex a-self-center a-items-center px-4 py-2 bg-c-green:+16 text-c-white px-8 mt-10 text-120 rounded-md shadow"
+                      hover="cursor-pointer bg-c-green:-9"
+                      mix-post="{{ url_for('add_item') }}"
+                      mix-data="#add_menu_item_form">
+                      Add Item
+                    </button>
+
+                </div>
+                
+            </section>
+            <section class="menu-items">
+    <h1>Your Items</h1>
+    <p>Total items: {{ item_count }}</p> <!-- Display the item count -->
+    <div class="items-container grid cols-2" md="cols-4">
+        {% if items %}
+            {% for item in items %}
+                <div class="bg-c-white:-16 rounded-10 shadow-md w-40 j-self-center">
+                    <!-- Main Image -->
+                    <div class="d-flex a-items-center w-full">
+                        <img 
+                            src="{{ url_for('static', filename='dishes/' + item.item_image) }}" 
+                            class="w-full h-30 rounded-t-10 obj-f-cover" 
+                            alt="Main Item Image">
+                    </div>
+                    <div class="pa-2">
+                      <!-- Item T
+                     itle and Price -->
+                    <h3 class="text-sm ma-0" md="text-18px text-lh-tight text-w-bold">{{ item.item_title }}</h3>
+                    <p class="text-12px ma-0 pa-0" md="text-16px">Price: {{ item.item_price }} Dkk</p>
+                    <!-- Additional Images -->
+                    {% if item.additional_images %}4
+                        <div class="additional-images d-flex gap-2 mt-4">
+                            {% for image in item.additional_images %}
+                                <img 
+                                    src="{{ url_for('static', filename=image) }}" 
+                                    class="w-12 h-12 rounded-md obj-f-cover shadow" 
+                                    alt="Additional Image">
+                            {% endfor %}
+                        </div>
+                      
+                    {% endif %}
+                    <!-- Edit Button -->
+                    <div class="d-flex j-content-center gap-2 mt-4">
+                        <a href="{{ url_for('view_item_edit_page', item_pk=item.item_pk) }}" 
+                          class="bg-c-gray text-c-white pa-2 text-10px rounded-md"
+                          md="px-4 py-2 text-14px"
+                          hover="bg-c-gray:+16">
+                            Edit
+                        </a>
+                        <button 
+                          class="bg-c-red:+16 text-c-white pa-2 text-10px pa-2 rounded-md"
+                          mix-delete="{{ url_for('delete_item', item_pk=item.item_pk) }}"
+                          md="px-4 py-2"
+                          hover="cursor-pointer bg-c-red">
+                            Delete
+                        </button>
+                    </div>
+
+                    </div>
+                    
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No items found for this user.</p>
+        {% endif %}
+    </div>
+</section>
+        
+        </section>
+</main>
+
+{% include "_bottom.html" %}
