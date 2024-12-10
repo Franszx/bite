@@ -1081,7 +1081,6 @@ def view_restaurants():
     restaurants = []
 
     try:
-        # Check if the user is logged in as a "restaurant" user
         if user and "restaurant" in user.get("roles", []):
             # Fetch only the restaurants owned by the logged-in user
             cursor.execute("""
@@ -1103,7 +1102,6 @@ def view_restaurants():
                 )
             return render_template("view_menu_management.html", restaurants=restaurants)
 
-        # For general users or with a query, perform a full search
         if query:
             sql = f"""
                 SELECT 
