@@ -33,6 +33,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 
+
 # Ensure the UPLOAD_FOLDER exists
 UPLOAD_FOLDER_AVATARS = 'static/avatars/'
 if not os.path.exists(UPLOAD_FOLDER_AVATARS):

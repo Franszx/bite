@@ -63,14 +63,14 @@ def db():
     Establish a connection to the PythonAnywhere database using the DATABASE dictionary.
     """
     try:
-        db_connection = mysql.connector.connect(
+        db = mysql.connector.connect(
             host=DATABASE['host'],
             user=DATABASE['user'],
             password=DATABASE['password'],
             database=DATABASE['database']
         )
-        cursor = db_connection.cursor(dictionary=True)
-        return db_connection, cursor
+        cursor = db.cursor(dictionary=True)
+        return db, cursor
     except mysql.connector.Error as err:
         ic(f"Database connection error: {err}")
         raise
