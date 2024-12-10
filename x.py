@@ -42,7 +42,7 @@ def raise_custom_exception(error, status_code):
 DATABASE = {
     'host': '2024lindberg.mysql.eu.pythonanywhere-services.com',
     'user': '2024lindberg',
-    'password': "a0b40581-8af6-4c98-bda0-b9b6df9688b2$kartofler",
+    'password': "a0b40581-8af6-4c98-bda0-b9b6df9688b2",
     'database': '2024lindberg$company',
 }
 
