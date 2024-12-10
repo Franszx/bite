@@ -13,14 +13,20 @@ from mysql.connector.errors import IntegrityError
 from functools import wraps
 from werkzeug.utils import secure_filename
 import random  
-import json
 
 from icecream import ic
 ic.configureOutput(prefix=f'***** | ', includeContext=True)
 
+
+
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'  # or 'redis', etc.
 Session(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024  # 2MB max file size
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}

@@ -13,12 +13,17 @@ from icecream import ic
 ic.configureOutput(prefix=f'***** | ', includeContext=True)
 
 
+
+
 UNSPLASH_ACCESS_KEY = '30f5d8eb-41ad-4dc1-8e95-36ab5e5e1009'
 ADMIN_ROLE_PK = "16fd2706-8baf-433b-82eb-8c7fada847da"
 CUSTOMER_ROLE_PK = "c56a4180-65aa-42ec-a945-5fd21dec0538"
 PARTNER_ROLE_PK = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 RESTAURANT_ROLE_PK = "9f8c8d22-5a67-4b6c-89d7-58f8b8cb4e15"
-SECRET_KEY = os.getenv('SECRET_KEY', '61dacde0-e6c2-4e31-b436-6f3e2ca4829109384') # This approach allows you to use a secure key in production while keeping a fallback for local development.
+SECRET_KEY = os.getenv('SECRET_KEY', '61dacde0-e6c2-4e31-b436-6f3e2ca4829109384')
+DATABASE_PASSWORD = "a0b40581-8af6-4c98-bda0-b9b6df9688b2$kartofler" 
+
+# This approach allows you to use a secure key in production while keeping a fallback for local development.
 
 
 # form to get data from input fields
@@ -34,17 +39,41 @@ class CustomException(Exception):
 def raise_custom_exception(error, status_code):
     raise CustomException(error, status_code)
 
+DATABASE = {
+    'host': '2024lindberg.mysql.eu.pythonanywhere-services.com',
+    'user': '2024lindberg',
+    'password': "a0b40581-8af6-4c98-bda0-b9b6df9688b2$kartofler",
+    'database': '2024lindberg$company',
+}
+
 
 ##############################
+# def db():
+#     db = mysql.connector.connect(
+#         host="mysql",      # Replace with your MySQL server's address or docker service name "mysql"
+#         user="root",  # Replace with your MySQL username
+#         password="password",  # Replace with your MySQL password
+#         database="company"   # Replace with your MySQL database name
+#     )
+#     cursor = db.cursor(dictionary=True)
+#     return db, cursor
+
 def db():
-    db = mysql.connector.connect(
-        host="mysql",      # Replace with your MySQL server's address or docker service name "mysql"
-        user="root",  # Replace with your MySQL username
-        password="password",  # Replace with your MySQL password
-        database="company"   # Replace with your MySQL database name
-    )
-    cursor = db.cursor(dictionary=True)
-    return db, cursor
+    """
+    Establish a connection to the PythonAnywhere database using the DATABASE dictionary.
+    """
+    try:
+        db_connection = mysql.connector.connect(
+            host=DATABASE['host'],
+            user=DATABASE['user'],
+            password=DATABASE['password'],
+            database=DATABASE['database']
+        )
+        cursor = db_connection.cursor(dictionary=True)
+        return db_connection, cursor
+    except mysql.connector.Error as err:
+        ic(f"Database connection error: {err}")
+        raise
 
 
 ##############################
