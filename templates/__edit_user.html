@@ -19,9 +19,26 @@
 
 
   <section class="bg-c-white rounded-4">
-  
+    <div class="d-flex j-content-center mt-12">
 
-    <div class=" mt-6">
+    
+    <form action="{{ url_for('view_edit_users') }}" method="GET" class="d-flex">
+      <input 
+          type="text" 
+          name="query" 
+          placeholder="Search users..." 
+          class="border-1 rounded-md px-4 py-2 text-120" 
+          value="{{ request.args.get('query', '') }}"
+      />
+      <button 
+          type="submit" 
+          class="bg-blue-600 text-white px-4 py-2 rounded-md ml-2">
+          Search
+      </button>
+  </form>
+</div>
+
+    <div class="">
       <div class="d-flex flex-col">
         <div class="d-flex rounded-t-md j-content-between text-c-charocoal:+1 border-b-1 border-c-white:-16" md="h-initial j-content-between">
           <p class="d-none py-1 px-1 text-w-medium" md="d-block py-5 ">Profile Info</p>

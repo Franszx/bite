@@ -50,7 +50,8 @@ try:
     cursor.execute("DROP TABLE IF EXISTS restaurants")
     cursor.execute("DROP TABLE IF EXISTS users")
     
-    q = """
+    # Create `users` table
+    cursor.execute("""
         CREATE TABLE users (
             user_pk CHAR(36),
             user_name VARCHAR(20) NOT NULL,
@@ -66,11 +67,15 @@ try:
             user_verification_key CHAR(36),
             reset_key CHAR(36),
             token_expiry DATETIME NULL,
-            PRIMARY KEY(user_pk),
-            FULLTEXT(user_name, user_last_name, user_email)
+            PRIMARY KEY(user_pk)
         )
-        """        
-    cursor.execute(q)
+    """)
+
+    # Add FULLTEXT index for `users`
+    cursor.execute("""
+        ALTER TABLE users
+        ADD FULLTEXT (user_name, user_last_name, user_email)
+    """)
 
 
     ##############################

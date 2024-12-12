@@ -703,22 +703,46 @@ def view_edit_users():
     try:
         db, cursor = x.db()
         
-        # Fetch all users without pagination
-        cursor.execute("""
-                    SELECT 
-                        u.user_pk, 
-                        u.user_name, 
-                        u.user_last_name, 
-                        u.user_avatar, 
-                        u.user_email, 
-                        u.user_blocked_at, 
-                        u.user_deleted_at,  -- Fetch the deletion timestamp
-                        r.restaurant_name
-                    FROM users u
-                    LEFT JOIN restaurants r ON u.user_pk = r.restaurant_user_fk
-                """)
-        users = cursor.fetchall()
+        # Get the search query from the request
+        query = request.args.get("query", "").strip()
+
+        # Fetch users based on the query
+        if query:
+            cursor.execute("""
+                SELECT 
+                    u.user_pk, 
+                    u.user_name, 
+                    u.user_last_name, 
+                    u.user_avatar, 
+                    u.user_email, 
+                    u.user_blocked_at, 
+                    u.user_deleted_at,  
+                    r.restaurant_name
+                FROM users u
+                LEFT JOIN restaurants r ON u.user_pk = r.restaurant_user_fk
+                WHERE 
+                    u.user_name LIKE %s OR 
+                    u.user_last_name LIKE %s OR 
+                    u.user_email LIKE %s
+            """, (f"%{query}%", f"%{query}%", f"%{query}%"))
+        else:
+            # Fetch all users without a search query
+            cursor.execute("""
+                SELECT 
+                    u.user_pk, 
+                    u.user_name, 
+                    u.user_last_name, 
+                    u.user_avatar, 
+                    u.user_email, 
+                    u.user_blocked_at, 
+                    u.user_deleted_at,  
+                    r.restaurant_name
+                FROM users u
+                LEFT JOIN restaurants r ON u.user_pk = r.restaurant_user_fk
+            """)
         
+        users = cursor.fetchall()
+
         # Ensure all fields are defined and not None
         for user in users:
             user["user_pk"] = user.get("user_pk", "")
@@ -729,14 +753,12 @@ def view_edit_users():
             user["user_blocked_at"] = user.get("user_blocked_at", None)
             user["restaurant_name"] = user.get("restaurant_name", "No Restaurant")
 
-        # Log the users data for debugging
-        ic(users)
-
         return render_template(
             "__edit_user.html",
             x=x,
             users=users,
-            restaurants=[]
+            restaurants=[],
+            query=query  # Pass the query back to the template
         )
     except Exception as ex:
         ic(f"Error in view_edit_users: {ex}")
@@ -749,7 +771,6 @@ def view_edit_users():
             ic(ex)
             return "<template>Database error occurred.</template>", 500
         return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
-
     finally:
         if "cursor" in locals():
             cursor.close()
@@ -1387,7 +1408,7 @@ def view_search():
 
         db, cursor = x.db()
 
-        # FULLTEXT search on restaurants
+        # Search restaurants using LIKE
         cursor.execute(
             """
             SELECT DISTINCT
@@ -1397,13 +1418,16 @@ def view_search():
                 restaurant_latitude, 
                 restaurant_longitude 
             FROM restaurants 
-            WHERE MATCH(restaurant_name,restaurant_item_title, restaurant_item_cuisine_type, restaurant_item_food_category) 
-            AGAINST (%s IN NATURAL LANGUAGE MODE)
-            """, (query,)
+            WHERE 
+                restaurant_name LIKE %s OR 
+                restaurant_item_title LIKE %s OR 
+                restaurant_item_cuisine_type LIKE %s OR 
+                restaurant_item_food_category LIKE %s
+            """, (f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%")
         )
         restaurant_results = cursor.fetchall()
 
-        # FULLTEXT search on items with associated restaurant_name
+        # Search items using LIKE and fetch associated restaurant details
         cursor.execute(
             """
             SELECT DISTINCT
@@ -1418,9 +1442,11 @@ def view_search():
                 r.restaurant_longitude 
             FROM items i
             INNER JOIN restaurants r ON i.item_user_fk = r.restaurant_user_fk
-            WHERE MATCH(i.item_title, i.item_cuisine_type, i.item_food_category) 
-            AGAINST (%s IN NATURAL LANGUAGE MODE)
-            """, (query,)
+            WHERE 
+                i.item_title LIKE %s OR 
+                i.item_cuisine_type LIKE %s OR 
+                i.item_food_category LIKE %s
+            """, (f"%{query}%", f"%{query}%", f"%{query}%")
         )
         item_results = cursor.fetchall()
 
