@@ -232,6 +232,7 @@
             <input
                 type="text"
                 name="confirm_password"
+                id="confirm_password"
                 placeholder="Enter your password"
                 class="border p-2 rounded-md w-72"
                 md="w-half"
@@ -241,6 +242,7 @@
                 class="bg-c-red:-10 border-1 border-c-charocoal text-c-white px-3 py-1 rounded-sm h-10 cursor-pointer w-40"
                 mix-post="/users/delete/{{ user['user_pk'] }}"
                 mix-data="#delete-profile-form"
+                aria-label="Delete your profile"
             >
                 Delete Profile
             </button>

@@ -590,7 +590,7 @@ def send_deletion_confirmation_email(to_email, user_name):
         message = MIMEMultipart()
         message["From"] = "bite food inc."
         message["To"] = receiver_email
-        message["Subject"] = "Item Unblocked Notification"
+        message["Subject"] = "Profile deleted notification"
 
         body = f"""
         Hi {user_name},
@@ -707,7 +707,7 @@ def validate_city_name():
     return city_name
 
 ##############################
-POSTAL_CODE_REGEX = r"^\d{4,6}$"  # Allows postal codes between 4 and 6 digits
+POSTAL_CODE_REGEX = r"^\d{2,6}$"  # Allows postal codes between 2 and 6 digits
 def validate_postal_code():
     error = "Postal code must be a number between 4 and 6 digits."
     postal_code = request.form.get("postnummer", "").strip()

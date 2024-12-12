@@ -189,129 +189,79 @@ def _________GET_________(): pass
 ##############################
 
 
-@app.get('/fetch-images')
-def fetch_images():
-    """Fetches and downloads images from Unsplash."""
-    search_params = {
-        "query": "food dishes",
-        "per_page": 10,  # Number of images per request
-        "page": 1,       # Start page
-    }
-    headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"}
+# @app.get('/fetch-images')
+# def fetch_images():
+#     """Fetches and downloads images from Unsplash."""
+#     search_params = {
+#         "query": "food dishes",
+#         "per_page": 10,  # Number of images per request
+#         "page": 1,       # Start page
+#     }
+#     headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"}
 
-    try:
-        response = requests.get(UNSPLASH_API_URL, headers=headers, params=search_params)
-        if response.status_code != 200:
-            return jsonify({"error": "Failed to fetch images", "status": response.status_code}), 500
+#     try:
+#         response = requests.get(UNSPLASH_API_URL, headers=headers, params=search_params)
+#         if response.status_code != 200:
+#             return jsonify({"error": "Failed to fetch images", "status": response.status_code}), 500
 
-        images = response.json().get("results", [])
-        if not images:
-            return jsonify({"error": "No images found"}), 404
-        for idx, img in enumerate(images):
-            img_url = img["urls"]["regular"]
-            img_name = f"dish_{idx + 1}.jpg"
-            save_path = os.path.join(UPLOAD_FOLDER_AVATARS, img_name)
-            download_image(img_url, save_path)
+#         images = response.json().get("results", [])
+#         if not images:
+#             return jsonify({"error": "No images found"}), 404
+#         for idx, img in enumerate(images):
+#             img_url = img["urls"]["regular"]
+#             img_name = f"dish_{idx + 1}.jpg"
+#             save_path = os.path.join(UPLOAD_FOLDER_AVATARS, img_name)
+#             download_image(img_url, save_path)
 
-        return jsonify({"message": "Images fetched and saved successfully."})
+#         return jsonify({"message": "Images fetched and saved successfully."})
 
-    except Exception as e:
-        ic(e)
-        return jsonify({"error": "An error occurred while fetching images"}), 500
-
-##############################
-
-@app.get('/images')
-def list_images():
-    """Lists all downloaded images."""
-    try:
-        images = os.listdir(UPLOAD_FOLDER_AVATARS)
-        images = [url_for('static', filename=f'uploads/images/{img}') for img in images if img]
-        return render_template("image_gallery.html", images=images)
-    except Exception as e:
-        return jsonify({"error": "Failed to list images", "details": str(e)}), 500
-
+#     except Exception as e:
+#         ic(e)
+#         return jsonify({"error": "An error occurred while fetching images"}), 500
 
 ##############################
 
-@app.get('/images/<path:filename>')
-def serve_image(filename):
-    """Serves individual images."""
-    return send_from_directory(UPLOAD_FOLDER_AVATARS, filename)
-
+# @app.get('/images')
+# def list_images():
+#     """Lists all downloaded images."""
+#     try:
+#         images = os.listdir(UPLOAD_FOLDER_AVATARS)
+#         images = [url_for('static', filename=f'uploads/images/{img}') for img in images if img]
+#         return render_template("image_gallery.html", images=images)
+#     except Exception as e:
+#         return jsonify({"error": "Failed to list images", "details": str(e)}), 500
 
 
 ##############################
-@app.get("/test-set-redis")
-def view_test_set_redis():
-    redis_host = "redis"
-    redis_port = 6379
-    redis_client = redis.Redis(host=redis_host, port=redis_port, decode_responses=True)    
-    redis_client.set("name", "Anders", ex=10)
-    # name = redis_client.get("name")
-    return "name saved"
 
-@app.get("/test-get-redis")
-def view_test_get_redis():
-    redis_host = "redis"
-    redis_port = 6379
-    redis_client = redis.Redis(host=redis_host, port=redis_port, decode_responses=True)    
-    name = redis_client.get("name")
-    if not name: name = "no name"
-    return name
-
-##############################
+# @app.get('/images/<path:filename>')
+# def serve_image(filename):
+#     """Serves individual images."""
+#     return send_from_directory(UPLOAD_FOLDER_AVATARS, filename)
 
 
 
 ##############################
-# @app.get("/")
-# @x.no_cache
-# def view_index():
-#     user = session.get("user", {})
-#     restaurants = []
+# @app.get("/test-set-redis")
+# def view_test_set_redis():
+#     redis_host = "redis"
+#     redis_port = 6379
+#     redis_client = redis.Redis(host=redis_host, port=redis_port, decode_responses=True)    
+#     redis_client.set("name", "Anders", ex=10)
+#     # name = redis_client.get("name")
+#     return "name saved"
 
-#     # Determine the active role
-#     active_role = None
-#     if user:
-#         roles = user.get("roles", [])
-#         role_from_query = request.args.get("role")  # Get role from query parameter
+# @app.get("/test-get-redis")
+# def view_test_get_redis():
+#     redis_host = "redis"
+#     redis_port = 6379
+#     redis_client = redis.Redis(host=redis_host, port=redis_port, decode_responses=True)    
+#     name = redis_client.get("name")
+#     if not name: name = "no name"
+#     return name
 
-#         # Validate role from query
-#         if role_from_query and role_from_query not in roles:
-#             return redirect(url_for("view_choose_role"))
+##############################
 
-#         # Set active role from query or default to current_role/session
-#         active_role = role_from_query or user.get("current_role")
-#         if not active_role and roles:
-#             active_role = roles[0]
-#             session["user"]["current_role"] = active_role
-#             session.modified = True
-
-#     else:
-#         # Fetch restaurants for the public landing page
-#         db, cursor = x.db()
-#         cursor.execute("""
-#             SELECT 
-#                 restaurant_name, 
-#                 restaurant_latitude, 
-#                 restaurant_longitude 
-#             FROM restaurants
-#             WHERE restaurant_latitude IS NOT NULL AND restaurant_longitude IS NOT NULL
-#         """)
-#         restaurants = cursor.fetchall() or []
-#         cursor.close()
-#         db.close()
-
-#     # Render the template with a single `role` parameter
-#     return render_template(
-#         "view_index.html",
-#         user=user,
-#         role=active_role,  # Pass the determined role once
-#         roles=user.get("roles", []),
-#         is_logged_in=bool(user),
-#         restaurants=restaurants
-#     )
 
 ##############################
 @app.get("/")
@@ -374,19 +324,6 @@ def view_index():
     )
 
 
-
-##############################
-
-# @app.get("/partner")
-# def show_partner():
-#     return render_template("_partner.html")
-
-##############################
-
-# @app.get("/restaurant")
-# def show_restaurant():
-#     return render_template("_restaurant.html")
-
 ##############################
 
 @app.get("/forgot-password")
@@ -434,10 +371,13 @@ def show_reset_password(reset_key):
         ic(f"Error in show_reset_password: {ex}")
         if "db" in locals():
             db.rollback()
-        toast = render_template(
-            "___toast.html", message="System under maintenance. Please try again later."
-        )
-        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 500
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return f"""<template mix-target="#toast" mix-bottom>Database error occurred.</template>""", 500
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
 
     finally:
         if "cursor" in locals():
@@ -547,7 +487,10 @@ def view_partner():
     # Ensure the user is logged in
     user = session.get("user")
     if not user:
+        ic("User is not logged in. Redirecting to login.")
         return redirect(url_for("view_login"))
+    else:
+        ic(f"User session data: {user}")
 
     roles = user.get("roles", [])
     current_role = user.get("current_role")
@@ -626,11 +569,22 @@ def view_restaurant():
             restaurant=restaurant_data
         )
     except Exception as ex:
-        print(f"Error loading restaurant page: {ex}")
-        return "<h1>System under maintenance</h1>", 500
+        ic(f"Error loading restaurant page: {ex}")
+        if "db" in locals():
+            db.rollback()
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return f"""<template mix-target="#toast" mix-bottom>Database error occurred.</template>""", 500
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
+
     finally:
-        if "cursor" in locals(): cursor.close()
-        if "db" in locals(): db.close()
+        if "cursor" in locals():
+            cursor.close()
+        if "db" in locals():
+            db.close()
 
 
 ##############################
@@ -726,7 +680,16 @@ def view_admin():
         )
     except Exception as ex:
         ic(f"Error in view_admin: {ex}")
-        return "<h1>Error loading admin page</h1>", 500
+        if "db" in locals():
+            db.rollback()
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred</template>", 500
+        return "<template>System under maintenance</template>", 500
+
     finally:
         if "cursor" in locals():
             cursor.close()
@@ -776,12 +739,21 @@ def view_edit_users():
             restaurants=[]
         )
     except Exception as ex:
-        ic("Error:", ex)
-        return "Error loading users page", 500
+        ic(f"Error in view_edit_users: {ex}")
+        if "db" in locals():
+            db.rollback()
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
+
     finally:
-        if "cursor" in locals(): 
+        if "cursor" in locals():
             cursor.close()
-        if "db" in locals(): 
+        if "db" in locals():
             db.close()
 
 ##############################
@@ -837,8 +809,17 @@ def view_edit_items():
             restaurants=[]
         )
     except Exception as ex:
-        ic("Error:", ex)
-        return "Error loading items page", 500
+        ic(f"Error in view_edit_items: {ex}")
+        if "db" in locals():
+            db.rollback()
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
+
     finally:
         if "cursor" in locals():
             cursor.close()
@@ -890,31 +871,22 @@ def get_more_items(page):
         </template>
         """
     except Exception as ex:
-        ic("Error:", ex)
-        return "<template>System under maintenance</template>", 500
+        ic("Error in get_more_items:", ex)
+        if "db" in locals():
+            db.rollback()
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
+
     finally:
         if "cursor" in locals():
             cursor.close()
         if "db" in locals():
             db.close()
-
-
-##############################
-
-@app.get("/admin/edit")
-@x.no_cache
-def view_edit_admin():
-    # Ensure the user is logged in and is an admin
-    if not session.get("user", "") or "admin" not in session["user"].get("roles", []):
-        return redirect(url_for("view_login"))
-    
-    try:
-        user = session.get("user")  # Get the logged-in admin's data
-        return render_template("__edit_admin.html", user=user)  # Render the edit page with admin's current data
-    except Exception as ex:
-        print("Error loading admin edit page:", ex)
-        return "Error loading admin edit page", 500
-
 
 ##############################
 @app.get("/profile")
@@ -961,7 +933,7 @@ def view_profile():
         role=current_role,
         restaurant=restaurant,  # Pass the single restaurant dictionary
         restaurants=restaurants,  # Pass as a list for JSON rendering
-    )
+    ), 200
 
 
 ##############################
@@ -1009,10 +981,24 @@ def view_profile_settings():
             user=user,
             role=user_role,
             restaurants=[restaurant] if restaurant else [],
-        )
+        ), 200
     except Exception as ex:
         ic(f"Error in /profile/settings: {ex}")
-        return "<h1>System under maintenance</h1>", 500
+        if "db" in locals():
+            db.rollback()
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
+
+    finally:
+        if "cursor" in locals():
+            cursor.close()
+        if "db" in locals():
+            db.close()
 
 ##############################
 @app.get("/choose-role")
@@ -1149,76 +1135,71 @@ def view_restaurants():
 
         return render_template("view_index.html", restaurants=restaurants, query=query)
     except Exception as ex:
-        
                 ic(ex)
                 if "db" in locals(): db.rollback()
-        
                 # My own exception
                 if isinstance(ex, x.CustomException):
                     return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code
-                
                 # Database exception
                 if isinstance(ex, x.mysql.connector.Error):
                     ic(ex)
                     if "users.user_email" in str(ex):
-                        return """<template mix-target="#toast" mix-bottom>restaurants not available</template>""", 400
+                        return """<template mix-target="#toast" mix-bottom>Restaurants not available</template>""", 400
                     return "<template>System upgrading</template>", 500  
-              
                 # Any other exception
                 return """<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500  
-            
     finally:
                 if "cursor" in locals(): cursor.close()
                 if "db" in locals(): db.close()
 
 ##############################
-@app.get("/restaurant/manage")
-@x.no_cache
-def view_manage_restaurant():
-    db, cursor = x.db()
-    user = session.get("user")
-    restaurants = []
+# @app.get("/restaurant/manage")
+# @x.no_cache
+# def view_manage_restaurant():
+#     db, cursor = x.db()
+#     user = session.get("user")
+#     restaurants = []
 
-    try:
-        if not user or "restaurant" not in user.get("roles", []):
-            return redirect(url_for("view_login"))  # Redirect if not logged in as a restaurant user
+#     try:
+#         if not user or "restaurant" not in user.get("roles", []):
+#             return redirect(url_for("view_login"))  # Redirect if not logged in as a restaurant user
 
-        # Fetch restaurants for the logged-in user
-        cursor.execute("""
-            SELECT restaurant_pk, restaurant_name 
-            FROM restaurants 
-            WHERE restaurant_user_fk = %s
-        """, (user["user_pk"],))
-        restaurants = cursor.fetchall()
+#         # Fetch restaurants for the logged-in user
+#         cursor.execute("""
+#             SELECT restaurant_pk, restaurant_name 
+#             FROM restaurants 
+#             WHERE restaurant_user_fk = %s
+#         """, (user["user_pk"],))
+#         restaurants = cursor.fetchall()
 
-        if not restaurants:  # No associated restaurants found
-            return render_template(
-                "view_menu_management.html",
-                message="No associated restaurants found.",
-                restaurants=[],
-            )
+#         if not restaurants:  # No associated restaurants found
+#             return render_template(
+#                 "view_menu_management.html",
+#                 message="No associated restaurants found.",
+#                 restaurants=[],
+#             )
 
-        # Map results to a list of dictionaries
-        restaurants = [
-            {"restaurant_pk": row[0], "restaurant_name": row[1]}
-            for row in restaurants
-        ]
+#         # Map results to a list of dictionaries
+#         restaurants = [
+#             {"restaurant_pk": row[0], "restaurant_name": row[1]}
+#             for row in restaurants
+#         ]
 
-        # Render template with restaurant data
-        return render_template(
-            "view_menu_management.html",
-            restaurants=restaurants
-        )
+#         # Render template with restaurant data
+#         return render_template(
+#             "view_menu_management.html",
+#             restaurants=restaurants
+#         )
 
-    except Exception as ex:
-        ic(f"Error fetching restaurants: {ex}")
-        return "<h1>System under maintenance</h1>", 500
+#     except Exception as ex:
+#         ic(f"Error fetching restaurants: {ex}")
+#         return "<h1>System under maintenance</h1>", 500
 
-    finally:
-        if "cursor" in locals():
-            cursor.close()
-        if "db" in locals():
-            db.close()
+#     finally:
+#         if "cursor" in locals():
+#             cursor.close()
+#         if "db" in locals():
+#             db.close()
 
 ##############################
 
@@ -1262,9 +1243,20 @@ def view_item_edit_page(item_pk):
         
         return render_template("__manage_item.html", item=item, role=role,  restaurants=[] )
     except Exception as ex:
+        # Handle exceptions and rollback database changes
         ic("Error in view_item_edit_page:", ex)
-        return "An error occurred", 500
+        if "db" in locals():
+            db.rollback()
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        elif isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
+
     finally:
+        # Ensure resources are properly closed
         if "cursor" in locals():
             cursor.close()
         if "db" in locals():
@@ -1337,13 +1329,14 @@ def view_manage_items():
             restaurants=[]  # Placeholder if needed
         )
 
-    except x.CustomException as ce:
-        ic("Validation Error:", ce)
-        return redirect(url_for("view_login"))
     except Exception as ex:
+        # Handle general exceptions
         ic("Error in view_manage_items:", ex)
-        return "An error occurred", 500
+        toast = render_template("___toast.html", message="An error occurred while loading items.")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 500
+
     finally:
+        # Ensure resources are properly closed
         if "cursor" in locals():
             cursor.close()
         if "db" in locals():
@@ -1371,12 +1364,17 @@ def add_restaurant():
         return render_template("__create_restaurant.html", user=user, x=x, restaurants=restaurants or [])
 
     except Exception as ex:
+        # Handle exceptions gracefully
         ic(f"Error in add_restaurant: {ex}")
-        return "<h1>System under maintenance</h1>", 500
+        toast = render_template("___toast.html", message="System under maintenance.")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 500
 
     finally:
-        if "cursor" in locals(): cursor.close()
-        if "db" in locals(): db.close()
+        # Ensure resources are properly closed
+        if "cursor" in locals():
+            cursor.close()
+        if "db" in locals():
+            db.close()
 
 ##############################
 @app.get("/search")
@@ -1476,17 +1474,13 @@ def view_search():
         ic("Error in view_search:", ex)
         if "db" in locals():
             db.rollback()
-
         # Handle exceptions as per your existing logic
         if isinstance(ex, x.CustomException):
             return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code
-
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>System upgrading</template>", 500  
-
         return """<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500  
-
     finally:
         if "cursor" in locals():
             cursor.close()
@@ -1607,46 +1601,46 @@ def view_menu(restaurant_pk):
 
 
 ##############################
-@app.get("/manage/menu/<item_pk>/images")
-@x.no_cache
-def view_add_item_images(item_pk):
-    try:
-        db, cursor = x.db()
-        cursor.execute(
-            """
-            SELECT item_title FROM items WHERE item_pk = %s
-            """,
-            (item_pk,),
-        )
-        item = cursor.fetchone()
+# @app.get("/manage/menu/<item_pk>/images")
+# @x.no_cache
+# def view_add_item_images(item_pk):
+#     try:
+#         db, cursor = x.db()
+#         cursor.execute(
+#             """
+#             SELECT item_title FROM items WHERE item_pk = %s
+#             """,
+#             (item_pk,),
+#         )
+#         item = cursor.fetchone()
 
-        cursor.execute(
-            """
-            SELECT image_path FROM item_images WHERE item_fk = %s
-            """,
-            (item_pk,),
-        )
-        images = cursor.fetchall()
+#         cursor.execute(
+#             """
+#             SELECT image_path FROM item_images WHERE item_fk = %s
+#             """,
+#             (item_pk,),
+#         )
+#         images = cursor.fetchall()
 
-        return render_template("manage_images.html", item_title=item[0], item_pk=item_pk, images=images)
+#         return render_template("manage_images.html", item_title=item[0], item_pk=item_pk, images=images)
 
-    except Exception as ex:
-        ic(ex)
-        if "db" in locals():
-            db.rollback()
-        if isinstance(ex, x.CustomException):
-            toast = render_template("___toast.html", message=ex.message)
-            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
-        if isinstance(ex, x.mysql.connector.Error):
-            ic(ex)
-            return "<template>System upgrading</template>", 500        
-        return "<template>System under maintenance</template>", 500  
+#     except Exception as ex:
+#         ic(ex)
+#         if "db" in locals():
+#             db.rollback()
+#         if isinstance(ex, x.CustomException):
+#             toast = render_template("___toast.html", message=ex.message)
+#             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+#         if isinstance(ex, x.mysql.connector.Error):
+#             ic(ex)
+#             return "<template>System upgrading</template>", 500        
+#         return "<template>System under maintenance</template>", 500  
 
-    finally:
-        if "cursor" in locals():
-            cursor.close()
-        if "db" in locals():
-            db.close()
+#     finally:
+#         if "cursor" in locals():
+#             cursor.close()
+#         if "db" in locals():
+#             db.close()
 
 ##############################
 ##############################
@@ -2054,10 +2048,8 @@ def buy_item(item_pk):
         """
 
     except Exception as ex:
-        ic("Error in buy_item:", ex)
         if "db" in locals():
             db.rollback()
-
         # Handle specific exceptions
         if isinstance(ex, x.CustomException):
             toast = render_template("___toast.html", message=ex.message)
@@ -2065,7 +2057,6 @@ def buy_item(item_pk):
         elif isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error occurred.</template>", 500
-
         # Generic error response
         return f"""
             <template mix-target="#toast" mix-bottom>An error occurred while processing your request.</template>
@@ -2135,6 +2126,9 @@ def signup():
         for role_pk in selected_roles:
             cursor.execute("INSERT INTO users_roles (user_role_user_fk, user_role_role_fk) VALUES (%s, %s)", 
                            (user_pk, role_pk))
+            
+        selected_roles = request.form.getlist("roles")
+        ic("Roles received from form:", selected_roles)
 
         # Step 6: Send verification email
         x.send_verify_email(user_email, user_verification_key)
@@ -2279,7 +2273,6 @@ def login():
         return f"""<template mix-redirect="/"></template>"""
 
     except Exception as ex:
-        ic(ex)
         if "db" in locals():
             db.rollback()
         if isinstance(ex, x.CustomException):
@@ -2503,80 +2496,7 @@ def change_profile_picture():
 
 
 ##############################
-@app.post("/users/delete/<user_pk>")
-def user_self_delete(user_pk):
-    try:
-        # Ensure the user is logged in
-        if not session.get("user"):
-            raise x.CustomException("You must be logged in to delete your account.", 401)
 
-        logged_in_user = session["user"]
-        logged_in_user_pk = logged_in_user["user_pk"]
-
-        # Check if the logged-in user is trying to delete their own profile
-        if logged_in_user_pk != user_pk:
-            raise x.CustomException("Unauthorized action. You can only delete your own account.", 403)
-
-        confirm_password = request.form.get("confirm_password", "").strip()
-        if not confirm_password:
-            raise x.CustomException("Password is required to delete your profile.", 400)
-
-        # Validate the password
-        db, cursor = x.db()
-        cursor.execute("SELECT user_password, user_deleted_at FROM users WHERE user_pk = %s", (user_pk,))
-        user = cursor.fetchone()
-
-        if not user or user["user_deleted_at"]:
-            raise x.CustomException("Account not found or already deleted.", 404)
-
-        stored_password_hash = user["user_password"]
-
-        if not check_password_hash(stored_password_hash, confirm_password):
-            raise x.CustomException("Incorrect password. Please try again.", 401)
-
-        # Perform the soft delete (update `user_deleted_at`)
-        user_deleted_at = int(time.time())
-        cursor.execute("UPDATE users SET user_deleted_at = %s WHERE user_pk = %s", (user_deleted_at, user_pk))
-
-        if cursor.rowcount != 1:
-            return "Unable to delete account. Try again later.", 400
-
-        # Commit changes to the database
-        db.commit()
-
-        # Log the user out after deletion
-        session.pop("user", None)
-
-        # Send confirmation email if necessary
-        x.send_deletion_confirmation_email(logged_in_user['user_email'], logged_in_user['user_name'])
-
-        return """<template mix-redirect="/profile-deleted"></template>"""
-
-    except Exception as ex:
-        ic("Error in user_self_delete:", ex)
-        if "db" in locals():
-            db.rollback()
-
-        # Handle specific exceptions
-        if isinstance(ex, x.CustomException):
-            toast = render_template("___toast.html", message=ex.message)
-            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
-        elif isinstance(ex, x.mysql.connector.Error):
-            ic(ex)
-            return "<template>Database error occurred.</template>", 500
-
-        # Generic error response
-        return """
-            <template mix-target="#toast" mix-bottom>
-                <div class="text-c-red:-9">An error occurred while deleting your profile.</div>
-            </template>
-        """, 500
-
-    finally:
-        if "cursor" in locals():
-            cursor.close()
-        if "db" in locals():
-            db.close()
 
 
 ##############################
@@ -2589,123 +2509,123 @@ def _________PUT_________(): pass
 ##############################
 ##############################
 
-@app.put("/users/update-roles")
-def update_user_roles():
-    try:
-        if not session.get("user"): x.raise_custom_exception("Please log in", 401)
+# @app.put("/users/update-roles")
+# def update_user_roles():
+#     try:
+#         if not session.get("user"): x.raise_custom_exception("Please log in", 401)
 
-        # Get data from the form
-        user_pk = request.form.get("user_pk")
-        selected_roles = request.form.getlist("roles")
+#         # Get data from the form
+#         user_pk = request.form.get("user_pk")
+#         selected_roles = request.form.getlist("roles")
 
-        if not user_pk or not selected_roles:
-            x.raise_custom_exception("User and roles are required", 400)
+#         if not user_pk or not selected_roles:
+#             x.raise_custom_exception("User and roles are required", 400)
 
-        # Validate if the user can update roles (self or admin)
-        logged_in_user = session.get("user")
-        is_admin = "admin" in logged_in_user.get("roles")
-        if not is_admin and logged_in_user.get("user_pk") != user_pk:
-            x.raise_custom_exception("Unauthorized action", 403)
+#         # Validate if the user can update roles (self or admin)
+#         logged_in_user = session.get("user")
+#         is_admin = "admin" in logged_in_user.get("roles")
+#         if not is_admin and logged_in_user.get("user_pk") != user_pk:
+#             x.raise_custom_exception("Unauthorized action", 403)
 
-        # Update roles in the database
-        db, cursor = x.db()
+#         # Update roles in the database
+#         db, cursor = x.db()
 
-        # Delete all current roles for the user
-        cursor.execute("DELETE FROM users_roles WHERE user_role_user_fk = %s", (user_pk,))
+#         # Delete all current roles for the user
+#         cursor.execute("DELETE FROM users_roles WHERE user_role_user_fk = %s", (user_pk,))
 
-        # Add the selected roles back
-        for role_pk in selected_roles:
-            cursor.execute(
-                "INSERT INTO users_roles (user_role_user_fk, user_role_role_fk) VALUES (%s, %s)",
-                (user_pk, role_pk),
-            )
+#         # Add the selected roles back
+#         for role_pk in selected_roles:
+#             cursor.execute(
+#                 "INSERT INTO users_roles (user_role_user_fk, user_role_role_fk) VALUES (%s, %s)",
+#                 (user_pk, role_pk),
+#             )
 
-        db.commit()
+#         db.commit()
 
-        # Return success response
-        toast = render_template("___toast.html", message="Roles updated successfully.")
-        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
+#         # Return success response
+#         toast = render_template("___toast.html", message="Roles updated successfully.")
+#         return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
 
-    except Exception as ex:
-        ic(ex)
-        if "db" in locals():
-            db.rollback()
-        if isinstance(ex, x.CustomException):
-            toast = render_template("___toast.html", message=ex.message)
-            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
-        if isinstance(ex, x.mysql.connector.Error):
-            ic(ex)
-            return "<template>Database error</template>", 500
-        return "<template>System under maintenance</template>", 500
+#     except Exception as ex:
+#         ic(ex)
+#         if "db" in locals():
+#             db.rollback()
+#         if isinstance(ex, x.CustomException):
+#             toast = render_template("___toast.html", message=ex.message)
+#             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+#         if isinstance(ex, x.mysql.connector.Error):
+#             ic(ex)
+#             return "<template>Database error</template>", 500
+#         return "<template>System under maintenance</template>", 500
 
-    finally:
-        if "cursor" in locals():
-            cursor.close()
-        if "db" in locals():
-            db.close()
+#     finally:
+#         if "cursor" in locals():
+#             cursor.close()
+#         if "db" in locals():
+#             db.close()
 
 ##############################
-@app.put("/admin/edit")
-def update_admin_credentials():
-    try:
-        ic("Admin update request received")
+# @app.put("/admin/edit")
+# def update_admin_credentials():
+#     try:
+#         ic("Admin update request received")
         
-        # Ensure the user is logged in and is an admin
-        if not session.get("user", "") or "admin" not in session["user"].get("roles", []):
-            ic("User not admin or not logged in")
-            return redirect(url_for("view_login"))
+#         # Ensure the user is logged in and is an admin
+#         if not session.get("user", "") or "admin" not in session["user"].get("roles", []):
+#             ic("User not admin or not logged in")
+#             return redirect(url_for("view_login"))
 
-        # Get the admin's primary key from the session
-        user_pk = session["user"]["user_pk"]
+#         # Get the admin's primary key from the session
+#         user_pk = session["user"]["user_pk"]
 
-        # Fetch the data from the request
-        new_name = request.form.get("name")
-        new_email = request.form.get("email")
-        new_password = request.form.get("password")
+#         # Fetch the data from the request
+#         new_name = request.form.get("name")
+#         new_email = request.form.get("email")
+#         new_password = request.form.get("password")
 
-        # Input validation
-        if not new_name or not new_email or not new_password:
-            toast = render_template("___toast.html", message="All fields are required.")
-            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
+#         # Input validation
+#         if not new_name or not new_email or not new_password:
+#             toast = render_template("___toast.html", message="All fields are required.")
+#             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
 
-        # Hash the new password
-        hashed_password = generate_password_hash(new_password)
+#         # Hash the new password
+#         hashed_password = generate_password_hash(new_password)
 
-        # Update the admin's credentials in the database
-        db, cursor = x.db()
-        cursor.execute("""
-            UPDATE users
-            SET user_name = %s, user_email = %s, user_password = %s, user_updated_at = NOW()
-            WHERE user_pk = %s
-        """, (new_name, new_email, hashed_password, user_pk))
-        ic("Database rows affected:", cursor.rowcount)
+#         # Update the admin's credentials in the database
+#         db, cursor = x.db()
+#         cursor.execute("""
+#             UPDATE users
+#             SET user_name = %s, user_email = %s, user_password = %s, user_updated_at = NOW()
+#             WHERE user_pk = %s
+#         """, (new_name, new_email, hashed_password, user_pk))
+#         ic("Database rows affected:", cursor.rowcount)
 
-        if cursor.rowcount == 0:
-            raise x.CustomException("Unable to update admin credentials", 400)
+#         if cursor.rowcount == 0:
+#             raise x.CustomException("Unable to update admin credentials", 400)
 
-        # Commit the changes
-        db.commit()
+#         # Commit the changes
+#         db.commit()
 
-        # Success response
-        toast = render_template("___toast.html", message="Admin credentials updated successfully.")
-        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
+#         # Success response
+#         toast = render_template("___toast.html", message="Admin credentials updated successfully.")
+#         return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
 
-    except Exception as ex:
-        ic(ex)
-        if "db" in locals(): db.rollback()
-        if isinstance(ex, x.CustomException):
-            toast = render_template("___toast.html", message=ex.message)
-            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
-        if isinstance(ex, x.mysql.connector.Error):
-            ic(ex)
-            if "users.user_email" in str(ex): 
-                toast = render_template("___toast.html", message="Email not available.")
-                return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
-            return f"""<template mix-target="#toast" mix-bottom>System upgrading</template>""", 500        
-        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500    
-    finally:
-        if "cursor" in locals(): cursor.close()
-        if "db" in locals(): db.close()
+#     except Exception as ex:
+#         ic(ex)
+#         if "db" in locals(): db.rollback()
+#         if isinstance(ex, x.CustomException):
+#             toast = render_template("___toast.html", message=ex.message)
+#             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+#         if isinstance(ex, x.mysql.connector.Error):
+#             ic(ex)
+#             if "users.user_email" in str(ex): 
+#                 toast = render_template("___toast.html", message="Email not available.")
+#                 return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
+#             return f"""<template mix-target="#toast" mix-bottom>System upgrading</template>""", 500        
+#         return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500    
+#     finally:
+#         if "cursor" in locals(): cursor.close()
+#         if "db" in locals(): db.close()
 
 
 
@@ -3186,10 +3106,13 @@ def delete_item(item_pk):
                    <template mix-redirect="{url_for('view_manage_items')}"></template>""", 200
 
     except Exception as ex:
+        # Handle exceptions and log for debugging
         ic("Error in delete_item:", ex)
-        return {"error": str(ex)}, 500
+        toast = render_template("___toast.html", message="System under maintenance.")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 500
 
     finally:
+        # Ensure database resources are closed
         if "cursor" in locals():
             cursor.close()
         if "db" in locals():
@@ -3210,7 +3133,81 @@ def _________BRIDGE_________(): pass
 ##############################
 ##############################
 ##############################
+##############################
+@app.post("/users/delete/<user_pk>")
+def user_self_delete(user_pk):
+    try:
+        # Ensure the user is logged in
+        if not session.get("user"):
+            raise x.CustomException("You must be logged in to delete your account.", 401)
 
+        logged_in_user = session["user"]
+        logged_in_user_pk = logged_in_user["user_pk"]
+
+        # Check if the logged-in user is trying to delete their own profile
+        if logged_in_user_pk != user_pk:
+            raise x.CustomException("Unauthorized action. You can only delete your own account.", 403)
+
+        confirm_password = request.form.get("confirm_password", "").strip()
+        ic(f"Received confirm_password: {confirm_password}")
+        if not confirm_password:
+            raise x.CustomException("Password is required to delete your profile.", 400)
+
+        # Validate the password
+        db, cursor = x.db()
+        cursor.execute("SELECT user_password, user_deleted_at FROM users WHERE user_pk = %s", (user_pk,))
+        user = cursor.fetchone()
+
+        if not user or user["user_deleted_at"]:
+            raise x.CustomException("Account not found or already deleted.", 404)
+
+        stored_password_hash = user["user_password"]
+
+        if not check_password_hash(stored_password_hash, confirm_password):
+            raise x.CustomException("Incorrect password. Please try again.", 401)
+
+        # Perform the soft delete (update `user_deleted_at`)
+        user_deleted_at = int(time.time())
+        cursor.execute("UPDATE users SET user_deleted_at = %s WHERE user_pk = %s", (user_deleted_at, user_pk))
+
+        if cursor.rowcount != 1:
+            return "Unable to delete account. Try again later.", 400
+
+        # Commit changes to the database
+        db.commit()
+
+        # Log the user out after deletion
+        session.pop("user", None)
+
+        # Send confirmation email if necessary
+        x.send_deletion_confirmation_email(logged_in_user['user_email'], logged_in_user['user_name'])
+
+        toast = render_template("___toast.html", message="Roles updated successfully.")
+        return f"""<template mix-redirect="/" mix-target="#toast" mix-bottom>{toast}</template>"""
+
+    except Exception as ex:
+        ic("Error in user_self_delete:", ex)
+        if "db" in locals():
+            db.rollback()
+        # Handle specific exceptions
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+        elif isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error occurred.</template>", 500
+        # Generic error response
+        return """
+            <template mix-target="#toast" mix-bottom>
+                <div class="text-c-red:-9">An error occurred while deleting your profile.</div>
+            </template>
+        """, 500
+
+    finally:
+        if "cursor" in locals():
+            cursor.close()
+        if "db" in locals():
+            db.close()
 
 ##############################
 @app.get("/verify/<verification_key>")

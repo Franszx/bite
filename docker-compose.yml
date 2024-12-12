@@ -38,15 +38,25 @@ services:
     ports:
       - 8080:80
 
-  arangodb:
+  arangodb1:
     image: arangodb:latest
-    container_name: fulldemo_arangodb
+    container_name: fulldemo_arangodb1
     environment:
       ARANGO_ROOT_PASSWORD: password
     volumes:
-      - arangodb_data:/var/lib/arangodb3
+      - arangodb_data1:/var/lib/arangodb3
     ports:
       - 8529:8529
+
+  arangodb2:
+    image: arangodb:latest
+    container_name: fulldemo_arangodb2
+    environment:
+      ARANGO_ROOT_PASSWORD: password
+    volumes:
+      - arangodb_data2:/var/lib/arangodb3
+    ports:
+      - 8530:8529
 
   redis:
     image: redis:latest
@@ -58,5 +68,6 @@ services:
 
 volumes:
   mysql_data:
-  arangodb_data:
+  arangodb_data1:
+  arangodb_data2:
   redis_data:
