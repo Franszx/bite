@@ -39,41 +39,41 @@ class CustomException(Exception):
 def raise_custom_exception(error, status_code):
     raise CustomException(error, status_code)
 
-# DATABASE = {
-#     'host': '2024lindberg.mysql.eu.pythonanywhere-services.com',
-#     'user': '2024lindberg',
-#     'password': "a0b40581-8af6-4c98-bda0-b9b6df9688b2",
-#     'database': '2024lindberg$company',
-# }
+DATABASE = {
+    'host': '2024lindberg.mysql.eu.pythonanywhere-services.com',
+    'user': '2024lindberg',
+    'password': "a0b40581-8af6-4c98-bda0-b9b6df9688b2",
+    'database': '2024lindberg$company',
+}
 
 
 ##############################
-def db():
-    db = mysql.connector.connect(
-        host="mysql",      # Replace with your MySQL server's address or docker service name "mysql"
-        user="root",  # Replace with your MySQL username
-        password="password",  # Replace with your MySQL password
-        database="company"   # Replace with your MySQL database name
-    )
-    cursor = db.cursor(dictionary=True)
-    return db, cursor
-
 # def db():
-#     """
-#     Establish a connection to the PythonAnywhere database using the DATABASE dictionary.
-#     """
-#     try:
-#         db = mysql.connector.connect(
-#             host=DATABASE['host'],
-#             user=DATABASE['user'],
-#             password=DATABASE['password'],
-#             database=DATABASE['database']
-#         )
-#         cursor = db.cursor(dictionary=True)
-#         return db, cursor
-#     except mysql.connector.Error as err:
-#         ic(f"Database connection error: {err}")
-#         raise
+#     db = mysql.connector.connect(
+#         host="mysql",      # Replace with your MySQL server's address or docker service name "mysql"
+#         user="root",  # Replace with your MySQL username
+#         password="password",  # Replace with your MySQL password
+#         database="company"   # Replace with your MySQL database name
+#     )
+#     cursor = db.cursor(dictionary=True)
+#     return db, cursor
+
+def db():
+    """
+    Establish a connection to the PythonAnywhere database using the DATABASE dictionary.
+    """
+    try:
+        db = mysql.connector.connect(
+            host=DATABASE['host'],
+            user=DATABASE['user'],
+            password=DATABASE['password'],
+            database=DATABASE['database']
+        )
+        cursor = db.cursor(dictionary=True)
+        return db, cursor
+    except mysql.connector.Error as err:
+        ic(f"Database connection error: {err}")
+        raise
 
 
 ##############################
