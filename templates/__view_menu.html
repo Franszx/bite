@@ -1,6 +1,6 @@
 {% include "_top.html" %}
 
-<main class="w-full h-full d-flex gap-10 flex-col py-3 px-6" md="px-72 pb-20">
+<main class="w-full h-full d-flex gap-10 flex-col py-3 px-6" md="px-60 pb-20">
    <!-- Hero Section -->
    <section class="w-full">
     <div class="w-full h-full flex flex-col justify-center">
@@ -14,7 +14,7 @@
     </div>
   </section>
   <div class="d-flex j-content-start">
-    <a href="/search?query={{ request.args.get('query', '') }}" class="btn text-c-charocoal:-10 py-2 text-75 rounded-sm" hover="text-c-green:-16">
+    <a href="/search?query={{ request.args.get('query', '') }}#restaurant-section" class="btn text-c-charocoal:-10 py-2 text-75 rounded-sm" hover="text-c-green:-16">
       ← Go Back to Search
     </a>
   </div>

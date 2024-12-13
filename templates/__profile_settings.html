@@ -1,7 +1,7 @@
 
 {% include "_top.html" %}
 
-<main class="w-full h-full d-flex flex-col px-6" md="px-72">
+<main class="w-full h-full d-flex flex-col px-6" md="px-60">
   <section class="bg-c-light py-10"> 
   <header class="d-flex j-content-between a-items-center py-3">
       <h1 class="text-200" md="text-350">
@@ -67,7 +67,7 @@
               value="{{ user['user_name'] }}"
               mix-check="{{ x.USER_NAME_REGEX }}"
               required
-              class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+              class=" mt-1 rounded-md border-s-hidden text-c-green text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
               md="text-130"
             />
           </div>
@@ -80,7 +80,7 @@
               value="{{ user['user_last_name'] }}"
               mic-check="{{ x.USER_LAST_NAME_REGEX }}"
               required
-              class="mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+              class="mt-1 rounded-md border-s-hidden text-c-green text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
               md="text-130"
             />
           </div>
@@ -93,7 +93,7 @@
               value="{{ user['user_email'] }}"
               mix-check="{{ x.REGEX_EMAIL }}"
               required
-              class="mt-1 rounded-md border-s-hidden text-120 text-c-blue:+16 text-a-right w-96 cursor-pointer " focus="bg-c-white:-10 text-c-gray:+10"
+              class="mt-1 rounded-md border-s-hidden text-120 text-c-green text-a-right w-96 cursor-pointer " focus="bg-c-white:-10 text-c-gray:+10"
               md="text-130"
               />
             </div>
@@ -109,7 +109,7 @@
                         id="restaurant_name"
                         value="{{ user.get('restaurant_name', '') }}"
                         required
-                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        class=" mt-1 rounded-md border-s-hidden text-c-green text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
                         md="text-130"
                     />
                 </div>
@@ -121,7 +121,7 @@
                         id="street_name"
                         value="{{ user.get('street_name', '') }}"
                         required
-                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        class=" mt-1 rounded-md border-s-hidden text-c-green text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
                         md="text-130"
                     />
                 </div>
@@ -133,7 +133,7 @@
                         id="street_number"
                         value="{{ user.get('street_number', '') }}"
                         required
-                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        class=" mt-1 rounded-md border-s-hidden text-c-green text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
                         md="text-130"
                     />
                 </div>
@@ -145,7 +145,7 @@
                         id="city"
                         value="{{ user.get('city', '') }}"
                         required
-                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        class=" mt-1 rounded-md border-s-hidden text-c-green text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
                         md="text-130"
                     />
                 </div>
@@ -157,7 +157,7 @@
                         id="postnummer"
                         value="{{ user.get('postnummer', '') }}"
                         required
-                        class=" mt-1 rounded-md border-s-hidden text-c-blue:+16 text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
+                        class=" mt-1 rounded-md border-s-hidden text-c-green text-120 text-a-right cursor-pointer" focus="bg-c-white:-16 text-c-gray:+10"
                         md="text-130"
                     />
                 </div>

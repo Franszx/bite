@@ -1,7 +1,7 @@
 
 {% include "_top.html" %}
 
-    <main class="w-full h-full d-flex flex-col px-6">
+    <main class="w-full h-full d-flex flex-col px-6" md="px-60">
       <section class="bg-c-light py-10"> 
       <header class="d-flex j-content-between a-items-center py-3">
           <h1 class="text-200" md="text-350">
@@ -108,23 +108,24 @@
                 
             </section>
             <section class="menu-items">
-    <h1>Your Items</h1>
-    <p>Total items: {{ item_count }}</p> <!-- Display the item count -->
+    <h1>Your Menu items</h1>
+    <p>Total: {{ item_count }}</p> <!-- Display the item count -->
     <div class="items-container grid cols-2" md="cols-4">
         {% if items %}
             {% for item in items %}
-                <div class="bg-c-white:-16 rounded-10 shadow-md w-40 j-self-center">
+                <div class="bg-c-white:-10 d-flex flex-col j-content-between rounded-10 shadow-md w-full j-self-center">
                     <!-- Main Image -->
-                    <div class="d-flex a-items-center w-full">
+                    <div class="d-flex w-full">
                         <img 
                             src="{{ url_for('static', filename='dishes/' + item.item_image) }}" 
                             class="w-full h-30 rounded-t-10 obj-f-cover" 
                             alt="Main Item Image">
                     </div>
                     <div class="pa-2">
-                      <!-- Item T
-                     itle and Price -->
-                    <h3 class="text-sm ma-0" md="text-18px text-lh-tight text-w-bold">{{ item.item_title }}</h3>
+                      <div>
+                        <h3 class="text-sm ma-0" md="text-14px text-lh-tight text-w-bold">{{ item.item_title }}</h3>
+                      </div>   
+                    
                     <p class="text-12px ma-0 pa-0" md="text-16px">Price: {{ item.item_price }} Dkk</p>
                     <!-- Additional Images -->
                     {% if item.additional_images %}4
