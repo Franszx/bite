@@ -22,7 +22,7 @@
         type="text" 
         mix-check="{{ x.RESTAURANT_NAME_REGEX }}" 
         class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
-        focus="border-c-blue:+6 outline-0"
+        focus="border-c-green outline-0"
         />
     </div>
 
@@ -40,7 +40,7 @@
         type="text" 
         mix-check="{{ x.STREET_NAME_REGEX }}" 
         class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
-        focus="border-c-blue:+6 outline-0"
+        focus="border-c-green outline-0"
         />
     </div>
 
@@ -58,7 +58,7 @@
         type="text" 
         mix-check="{{ x.STREET_NUMBER_REGEX }}" 
         class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
-        focus="border-c-blue:+6 outline-0"
+        focus="border-c-green outline-0"
         />
     </div>
 
@@ -76,7 +76,7 @@
         type="text" 
         mix-check="{{ x.CITY_NAME_REGEX }}" 
         class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
-        focus="border-c-blue:+6 outline-0"
+        focus="border-c-green outline-0"
         />
     </div>
 
@@ -94,14 +94,14 @@
         type="text" 
         mix-check="{{ x.POSTAL_CODE_REGEX }}" 
         class="py-3 px-4 rounded-md border-2 border-c-gray:-4"
-        focus="border-c-blue:+6 outline-0"
+        focus="border-c-green outline-0"
         />
     </div>
 
     <button 
       mix-post="/restaurants/add" 
       mix-data="#frm_create_restaurant"
-      class="py-3 px-6 cursor-pointer text-w-thin bg-c-blue:-9 text-c-white rounded-md shadow-md hover:bg-c-blue:-6">
+      class="py-3 px-6 cursor-pointer bg-c-green:+10 text-c-white rounded-md shadow-md " hover="bg-c-green:+16">
       Create Restaurant
     </button>
   </form>

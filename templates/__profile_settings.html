@@ -162,11 +162,11 @@
                     />
                 </div>
             {% else %}
-                <div class="my-8">
+                <div class="my-8 d-flex">
 
-                  <button class="rounded-sm">
-                    <a href="{{ url_for('add_restaurant') }}" class="text-c-gray:+1 pa-4 mt-2 text-120 ">
-                      Add Restaurant|NEED FIX WHEN TIME!!!!!
+                  <button class="rounded-md py-2 px-4 bg-c-green:+16 cursor-pointer" hover="bg-c-green:+10">
+                    <a href="{{ url_for('add_restaurant') }}" class="text-120 text-c-white" hover="text-c-white:-2">
+                      Add Restaurant
                 </a>
 
                   </button>
@@ -179,7 +179,7 @@
          
           <div class="d-flex j-content-end mt-4">
             <button
-              class="bg-blue-600 text-white px-4 py-2 text-120 rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="text-c-gray:-16 px-4 py-2 text-120 rounded-md"
               id="update-{{ user['user_pk'] }}"
               mix-put="/users"
               mix-data="#update_profile_form-{{ user['user_pk'] }}"
