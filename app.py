@@ -1805,17 +1805,20 @@ def update_item_details(item_pk):
         data = request.form  # Retrieve the form data
         files = request.files  # Retrieve uploaded files
         db, cursor = x.db()
+        BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
          # Handle the main item_image upload
         main_image = files.get("item_image")  # Main item image
         main_image_filename = None
+        main_upload_folder = os.path.join(BASE_DIR, "static", "dishes")
+        os.makedirs(main_upload_folder, exist_ok=True)
+
         if main_image and allowed_file(main_image.filename):  # Check file validity
             # Generate a UUID4 filename
             main_image_filename = f"{uuid.uuid4()}.{main_image.filename.rsplit('.', 1)[1].lower()}"
-            main_upload_folder = os.path.join(os.getcwd(), "static", "dishes")
-            os.makedirs(main_upload_folder, exist_ok=True)
             main_filepath = os.path.join(main_upload_folder, main_image_filename)
             main_image.save(main_filepath)
+            ic("Main image saved to:", main_filepath)
 
         # Update the item details in the database
         cursor.execute("""
@@ -1849,12 +1852,11 @@ def update_item_details(item_pk):
         
         restaurant_fk = restaurant_fk_row["restaurant_pk"]
 
-        # Handle image uploads
-        uploaded_images = []
-        BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+        
         upload_folder = os.path.join(BASE_DIR, "static", "uploads", "items")
         os.makedirs(upload_folder, exist_ok=True) 
 
+        
         for key in files:
             if key.startswith("item_image_"):  # Ensure it's one of the image inputs
                 additional_image = files[key]
@@ -1863,6 +1865,7 @@ def update_item_details(item_pk):
                     unique_filename = f"{uuid.uuid4()}.{additional_image.filename.rsplit('.', 1)[1].lower()}"
                     filepath = os.path.join(upload_folder, unique_filename)
                     additional_image.save(filepath)
+                    ic("Additional image saved to:", filepath)
 
                     # Insert the UUID4 filename into the database
                     cursor.execute("""
@@ -1873,9 +1876,9 @@ def update_item_details(item_pk):
                         item_pk, 
                         f"uploads/items/{unique_filename}", 
                         restaurant_fk, 
-                        int(time.time())))
-                    
-                    uploaded_images.append(unique_filename)
+                        int(time.time())
+                    ))
+                    ic("Inserted image path into database:", unique_filename)
 
         db.commit()
 
@@ -1897,6 +1900,7 @@ def update_item_details(item_pk):
         elif isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error occurred.</template>", 500
+        toast = render_template("___toast.html", message=ex.message)
 
         return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
 
