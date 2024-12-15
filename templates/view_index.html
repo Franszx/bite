@@ -75,12 +75,12 @@
   <section class="border-b-5 border-c-white:-5 mx-32" md="mx-96"></section>
 
 
-  {% if restaurants %}
-  <section id="restaurant-section" class="mt-20 px-6" md="mt-52 px-60">
+  {% if query and restaurants %}
+  <section id="restaurant-section" class="mt-20 px-6" md="mt-52 px-52">
     <div class="d-flex flex-col a-self-center" md="px-60">
-      {% if query %}
+
         <h2 class="text-2rem">Restaurant results for <span class="text-w-bold text-t-capitalize">{{ query }}</span></h2>
-      {% endif %}
+
     </div>
 
     <div class="d-flex flex-col gap-4" md="flex-row gap-0 mb-20 border-11 border-c-gray:+1">
