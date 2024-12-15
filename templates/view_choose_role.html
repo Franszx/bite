@@ -5,14 +5,14 @@
   <section class="d-flex flex-col j-content-center a-items-center gap-10 my-20">
     <section class="hero d-flex flex-col j-content-center a-items-center text-c-black:+16 text-a-center px-6">
       <h1 class="text-3rem text-lh-tight text-w-bold" md="text-4rem">Welcome to Bite, {{ user['user_name'] }}</h1>
-      <p class="text-200 text-w-thin mt-2">Choose your account to get started</p>
+      <p class="text-200 text-w-thin mt-2">Choose your account</p>
       </section>
       <section class="w-full max-w-lg text-a-center" sm="px-6">
         
         <div class="d-flex flex-col mt-6">
           {% for role in user.roles %}
           <a href="{{ url_for('select_role', role=role) }}" 
-             class="px-4 py-2 bg-c-white:-16 a-self-center text-c-gray:+15 text-a-center w-80 rounded-md mt-2 cursor-pointer"
+             class="text-1.5rem px-4 py-2 bg-c-white:-16 a-self-center text-c-black:+16 text-a-center w-80 rounded-md my-2 cursor-pointer"
              hover="bg-c-white:-10">
             {{ role.capitalize() }} account
           </a>
