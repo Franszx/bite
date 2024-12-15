@@ -189,57 +189,77 @@ def _________GET_________(): pass
 ##############################
 
 
-# @app.get('/fetch-images')
-# def fetch_images():
-#     """Fetches and downloads images from Unsplash."""
-#     search_params = {
-#         "query": "food dishes",
-#         "per_page": 10,  # Number of images per request
-#         "page": 1,       # Start page
-#     }
-#     headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"}
+@app.get('/fetch-images')
+def fetch_images():
+    """Fetches and downloads images from Unsplash."""
+    search_params = {
+        "query": "food dishes",
+        "per_page": 10,
+        "page": 1,
+    }
+    headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"}
 
-#     try:
-#         response = requests.get(UNSPLASH_API_URL, headers=headers, params=search_params)
-#         if response.status_code != 200:
-#             return jsonify({"error": "Failed to fetch images", "status": response.status_code}), 500
+    try:
+        response = requests.get(UNSPLASH_API_URL, headers=headers, params=search_params)
+        if response.status_code != 200:
+            return jsonify({"error": "Failed to fetch images", "status": response.status_code}), 500
 
-#         images = response.json().get("results", [])
-#         if not images:
-#             return jsonify({"error": "No images found"}), 404
-#         for idx, img in enumerate(images):
-#             img_url = img["urls"]["regular"]
-#             img_name = f"dish_{idx + 1}.jpg"
-#             save_path = os.path.join(UPLOAD_FOLDER_AVATARS, img_name)
-#             download_image(img_url, save_path)
+        images = response.json().get("results", [])
+        if not images:
+            return jsonify({"error": "No images found"}), 404
 
-#         return jsonify({"message": "Images fetched and saved successfully."})
+        for idx, img in enumerate(images):
+            img_url = img["urls"]["regular"]
+            img_name = f"dish_{idx + 1}.jpg"
+            save_path = os.path.join(app.config['UPLOAD_FOLDER_DISHES'], img_name)  # Use UPLOAD_FOLDER_DISHES
+            download_image(img_url, save_path)
 
-#     except Exception as e:
-#         ic(e)
-#         return jsonify({"error": "An error occurred while fetching images"}), 500
+        return jsonify({"message": "Images fetched and saved successfully."}), 200
 
-##############################
+    except Exception as e:
+        return jsonify({"error": "An error occurred while fetching images", "details": str(e)}), 500
 
-# @app.get('/images')
-# def list_images():
-#     """Lists all downloaded images."""
-#     try:
-#         images = os.listdir(UPLOAD_FOLDER_AVATARS)
-#         images = [url_for('static', filename=f'uploads/images/{img}') for img in images if img]
-#         return render_template("image_gallery.html", images=images)
-#     except Exception as e:
-#         return jsonify({"error": "Failed to list images", "details": str(e)}), 500
+#############################
 
+@app.get('/images')
+def list_images():
+    """Lists all downloaded images."""
+    folder = request.args.get('folder', 'dishes')  # Default to dishes if no folder is specified
+    folder_path = {
+        'avatars': app.config['UPLOAD_FOLDER_AVATARS'],
+        'items': app.config['UPLOAD_FOLDER_ITEMS'],
+        'dishes': app.config['UPLOAD_FOLDER_DISHES'],
+    }.get(folder)
 
-##############################
+    if not folder_path:
+        return jsonify({"error": "Invalid folder"}), 400
 
-# @app.get('/images/<path:filename>')
-# def serve_image(filename):
-#     """Serves individual images."""
-#     return send_from_directory(UPLOAD_FOLDER_AVATARS, filename)
+    try:
+        images = os.listdir(folder_path)
+        images = [url_for('static', filename=f'{folder}/{img}') for img in images if img]
+        return render_template("image_gallery.html", images=images, folder=folder)
+    except Exception as e:
+        return jsonify({"error": "Failed to list images", "details": str(e)}), 500
 
+#############################
 
+@app.get('/images/<path:filename>')
+def serve_image(filename):
+    """Serves individual images."""
+    folder = request.args.get('folder', 'dishes')  # Default to dishes
+    folder_path = {
+        'avatars': app.config['UPLOAD_FOLDER_AVATARS'],
+        'items': app.config['UPLOAD_FOLDER_ITEMS'],
+        'dishes': app.config['UPLOAD_FOLDER_DISHES'],
+    }.get(folder)
+
+    if not folder_path:
+        return jsonify({"error": "Invalid folder"}), 400
+
+    try:
+        return send_from_directory(folder_path, filename)
+    except Exception as e:
+        return jsonify({"error": "Failed to serve image", "details": str(e)}), 500
 
 ##############################
 # @app.get("/test-set-redis")
