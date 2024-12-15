@@ -1459,7 +1459,8 @@ def view_search():
             SELECT DISTINCT
                 i.item_pk, 
                 i.item_title, 
-                i.item_price, 
+                i.item_price,
+                i.item_food_category, 
                 i.item_image, 
                 r.restaurant_pk, 
                 r.restaurant_name, 
@@ -1500,6 +1501,7 @@ def view_search():
                 "item_pk": item["item_pk"],
                 "item_title": item["item_title"],
                 "item_price": item["item_price"],
+                "item_food_category": item["item_food_category"],
                 "item_image": item["item_image"],
                 "restaurant_name": item["restaurant_name"],
             }

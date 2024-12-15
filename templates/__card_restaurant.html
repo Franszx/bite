@@ -5,13 +5,15 @@
       class="w-full h-30 rounded-t-4 obj-f-cover" 
       md="h-40">
     <div class="px-2" md="">
-      <h3 class="text-14px text-c-black:+16 mb-1" md="text-lg">{{ restaurant["restaurant_name"] }}</h3>
-      <p class="text-8px text-c-black:+16 ma-0 pb-1" md="text-sm">
+      <div>
+        <h3 class="text-14px text-c-black:+16 mb-1" md="text-18px">{{ restaurant["restaurant_name"] }}</h3>
+      </div>
+      <p class="text-8px text-c-black:+16 ma-0 pb-1" md="text-12px">
         Address: {{ restaurant["restaurant_address"] }}
       </p>
-      <div class="d-flex j-content-between ml-2" md="ml-0">
+      <div class="d-flex j-content-center ml-2" md="ml-0">
         <a href="/restaurant/{{ restaurant['restaurant_pk'] }}?query={{ query }}" class="btn pa-2 text-c-black:+16" md="text-1rem" hover="text-c-green:+16 ts-300 text-d-underline">
-          View Menu
+          View Restaurant
         </a>
       </div>
     </div>

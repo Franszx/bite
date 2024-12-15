@@ -52,21 +52,21 @@
 
   
 
-  <section class="how-it-works py-20 px-6" md="py-52 px-60 ">
+  <section class="how-it-works py-10 px-6" md="py-52 px-60 ">
     <h2 class="text-2rem text-w-extrabold text-center mb-6">How It Works</h2>
     <div class="grid gap-4" md="cols-3">
       <div class="step-card text-center">
-        <img src="{{ url_for('static', filename='icons/search.svg') }}" alt="Search" class="mb-4 w-16 h-16 obj-f-contain" />
+        <img src="{{ url_for('static', filename='uploads/images/' 'search.webp') }}" alt="Search" class="mb-4 w-24 h-24 obj-f-contain float-left mr-2" />
         <h4 class="text-lg text-w-bold">1. Search</h4>
         <p class="text-sm text-c-gray">Find your favorite meals and restaurants in just a few clicks.</p>
       </div>
       <div class="step-card text-center">
-        <img src="{{ url_for('static', filename='icons/order.svg') }}" alt="Order" class="mb-4 w-16 h-16 obj-f-contain" />
+        <img src="{{ url_for('static', filename='uploads/images/' 'order.webp') }}" alt="Order" class="mb-4 w-24 h-24 obj-f-contain float-left mr-2" />
         <h4 class="text-lg text-w-bold">2. Order</h4>
         <p class="text-sm text-c-gray">Place your order and pay securely through our app.</p>
       </div>
       <div class="step-card text-center">
-        <img src="{{ url_for('static', filename='icons/delivery.svg') }}" alt="Delivery" class="mb-4 w-16 h-16 obj-f-contain" />
+        <img src="{{ url_for('static', filename='uploads/images/' 'enjoy.webp') }}" alt="Delivery" class="mb-4 w-24 h-24 obj-f-contain float-left mr-2" />
         <h4 class="text-lg text-w-bold">3. Enjoy</h4>
         <p class="text-sm text-c-gray">Sit back and relax while we deliver delicious food to your door.</p>
       </div>
@@ -76,7 +76,7 @@
 
 
   {% if query and restaurants %}
-  <section id="restaurant-section" class="mt-20 px-6" md="mt-52 px-52">
+  <section id="restaurant-section" class=" px-6" md="mt-52 px-52">
     <div class="d-flex flex-col a-self-center" md="px-60">
 
         <h2 class="text-2rem">Restaurant results for <span class="text-w-bold text-t-capitalize">{{ query }}</span></h2>
@@ -98,7 +98,7 @@
     </div>
   </section>
 {% else %}
-  <section id="restaurant-section" class="mt-32">
+  <section id="restaurant-section">
     <div class="d-flex flex-col" md="px-60">
     </div>
   </section>
@@ -132,8 +132,8 @@
             <div class="card-content px-4 py-2">
               <h4 class="text-lg text-w-bold text-c-black">{{ item.item_title }}</h4>
               <p class="text-sm text-c-gray">Price: <span class="text-c-black">{{ item.item_price }} DKK</span></p>
-              <p class="text-sm text-c-gray">Category: {{ item.item_food_category }}</p>
-              <p class="text-sm text-c-gray">Restaurant: <span class="text-c-black">{{ item.restaurant_name }}</span></p>
+              <p class="text-12px text-c-gray">Category: {{ item.item_food_category }} </p>
+              <p class="text-12px text-c-gray">Restaurant: <span class="text-c-black">{{ item.restaurant_name }}</span></p>
             </div>
     
             <!-- Actions Section -->
@@ -181,10 +181,10 @@
   
  
   
-  <section class="cta-banner bg-c-white:-16 py-80 text-center text-c-white px-6" md="px-60">
+  <section class="cta-banner bg-c-white:-16 py-20 text-center text-c-white px-6" md="px-60">
     <h2 class="text-2rem text-w-bold">Ready to Satisfy Your Hunger?</h2>
     <p class="text-lg mb-6">Explore our wide range of restaurants and dishes!</p>
-    <a href="#search-section" class="btn bg-none text-c-white px-6 py-3 rounded-lg mt-4 ts-300" hover="bg-c-green:+16 text-c-white ts-300 ts-f-ease-in">
+    <a href="#search-section" class="btn bg-c-white text-c-green:+11 px-6 py-3 rounded-lg mt-4 ts-300" hover="bg-c-green:+16 text-c-white ts-300 ts-f-ease-in">
       Order Now
     </a>
   </section>
