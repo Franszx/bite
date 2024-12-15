@@ -1876,8 +1876,8 @@ def update_item_details(item_pk):
         restaurant_fk_row = cursor.fetchone()
 
         if not restaurant_fk_row:
-            raise ValueError("Restaurant not found for the given item.")
-        
+            raise x.CustomException("You need to create a restaurant before uploading item images.", 400)
+
         restaurant_fk = restaurant_fk_row["restaurant_pk"]
 
         
@@ -1914,23 +1914,21 @@ def update_item_details(item_pk):
         toast = render_template("___toast_success.html", message="Item successfully updated with images.")
         return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 201
     except Exception as ex:
-        # Log the exception for debugging
-        ic("Error in update_item_details:", ex)
-        
         # Rollback the database in case of an error
         if "db" in locals():
             db.rollback()
 
         # Handle specific exceptions with appropriate responses
         if isinstance(ex, x.CustomException):
-            toast = render_template("___toast.html", message=ex.message)
+            toast = render_template("___toast.html", message=ex.message)  # Render the toast with the custom message
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
         elif isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error occurred.</template>", 500
-        
 
-        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
+        # Generic error response
+        toast = render_template("___toast.html", message="System under maintenance.")  # Fallback toast message
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 500
 
     finally:
         # Ensure database connections are closed
