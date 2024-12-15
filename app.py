@@ -1900,7 +1900,7 @@ def update_item_details(item_pk):
         elif isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error occurred.</template>", 500
-        toast = render_template("___toast.html", message=ex.message)
+        
 
         return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
 
