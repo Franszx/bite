@@ -11,24 +11,29 @@
       </div>
      <div class="d-flex a-self-start" md="a-self-center">
       <form 
-      id="search-form" 
-      class="d-flex gap-2"
-      md="px-6 flex-col "
-      method="get" 
-      action="{{ url_for('view_search') }}#restaurant-section">
-      <input type="text" 
-        name="query" 
-        id="search-input" 
-        placeholder="Search delicous food" 
-        class="w-full"
-        focus="bg-c-white:-4" 
-        value="{{ query|default('') }}" />
-      <button 
-        type="submit" 
-        class="btn pa-2 bg-c-white:-6 text-c-gray:+16 cursor-pointer" 
-        hover="bg-c-green:+16 ts-300 text-c-white ts-f-ease-in">
-        Search
-      </button>
+        id="search-form" 
+        class="d-flex gap-2"
+        md="px-6 flex-col "
+        method="get" 
+        action="{{ url_for('view_search') }}#restaurant-section">
+          <input 
+            type="text" 
+            name="query" 
+            id="search-input" 
+            placeholder="Search delicous food" 
+            mix-check="{{ x.SEARCH_QUERY_REGEX }}"
+            class="w-full"
+            focus="bg-c-white:-4" 
+            value="{{ query|default('') }}"
+            title="Search can only contain letters, numbers, and spaces."
+            required
+            />
+          <button 
+            type="submit" 
+            class="btn pa-2 bg-c-white:-6 text-c-gray:+16 cursor-pointer" 
+            hover="bg-c-green:+16 ts-300 text-c-white ts-f-ease-in">
+            Search
+          </button>
     </form>
      </div>
      

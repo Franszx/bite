@@ -707,7 +707,7 @@ def validate_city_name():
     return city_name
 
 ##############################
-POSTAL_CODE_REGEX = r"^\d{2,6}$"  # Allows postal codes between 2 and 6 digits
+POSTAL_CODE_REGEX = r"^\d{2,6}$" 
 def validate_postal_code():
     error = "Postal code must be a number between 4 and 6 digits."
     postal_code = request.form.get("postnummer", "").strip()
@@ -715,7 +715,20 @@ def validate_postal_code():
         raise_custom_exception(error, 400)
     return postal_code
 
+##############################
+SEARCH_QUERY_MIN = 1
+SEARCH_QUERY_MAX = 50
+SEARCH_QUERY_REGEX = f"^.{{{SEARCH_QUERY_MIN},{SEARCH_QUERY_MAX}}}$"
 
+def validate_search_query():
+    error = f"Search query must be between {SEARCH_QUERY_MIN} and {SEARCH_QUERY_MAX} characters."
+    search_query = request.args.get("query", "").strip()
+    
+    # Check if query matches the regex
+    if not re.match(SEARCH_QUERY_REGEX, search_query):
+        raise_custom_exception(error, 400)
+
+    return search_query
 
 
 
