@@ -2316,12 +2316,12 @@ def login():
         )
         user_row = cursor.fetchone()
         if not user_row:
-            toast = render_template("___toast.html", message="user not registered")
+            toast = render_template("___toast.html", message="User not registered")
             return f"""<template mix-target="#toast">{toast}</template>""", 400
         
         # Validate password
         if not check_password_hash(user_row["user_password"], user_password):
-            toast = render_template("___toast.html", message="invalid credentials")
+            toast = render_template("___toast.html", message="Invalid credentials")
             return f"""<template mix-target="#toast">{toast}</template>""", 401
         
         # Get roles for the user
