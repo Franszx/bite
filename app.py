@@ -1851,8 +1851,9 @@ def update_item_details(item_pk):
 
         # Handle image uploads
         uploaded_images = []
-        upload_folder = os.path.join(os.getcwd(), "static", "uploads", "items")
-        os.makedirs(upload_folder, exist_ok=True)# Ensure directory exists
+        BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+        upload_folder = os.path.join(BASE_DIR, "static", "uploads", "items")
+        os.makedirs(upload_folder, exist_ok=True) 
 
         for key in files:
             if key.startswith("item_image_"):  # Ensure it's one of the image inputs
@@ -1870,7 +1871,7 @@ def update_item_details(item_pk):
                     """, (
                         str(uuid.uuid4()), 
                         item_pk, 
-                        f"static/uploads/items/{unique_filename}", 
+                        f"uploads/items/{unique_filename}", 
                         restaurant_fk, 
                         int(time.time())))
                     
@@ -1897,7 +1898,6 @@ def update_item_details(item_pk):
             ic(ex)
             return "<template>Database error occurred.</template>", 500
 
-        # Generic error response
         return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500
 
     finally:
