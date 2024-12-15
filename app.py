@@ -1812,8 +1812,8 @@ def update_item_details(item_pk):
         if main_image and allowed_file(main_image.filename):  # Check file validity
             # Generate a UUID4 filename
             main_image_filename = f"{uuid.uuid4()}.{main_image.filename.rsplit('.', 1)[1].lower()}"
-            main_upload_folder = os.path.join("static", "dishes")
-            os.makedirs(main_upload_folder, exist_ok=True)  # Ensure directory exists
+            main_upload_folder = os.path.join(os.getcwd(), "static", "dishes")
+            os.makedirs(main_upload_folder, exist_ok=True)
             main_filepath = os.path.join(main_upload_folder, main_image_filename)
             main_image.save(main_filepath)
 
@@ -1851,8 +1851,8 @@ def update_item_details(item_pk):
 
         # Handle image uploads
         uploaded_images = []
-        upload_folder = os.path.join("static", "uploads", "items")
-        os.makedirs(upload_folder, exist_ok=True)  # Ensure directory exists
+        upload_folder = os.path.join(os.getcwd(), "static", "uploads", "items")
+        os.makedirs(upload_folder, exist_ok=True)# Ensure directory exists
 
         for key in files:
             if key.startswith("item_image_"):  # Ensure it's one of the image inputs
