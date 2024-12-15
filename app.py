@@ -1653,6 +1653,34 @@ def view_menu(restaurant_pk):
 
 
 ##############################
+@app.get("/items")
+def view_all_items():
+    try:
+        db, cursor = x.db()
+
+        # Fetch all items
+        cursor.execute("""
+            SELECT i.item_pk, i.item_title, i.item_price, i.item_cuisine_type, i.item_image, 
+                   r.restaurant_pk, r.restaurant_name
+            FROM items i
+            INNER JOIN restaurants r ON i.item_user_fk = r.restaurant_user_fk
+        """)
+        items = cursor.fetchall()
+        restaurants = []
+
+        # Check if the user is logged in
+        is_logged_in = 'user' in session
+
+        return render_template("view_all_items.html", items=items, restaurants=restaurants, is_logged_in=is_logged_in)
+    
+    except Exception as ex:
+        ic("Error fetching items:", ex)
+        return "<h1>Unable to load items. Please try again later.</h1>", 500
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+##############################
 # @app.get("/manage/menu/<item_pk>/images")
 # @x.no_cache
 # def view_add_item_images(item_pk):
