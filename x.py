@@ -1,4 +1,4 @@
-from flask import request, make_response
+from flask import request, make_response, url_for
 from functools import wraps
 import mysql.connector
 import re
@@ -219,7 +219,7 @@ def send_verify_email(to_email, user_verification_key):
         message["Subject"] = "Please verify your account"
 
         # Body of the email
-        body = f"""To verify your account, please <a href="http://127.0.0.1/verify/{user_verification_key}">click here</a>"""
+        body = f"""To verify your account, please <a href="{url_for('verify_user', verification_key=user_verification_key, _external=True)}">click here</a>"""
         message.attach(MIMEText(body, "html"))
 
         # Connect to Gmail's SMTP server and send the email
