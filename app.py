@@ -1519,7 +1519,7 @@ def view_search():
                 restaurant_item_title LIKE %s OR 
                 restaurant_item_cuisine_type LIKE %s OR 
                 restaurant_item_food_category LIKE %s
-            """, (f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%")
+            """, (f"%{query}%", f"%{query}%", f"%{query}%", f"%{query}%") # Tuple
         )
         restaurant_results = cursor.fetchall()
 
@@ -2837,10 +2837,10 @@ def user_update():
             restaurant_address = f"{street_number} {street_name}, {postnummer} {city}"
             restaurant_update_query = """
                 UPDATE restaurants
-                SET restaurant_name = %s, restaurant_address = %s, restaurant_updated_at = %s
+                SET restaurant_name = %s, restaurant_address = %s
                 WHERE restaurant_user_fk = %s
             """
-            cursor.execute(restaurant_update_query, (restaurant_name, restaurant_address, restaurant_updated_at, user_pk))
+            cursor.execute(restaurant_update_query, (restaurant_name, restaurant_address, user_pk))
             ic(f"Rows affected for restaurant update: {cursor.rowcount}")
             if cursor.rowcount != 1:
                 x.raise_custom_exception("Cannot update restaurant", 401)
