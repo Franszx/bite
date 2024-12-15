@@ -1870,7 +1870,7 @@ def update_item_details(item_pk):
                     """, (
                         str(uuid.uuid4()), 
                         item_pk, 
-                        f"uploads/items/{unique_filename}", 
+                        f"static/uploads/items/{unique_filename}", 
                         restaurant_fk, 
                         int(time.time())))
                     
