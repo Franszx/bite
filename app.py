@@ -34,20 +34,26 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 
-# Ensure the UPLOAD_FOLDER exists
-UPLOAD_FOLDER_AVATARS = 'static/avatars/'
+
+# Define the base directory (root of the project)
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+# Ensure the UPLOAD_FOLDER exists for avatars
+UPLOAD_FOLDER_AVATARS = os.path.join(BASE_DIR, "static", "avatars")
 if not os.path.exists(UPLOAD_FOLDER_AVATARS):
     os.makedirs(UPLOAD_FOLDER_AVATARS)
 
 app.config['UPLOAD_FOLDER_AVATARS'] = UPLOAD_FOLDER_AVATARS
 
-UPLOAD_FOLDER_ITEMS = 'static/uploads/items'
+# Ensure the UPLOAD_FOLDER exists for items
+UPLOAD_FOLDER_ITEMS = os.path.join(BASE_DIR, "static", "uploads", "items")
 if not os.path.exists(UPLOAD_FOLDER_ITEMS):
     os.makedirs(UPLOAD_FOLDER_ITEMS)
 
 app.config['UPLOAD_FOLDER_ITEMS'] = UPLOAD_FOLDER_ITEMS
 
-UPLOAD_FOLDER_DISHES = os.path.join(os.getcwd(), "static", "dishes")
+# Ensure the UPLOAD_FOLDER exists for dishes
+UPLOAD_FOLDER_DISHES = os.path.join(BASE_DIR, "static", "dishes")
 if not os.path.exists(UPLOAD_FOLDER_DISHES):
     os.makedirs(UPLOAD_FOLDER_DISHES)
 
