@@ -12,7 +12,7 @@
       {% elif role == 'partner' %}
         Hello {{ user['user_name'] }} 
       {% elif role == 'restaurant' %}
-        Hello {{ user.get('restaurant', user['user_name']) }}
+        Hi {{ user.get('restaurant', user['user_name']) }}
         
       {% endif %} 
       </h1>
