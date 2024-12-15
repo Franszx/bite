@@ -1,11 +1,11 @@
-<div class="d-flex flex-col j-content-between :-16 rounded-10 shadow-md w-60 j-self-center mb-8" md="w-full">
+<div class="d-flex flex-col j-content-between rounded-10 shadow-md mb-8" md="w-full">
     <div class="card-image w-full h-40 obj-f-cover">
       <img src="{{ url_for('static', filename='dishes/' + item['item_image']) }}" 
-      alt="Item Image" class="w-full h-30 rounded-t-10 " md="h-40">
+      alt="Item Image" class="w-full h-full rounded-t-10 obj-f-cover " md="h-40">
     </div>
     
 
-    <div class="card-content pa-4 flex-1 d-flex flex-col j-content-between" md="pa-4">
+    <div class="card-content pa-4 d-flex flex-col j-content-between" md="pa-4">
       <h3 class="text-lg text-c-black:+16 mb-1">{{ item["item_title"] }}</h3>
       <p class="text-12px text-c-black:+16 ma-0 pb-1" md="text-sm">Price: {{ item["item_price"] }} Dkk.</p>
       <div class="mb-2">
