@@ -47,7 +47,7 @@ if not os.path.exists(UPLOAD_FOLDER_ITEMS):
 
 app.config['UPLOAD_FOLDER_ITEMS'] = UPLOAD_FOLDER_ITEMS
 
-UPLOAD_FOLDER_DISHES = os.path.join("static", "dishes")
+UPLOAD_FOLDER_DISHES = os.path.join(os.getcwd(), "static", "dishes")
 if not os.path.exists(UPLOAD_FOLDER_DISHES):
     os.makedirs(UPLOAD_FOLDER_DISHES)
 
@@ -3255,8 +3255,7 @@ def verify_user(verification_key):
             x.raise_custom_exception("cannot verify account", 400)
 
         db.commit()
-        # return redirect(url_for("view_login", message="User verified, please login"))
-        return redirect(f"/login?message=User verified, please login")
+        return redirect(url_for("view_login", message="User verified, please login"))
 
     except Exception as ex:
         ic(ex)
