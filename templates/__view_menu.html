@@ -6,8 +6,8 @@
     <div class="w-full h-full flex flex-col justify-center">
       <h1 class="text-1rem text-c-gray:+16 mb-2" md="text-2rem">{{ restaurant["restaurant_name"] }}</h1>
       <p class="text-c-gray:-16 text-lg">{{ restaurant["restaurant_address"] }}</p>
-      <div class="flex flex-row gap-2 mt-4">
-        <span class="bg-c-white:-3 text-c-gray:+16 px-4 py-1 rounded-4 ">Delivery: 69.00 DKK</span>
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <span class="bg-c-white:-3 text-c-gray:+16 px-4 py-1 rounded-4">Delivery: 69.00 DKK</span>
         <span class="bg-c-white:-3 text-c-gray:+16 px-4 py-1 rounded-4 ">Min. Order: 75.00 DKK</span>
         <span class="bg-c-white:-3 text-c-gray:+16 px-4 py-1 rounded-4 ">W+: Free Delivery</span>
       </div>
@@ -18,7 +18,7 @@
       ← Go Back to Search
     </a>
   </div>
-  <div class="grid cols-4 gap-1" md="d-flex flex-row">
+  <div class="d-flex flex-wrap gap-2" md="d-flex ">
     {% for cuisine in cuisine_types %}
       <form method="get" action="{{ url_for('view_menu', restaurant_pk=restaurant['restaurant_pk']) }}">
         <input type="hidden" name="cuisine" value="{{ cuisine }}">
@@ -41,7 +41,7 @@
         
   
 
-  <div class="grid gap-2 cols-2" sm="cols-3 gap-4">
+  <div class="grid gap-2 mb-12" sm="cols-3 gap-4">
     {% for item in items %}
     <div class="card bg-c-white rounded-10 shadow-md d-flex flex-col h-full j-content-between overflow-hidden border-c-gray:-10" hover="scale-101 ts-300">
         <div class="card-image-container w-full h-40 obj-f-cover">
@@ -68,7 +68,7 @@
                         name="quantity"
                         min="1"
                         value="1"
-                        class="border-s-hidden px-2 py-1 rounded-md w-20"
+                        class="border-0 px-2 py-1 rounded-md w-20"
                         required
                     />
 
